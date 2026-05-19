@@ -10,10 +10,12 @@ This repository provides a comprehensive set of automotive software engineering 
 
 This work is a **format migration** of the excellent [automotive-claude-code-agents](https://github.com/sydyg/automotive-claude-code-agents) repository. The original project was authored by:
 
-| Contributor | Role | Affiliation |
-|-------------|------|-------------|
-| [theja0473](https://github.com/theja0473) | Original author | automotive-claude-code-agents |
-| [sydyg (张玉新)](https://github.com/sydyg) | Enhanced fork maintainer | Jilin University / Zhuoyu Technology (卓驭科技) / Yuyan Technology (驭研科技) |
+| Contributor | Role |
+|-------------|------|
+| [theja0473](https://github.com/theja0473) | Original author of [automotive-claude-code-agents](https://github.com/theja0473/automotive-claude-code-agents) |
+| [sydyg](https://github.com/sydyg) | Enhanced fork maintainer — added 26 China regulatory standards and deep SOTIF practice |
+
+*This repository is a format migration of the enhanced fork for Hermes Agent.*
 
 **What changed in this fork:**
 
