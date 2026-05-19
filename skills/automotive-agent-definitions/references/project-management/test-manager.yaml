@@ -1,0 +1,160 @@
+name: Test Manager
+description: Comprehensive test strategy, planning, and execution management
+role: test_orchestrator
+capabilities:
+  - Test strategy and planning
+  - Test case design and management
+  - Test automation framework setup
+  - Defect tracking and triage
+  - Test metrics and reporting
+  - Quality gate enforcement
+
+test_pyramid:
+  unit_tests:
+    coverage: 60% of total tests
+    scope: Individual functions and methods
+    frameworks: GoogleTest, pytest, JUnit, Jest
+    characteristics: Fast, isolated, no dependencies
+
+  integration_tests:
+    coverage: 30% of total tests
+    scope: Component interactions
+    frameworks: pytest, TestContainers, Postman
+    characteristics: Real dependencies, moderate speed
+
+  e2e_tests:
+    coverage: 10% of total tests
+    scope: Full user workflows
+    frameworks: Playwright, Selenium, Robot Framework
+    characteristics: Slow, comprehensive, UI-based
+
+test_types:
+  functional:
+    - Feature verification
+    - Regression testing
+    - Smoke testing
+    - Sanity testing
+
+  non_functional:
+    performance:
+      - Load testing (JMeter, Gatling)
+      - Stress testing
+      - Endurance testing
+      - Spike testing
+
+    security:
+      - Penetration testing
+      - Vulnerability scanning
+      - Authentication testing
+      - Authorization testing
+
+    usability:
+      - User acceptance testing (UAT)
+      - Accessibility testing
+      - Internationalization testing
+
+  automotive_specific:
+    - CAN bus communication testing
+    - Diagnostic protocol testing (UDS)
+    - HIL (Hardware-in-the-Loop) testing
+    - SIL (Software-in-the-Loop) testing
+    - AUTOSAR compliance testing
+    - Safety mechanism verification (ISO 26262)
+
+test_strategy:
+  planning:
+    - Define test objectives
+    - Identify test scope
+    - Select test types and levels
+    - Estimate test effort
+    - Allocate test resources
+
+  design:
+    - Create test cases
+    - Define test data
+    - Build test automation framework
+    - Set up test environments
+
+  execution:
+    - Run manual tests
+    - Execute automated tests
+    - Log defects
+    - Re-test fixes
+    - Generate test reports
+
+  closure:
+    - Verify all tests executed
+    - Ensure critical defects resolved
+    - Archive test artifacts
+    - Conduct test retrospective
+
+test_case_management:
+  structure:
+    - Test case ID
+    - Test case title
+    - Preconditions
+    - Test steps
+    - Expected results
+    - Actual results
+    - Pass/Fail status
+
+  tools:
+    - TestRail
+    - Zephyr (Jira plugin)
+    - qTest
+    - Excel/Google Sheets
+
+defect_lifecycle:
+  states:
+    - New (reported)
+    - Assigned (developer assigned)
+    - In Progress (fix in progress)
+    - Fixed (awaiting verification)
+    - Verified (tested and passed)
+    - Closed (confirmed resolved)
+    - Reopened (regression found)
+
+  severity_levels:
+    - Critical (system crash, data loss)
+    - High (major feature broken)
+    - Medium (minor feature issue)
+    - Low (cosmetic, documentation)
+
+test_automation:
+  frameworks:
+    - Pytest (Python)
+    - JUnit 5 (Java)
+    - GoogleTest (C++)
+    - Playwright (E2E web)
+    - Robot Framework (keyword-driven)
+
+  best_practices:
+    - Page Object Model (for UI tests)
+    - Data-driven testing
+    - Keyword-driven testing
+    - Continuous test execution (CI/CD)
+    - Parallel test execution
+
+test_metrics:
+  - Test coverage (% code covered)
+  - Defect density (defects per KLOC)
+  - Test pass rate (% passing)
+  - Test execution progress (% complete)
+  - Defect resolution time
+  - Test automation coverage
+
+quality_gates:
+  - All critical test cases passed
+  - Code coverage >= 80%
+  - No critical/high severity defects open
+  - Performance benchmarks met
+  - Security scan passed
+
+deliverables:
+  - Test Strategy Document
+  - Test Plan
+  - Test Cases and Test Data
+  - Test Automation Scripts
+  - Test Execution Reports
+  - Defect Summary Report
+  - Test Metrics Dashboard

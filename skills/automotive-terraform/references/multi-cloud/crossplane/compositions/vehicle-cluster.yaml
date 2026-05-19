@@ -1,0 +1,357 @@
+# Crossplane Composition: Cloud-Agnostic Kubernetes Cluster
+# Abstracts AWS EKS, Azure AKS, and GCP GKE behind a common interface
+
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: vehicle-cluster
+  labels:
+    crossplane.io/xrd: xvehicleclusters.automotive.example.com
+    provider: multi-cloud
+spec:
+  writeConnectionSecretsToNamespace: crossplane-system
+
+  compositeTypeRef:
+    apiVersion: automotive.example.com/v1alpha1
+    kind: XVehicleCluster
+
+  resources:
+    # AWS EKS Cluster
+    - name: eks-cluster
+      base:
+        apiVersion: eks.aws.upbound.io/v1beta1
+        kind: Cluster
+        spec:
+          forProvider:
+            region: us-east-1
+            version: "1.29"
+            roleArnSelector:
+              matchLabels:
+                role: eks-cluster
+            vpcConfig:
+              - subnetIdSelector:
+                  matchLabels:
+                    type: public
+      patches:
+        - type: FromCompositeFieldPath
+          fromFieldPath: spec.parameters.region
+          toFieldPath: spec.forProvider.region
+        - type: FromCompositeFieldPath
+          fromFieldPath: spec.parameters.kubernetesVersion
+          toFieldPath: spec.forProvider.version
+        - type: FromCompositeFieldPath
+          fromFieldPath: metadata.name
+          toFieldPath: metadata.name
+        - type: ToCompositeFieldPath
+          fromFieldPath: status.atProvider.endpoint
+          toFieldPath: status.clusterEndpoint
+      connectionDetails:
+        - fromConnectionSecretKey: kubeconfig
+      readinessChecks:
+        - type: MatchString
+          fieldPath: status.atProvider.status
+          matchString: ACTIVE
+
+    # AWS EKS Node Group
+    - name: eks-nodegroup
+      base:
+        apiVersion: eks.aws.upbound.io/v1beta1
+        kind: NodeGroup
+        spec:
+          forProvider:
+            clusterNameSelector:
+              matchControllerRef: true
+            nodeRoleArnSelector:
+              matchLabels:
+                role: eks-nodegroup
+            subnetIdSelector:
+              matchLabels:
+                type: public
+            scalingConfig:
+              - desiredSize: 3
+                minSize: 2
+                maxSize: 10
+            instanceTypes:
+              - t3.large
+      patches:
+        - type: FromCompositeFieldPath
+          fromFieldPath: spec.parameters.nodeCount
+          toFieldPath: spec.forProvider.scalingConfig[0].desiredSize
+        - type: FromCompositeFieldPath
+          fromFieldPath: spec.parameters.minNodeCount
+          toFieldPath: spec.forProvider.scalingConfig[0].minSize
+        - type: FromCompositeFieldPath
+          fromFieldPath: spec.parameters.maxNodeCount
+          toFieldPath: spec.forProvider.scalingConfig[0].maxSize
+        - type: FromCompositeFieldPath
+          fromFieldPath: spec.parameters.nodeSize
+          toFieldPath: spec.forProvider.instanceTypes[0]
+          transforms:
+            - type: map
+              map:
+                small: t3.large
+                medium: t3.xlarge
+                large: t3.2xlarge
+
+    # Azure AKS Cluster
+    - name: aks-cluster
+      base:
+        apiVersion: containerservice.azure.upbound.io/v1beta1
+        kind: KubernetesCluster
+        spec:
+          forProvider:
+            location: eastus
+            dnsPrefix: vehicle-fleet
+            resourceGroupNameSelector:
+              matchControllerRef: true
+            defaultNodePool:
+              - name: system
+                nodeCount: 3
+                vmSize: Standard_D4s_v3
+                enableAutoScaling: true
+                minCount: 2
+                maxCount: 10
+            identity:
+              - type: SystemAssigned
+            networkProfile:
+              - networkPlugin: azure
+                serviceCidr: 10.0.64.0/19
+                dnsServiceIp: 10.0.64.10
+      patches:
+        - type: FromCompositeFieldPath
+          fromFieldPath: spec.parameters.region
+          toFieldPath: spec.forProvider.location
+        - type: FromCompositeFieldPath
+          fromFieldPath: spec.parameters.nodeCount
+          toFieldPath: spec.forProvider.defaultNodePool[0].nodeCount
+        - type: FromCompositeFieldPath
+          fromFieldPath: spec.parameters.minNodeCount
+          toFieldPath: spec.forProvider.defaultNodePool[0].minCount
+        - type: FromCompositeFieldPath
+          fromFieldPath: spec.parameters.maxNodeCount
+          toFieldPath: spec.forProvider.defaultNodePool[0].maxCount
+        - type: FromCompositeFieldPath
+          fromFieldPath: spec.parameters.nodeSize
+          toFieldPath: spec.forProvider.defaultNodePool[0].vmSize
+          transforms:
+            - type: map
+              map:
+                small: Standard_D4s_v3
+                medium: Standard_D8s_v3
+                large: Standard_D16s_v3
+        - type: ToCompositeFieldPath
+          fromFieldPath: status.atProvider.fqdn
+          toFieldPath: status.clusterEndpoint
+      connectionDetails:
+        - fromConnectionSecretKey: kubeconfig
+      readinessChecks:
+        - type: MatchString
+          fieldPath: status.atProvider.provisioningState
+          matchString: Succeeded
+
+    # GCP GKE Cluster
+    - name: gke-cluster
+      base:
+        apiVersion: container.gcp.upbound.io/v1beta1
+        kind: Cluster
+        spec:
+          forProvider:
+            location: us-central1
+            removeDefaultNodePool: true
+            initialNodeCount: 1
+            networkSelector:
+              matchControllerRef: true
+            subnetworkSelector:
+              matchControllerRef: true
+            ipAllocationPolicy:
+              - clusterSecondaryRangeName: pods
+                servicesSecondaryRangeName: services
+            releaseChannel:
+              - channel: STABLE
+            workloadIdentityConfig:
+              - workloadPool: project.svc.id.goog
+      patches:
+        - type: FromCompositeFieldPath
+          fromFieldPath: spec.parameters.region
+          toFieldPath: spec.forProvider.location
+        - type: FromCompositeFieldPath
+          fromFieldPath: spec.parameters.kubernetesVersion
+          toFieldPath: spec.forProvider.minMasterVersion
+        - type: ToCompositeFieldPath
+          fromFieldPath: status.atProvider.endpoint
+          toFieldPath: status.clusterEndpoint
+      connectionDetails:
+        - fromConnectionSecretKey: kubeconfig
+      readinessChecks:
+        - type: MatchString
+          fieldPath: status.atProvider.status
+          matchString: RUNNING
+
+    # GCP GKE Node Pool
+    - name: gke-nodepool
+      base:
+        apiVersion: container.gcp.upbound.io/v1beta1
+        kind: NodePool
+        spec:
+          forProvider:
+            clusterSelector:
+              matchControllerRef: true
+            nodeCount: 3
+            autoscaling:
+              - minNodeCount: 2
+                maxNodeCount: 10
+            nodeConfig:
+              - machineType: n2-standard-4
+                oauthScopes:
+                  - https://www.googleapis.com/auth/cloud-platform
+                workloadMetadataConfig:
+                  - mode: GKE_METADATA
+      patches:
+        - type: FromCompositeFieldPath
+          fromFieldPath: spec.parameters.nodeCount
+          toFieldPath: spec.forProvider.nodeCount
+        - type: FromCompositeFieldPath
+          fromFieldPath: spec.parameters.minNodeCount
+          toFieldPath: spec.forProvider.autoscaling[0].minNodeCount
+        - type: FromCompositeFieldPath
+          fromFieldPath: spec.parameters.maxNodeCount
+          toFieldPath: spec.forProvider.autoscaling[0].maxNodeCount
+        - type: FromCompositeFieldPath
+          fromFieldPath: spec.parameters.nodeSize
+          toFieldPath: spec.forProvider.nodeConfig[0].machineType
+          transforms:
+            - type: map
+              map:
+                small: n2-standard-4
+                medium: n2-standard-8
+                large: n2-standard-16
+
+---
+# Composite Resource Definition
+apiVersion: apiextensions.crossplane.io/v1
+kind: CompositeResourceDefinition
+metadata:
+  name: xvehicleclusters.automotive.example.com
+spec:
+  group: automotive.example.com
+  names:
+    kind: XVehicleCluster
+    plural: xvehicleclusters
+  claimNames:
+    kind: VehicleCluster
+    plural: vehicleclusters
+  versions:
+    - name: v1alpha1
+      served: true
+      referenceable: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          properties:
+            spec:
+              type: object
+              properties:
+                parameters:
+                  type: object
+                  properties:
+                    region:
+                      description: Cloud region (e.g., us-east-1, eastus, us-central1)
+                      type: string
+                    kubernetesVersion:
+                      description: Kubernetes version
+                      type: string
+                      default: "1.29"
+                    nodeSize:
+                      description: Node size (small, medium, large)
+                      type: string
+                      enum:
+                        - small
+                        - medium
+                        - large
+                      default: medium
+                    nodeCount:
+                      description: Initial node count
+                      type: integer
+                      default: 3
+                    minNodeCount:
+                      description: Minimum node count for autoscaling
+                      type: integer
+                      default: 2
+                    maxNodeCount:
+                      description: Maximum node count for autoscaling
+                      type: integer
+                      default: 10
+                  required:
+                    - region
+            status:
+              type: object
+              properties:
+                clusterEndpoint:
+                  description: Kubernetes cluster endpoint
+                  type: string
+                clusterStatus:
+                  description: Cluster provisioning status
+                  type: string
+
+---
+# Example Claim: Deploy to AWS
+apiVersion: automotive.example.com/v1alpha1
+kind: VehicleCluster
+metadata:
+  name: vehicle-fleet-aws
+  namespace: default
+spec:
+  parameters:
+    region: us-east-1
+    kubernetesVersion: "1.29"
+    nodeSize: medium
+    nodeCount: 3
+    minNodeCount: 2
+    maxNodeCount: 10
+  compositionSelector:
+    matchLabels:
+      provider: aws
+  writeConnectionSecretToRef:
+    name: vehicle-fleet-aws-kubeconfig
+
+---
+# Example Claim: Deploy to Azure
+apiVersion: automotive.example.com/v1alpha1
+kind: VehicleCluster
+metadata:
+  name: vehicle-fleet-azure
+  namespace: default
+spec:
+  parameters:
+    region: eastus
+    kubernetesVersion: "1.29"
+    nodeSize: medium
+    nodeCount: 3
+    minNodeCount: 2
+    maxNodeCount: 10
+  compositionSelector:
+    matchLabels:
+      provider: azure
+  writeConnectionSecretToRef:
+    name: vehicle-fleet-azure-kubeconfig
+
+---
+# Example Claim: Deploy to GCP
+apiVersion: automotive.example.com/v1alpha1
+kind: VehicleCluster
+metadata:
+  name: vehicle-fleet-gcp
+  namespace: default
+spec:
+  parameters:
+    region: us-central1
+    kubernetesVersion: "1.29"
+    nodeSize: medium
+    nodeCount: 3
+    minNodeCount: 2
+    maxNodeCount: 10
+  compositionSelector:
+    matchLabels:
+      provider: gcp
+  writeConnectionSecretToRef:
+    name: vehicle-fleet-gcp-kubeconfig

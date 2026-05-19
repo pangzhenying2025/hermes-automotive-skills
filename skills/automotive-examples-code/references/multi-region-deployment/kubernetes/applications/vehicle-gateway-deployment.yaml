@@ -1,0 +1,384 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: automotive
+  labels:
+    name: automotive
+    istio-injection: enabled
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: vehicle-gateway-config
+  namespace: automotive
+data:
+  config.yaml: |
+    server:
+      port: 8080
+      grpc_port: 50051
+      read_timeout: 30s
+      write_timeout: 30s
+
+    database:
+      host: ${DB_HOST}
+      port: 5432
+      database: automotive
+      ssl_mode: require
+      max_connections: 100
+      connection_lifetime: 300s
+
+    cache:
+      type: redis
+      host: ${REDIS_HOST}
+      port: 6379
+      ttl: 300s
+      max_connections: 50
+
+    region:
+      name: ${AWS_REGION}
+      primary: ${PRIMARY_REGION}
+
+    telemetry:
+      batch_size: 1000
+      flush_interval: 10s
+      max_queue_size: 10000
+
+    logging:
+      level: info
+      format: json
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: vehicle-gateway-secrets
+  namespace: automotive
+type: Opaque
+stringData:
+  db-password: ${DB_PASSWORD}  # Injected from Secrets Manager
+  redis-password: ${REDIS_PASSWORD}
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vehicle-gateway
+  namespace: automotive
+  labels:
+    app: vehicle-gateway
+    version: v1
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: vehicle-gateway
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: vehicle-gateway
+        version: v1
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9090"
+        prometheus.io/path: "/metrics"
+    spec:
+      serviceAccountName: vehicle-gateway
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        fsGroup: 1000
+
+      containers:
+      - name: vehicle-gateway
+        image: automotive-platform/vehicle-gateway:1.2.0
+        imagePullPolicy: Always
+
+        ports:
+        - name: http
+          containerPort: 8080
+          protocol: TCP
+        - name: grpc
+          containerPort: 50051
+          protocol: TCP
+        - name: metrics
+          containerPort: 9090
+          protocol: TCP
+
+        env:
+        - name: AWS_REGION
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.annotations['region']
+        - name: PRIMARY_REGION
+          value: "us-east-1"
+        - name: DB_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: infrastructure-config
+              key: db-host
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: vehicle-gateway-secrets
+              key: db-password
+        - name: REDIS_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: infrastructure-config
+              key: redis-host
+        - name: OTEL_EXPORTER_OTLP_ENDPOINT
+          value: "http://otel-collector:4317"
+
+        resources:
+          requests:
+            cpu: 500m
+            memory: 512Mi
+          limits:
+            cpu: 2000m
+            memory: 2Gi
+
+        livenessProbe:
+          httpGet:
+            path: /health/live
+            port: http
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+
+        readinessProbe:
+          httpGet:
+            path: /health/ready
+            port: http
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 2
+
+        volumeMounts:
+        - name: config
+          mountPath: /etc/vehicle-gateway
+          readOnly: true
+        - name: tmp
+          mountPath: /tmp
+
+      volumes:
+      - name: config
+        configMap:
+          name: vehicle-gateway-config
+      - name: tmp
+        emptyDir: {}
+
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - vehicle-gateway
+              topologyKey: kubernetes.io/hostname
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: workload-type
+                operator: In
+                values:
+                - general
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: vehicle-gateway
+  namespace: automotive
+  labels:
+    app: vehicle-gateway
+spec:
+  type: ClusterIP
+  ports:
+  - name: http
+    port: 80
+    targetPort: http
+    protocol: TCP
+  - name: grpc
+    port: 50051
+    targetPort: grpc
+    protocol: TCP
+  selector:
+    app: vehicle-gateway
+
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: vehicle-gateway-hpa
+  namespace: automotive
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: vehicle-gateway
+  minReplicas: 5
+  maxReplicas: 50
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 80
+  - type: Pods
+    pods:
+      metric:
+        name: http_requests_per_second
+      target:
+        type: AverageValue
+        averageValue: "1000"
+  behavior:
+    scaleDown:
+      stabilizationWindowSeconds: 300
+      policies:
+      - type: Percent
+        value: 50
+        periodSeconds: 60
+      - type: Pods
+        value: 5
+        periodSeconds: 60
+      selectPolicy: Min
+    scaleUp:
+      stabilizationWindowSeconds: 60
+      policies:
+      - type: Percent
+        value: 100
+        periodSeconds: 30
+      - type: Pods
+        value: 10
+        periodSeconds: 30
+      selectPolicy: Max
+
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: vehicle-gateway
+  namespace: automotive
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::123456789012:role/vehicle-gateway-irsa
+
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: vehicle-gateway-pdb
+  namespace: automotive
+spec:
+  minAvailable: 3
+  selector:
+    matchLabels:
+      app: vehicle-gateway
+
+---
+# Istio Virtual Service for traffic management
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: vehicle-gateway
+  namespace: automotive
+spec:
+  hosts:
+  - vehicle-gateway.automotive.svc.cluster.local
+  - api.automotive.example.com
+  gateways:
+  - automotive-gateway
+  http:
+  - match:
+    - uri:
+        prefix: /v1/vehicles
+    route:
+    - destination:
+        host: vehicle-gateway.automotive.svc.cluster.local
+        port:
+          number: 80
+      weight: 100
+    retries:
+      attempts: 3
+      perTryTimeout: 2s
+      retryOn: 5xx,reset,connect-failure,refused-stream
+    timeout: 10s
+    corsPolicy:
+      allowOrigins:
+      - exact: https://dashboard.automotive.example.com
+      allowMethods:
+      - GET
+      - POST
+      - PUT
+      - DELETE
+      allowHeaders:
+      - authorization
+      - content-type
+      allowCredentials: true
+      maxAge: 24h
+
+---
+# Istio DestinationRule for traffic policy
+apiVersion: networking.istio.io/v1beta1
+kind: DestinationRule
+metadata:
+  name: vehicle-gateway
+  namespace: automotive
+spec:
+  host: vehicle-gateway.automotive.svc.cluster.local
+  trafficPolicy:
+    connectionPool:
+      tcp:
+        maxConnections: 1000
+      http:
+        http1MaxPendingRequests: 1000
+        http2MaxRequests: 1000
+        maxRequestsPerConnection: 10
+    outlierDetection:
+      consecutiveErrors: 5
+      interval: 30s
+      baseEjectionTime: 60s
+      maxEjectionPercent: 50
+      minHealthPercent: 50
+    loadBalancer:
+      simple: LEAST_REQUEST
+      localityLbSetting:
+        enabled: true
+        failover:
+        - from: us-east-1
+          to: eu-west-1
+        - from: eu-west-1
+          to: us-east-1
+
+---
+# ServiceMonitor for Prometheus
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: vehicle-gateway
+  namespace: automotive
+  labels:
+    app: vehicle-gateway
+spec:
+  selector:
+    matchLabels:
+      app: vehicle-gateway
+  endpoints:
+  - port: metrics
+    interval: 30s
+    path: /metrics

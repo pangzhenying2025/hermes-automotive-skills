@@ -1,0 +1,38 @@
+name: fleet-monitoring
+version: 1.0.0
+description: |
+  Fleet monitoring setup with telemetry, dashboards, and anomaly detection.
+
+domain: cloud_operations
+safety_standard: ISO_26262
+estimated_duration: 3-4_weeks
+
+phases:
+  - phase: telemetry_setup
+    name: Telemetry Data Collection Infrastructure
+    duration: 1_week
+    outputs:
+      - telemetry_pipeline
+      - data_ingestion_endpoints
+  - phase: dashboards
+    name: Monitoring Dashboard Creation
+    duration: 1_week
+    outputs:
+      - grafana_dashboards
+      - kpi_visualizations
+  - phase: alerting
+    name: Alert Rules and Notification Setup
+    duration: 3-5_days
+    outputs:
+      - alert_rules
+      - pagerduty_integration
+  - phase: anomaly_detection
+    name: ML-Based Anomaly Detection
+    duration: 1-2_weeks
+    outputs:
+      - anomaly_detection_models
+      - automated_incident_creation
+
+references:
+  - ISO 26262-5 (Safety monitoring)
+  - AUTOSAR Adaptive Platform (Logging and Tracing)

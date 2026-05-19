@@ -1,0 +1,164 @@
+name: power-management-optimization
+version: 1.0.0
+description: "ECU power management optimization workflow for reducing current consumption across all operating modes"
+trigger: "When ECU power budget is exceeded, for new platform optimization, or to meet updated vehicle power targets"
+domain: "Embedded"
+safety_level: "ASIL-A"
+
+prerequisites:
+  - "ECU hardware and BSP with all drivers functional"
+  - "Power measurement equipment with sufficient resolution"
+  - "Power budget specification from vehicle integration"
+  - "Understanding of all ECU operating modes and transitions"
+  - "Power mode state machine documented"
+
+phases:
+  - name: "Power Budget Analysis"
+    description: "Establish current power consumption baseline and identify optimization targets"
+    inputs:
+      - "ECU power budget specification"
+      - "Current firmware in all operating modes"
+      - "Power measurement setup"
+    steps:
+      - "Configure precision current measurement on ECU supply"
+      - "Measure current consumption in full run mode"
+      - "Measure current in each defined low-power mode"
+      - "Measure current during mode transitions"
+      - "Profile current over typical operating cycle"
+      - "Identify top power-consuming subsystems using selective disable"
+      - "Measure peripheral current contribution individually"
+      - "Calculate power budget gap per operating mode"
+      - "Prioritize optimization targets by impact potential"
+      - "Create power budget breakdown table"
+    outputs:
+      - "Baseline power consumption measurements"
+      - "Power budget breakdown by subsystem"
+      - "Optimization target priority list"
+    tools:
+      - "Precision current meter"
+      - "Power profiling tool"
+      - "Data logging system"
+    quality_gates:
+      - "Measurements repeatable within 2%"
+      - "All operating modes measured"
+      - "Budget gap quantified per mode"
+
+  - name: "Clock and Peripheral Optimization"
+    description: "Optimize clock configuration and peripheral power management"
+    inputs:
+      - "Power budget breakdown"
+      - "Microcontroller power management reference manual"
+      - "Peripheral usage requirements per operating mode"
+    steps:
+      - "Analyze clock tree for over-clocked peripherals"
+      - "Reduce peripheral clock frequencies to minimum required"
+      - "Disable clock gates for unused peripherals in each mode"
+      - "Configure flash access wait states for reduced clock speeds"
+      - "Optimize PLL configuration for power versus performance"
+      - "Configure ADC sampling rate to minimum required"
+      - "Reduce communication peripheral baud rates where possible"
+      - "Implement dynamic clock scaling based on workload"
+      - "Verify functional correctness after clock changes"
+      - "Measure power savings from clock optimizations"
+    outputs:
+      - "Optimized clock configuration"
+      - "Power savings measurements from clock changes"
+      - "Functional verification results"
+    tools:
+      - "Clock configuration tool"
+      - "Current meter"
+      - "Functional test suite"
+    quality_gates:
+      - "All functional tests pass after optimization"
+      - "Measurable power reduction achieved"
+      - "No performance degradation in critical paths"
+
+  - name: "Software Optimization"
+    description: "Optimize software execution patterns and algorithms for reduced power consumption"
+    inputs:
+      - "Power profile with software activity correlation"
+      - "CPU utilization breakdown by task"
+      - "Algorithm execution time measurements"
+    steps:
+      - "Profile CPU utilization per OS task"
+      - "Identify busy-wait loops and replace with event-driven patterns"
+      - "Optimize high-frequency task execution intervals"
+      - "Reduce polling frequency for slow-changing inputs"
+      - "Implement adaptive processing based on vehicle state"
+      - "Optimize memory access patterns to reduce cache misses"
+      - "Use DMA for bulk data transfers to free CPU"
+      - "Implement idle hook to enter low-power mode between tasks"
+      - "Optimize interrupt processing to minimize wake time"
+      - "Measure CPU utilization and power after optimizations"
+    outputs:
+      - "Optimized software with reduced CPU utilization"
+      - "Power savings measurements from software changes"
+      - "CPU utilization comparison"
+    tools:
+      - "CPU profiler"
+      - "Trace analyzer"
+      - "Power measurement equipment"
+    quality_gates:
+      - "CPU utilization reduced measurably"
+      - "No increase in task deadline misses"
+      - "Functional behavior unchanged"
+
+  - name: "Low-Power Mode Implementation"
+    description: "Implement and optimize low-power modes for sleep and standby states"
+    inputs:
+      - "Power mode state machine specification"
+      - "Wake-up source requirements"
+      - "Maximum wake-up time requirements"
+    steps:
+      - "Implement sleep mode entry sequence"
+      - "Configure wake-up sources per low-power mode"
+      - "Implement RAM retention configuration for sleep modes"
+      - "Optimize shutdown sequence to disable peripherals in correct order"
+      - "Implement fast wake-up sequence preserving state"
+      - "Configure CAN transceiver wake-up for network management"
+      - "Implement partial networking if supported by hardware"
+      - "Measure current consumption in each low-power mode"
+      - "Measure wake-up time from each low-power mode"
+      - "Test mode transitions under all wake-up conditions"
+    outputs:
+      - "Implemented low-power modes"
+      - "Sleep current measurements"
+      - "Wake-up time measurements"
+    tools:
+      - "Current meter with data logging"
+      - "Oscilloscope for wake-up timing"
+      - "CAN bus analyzer"
+    quality_gates:
+      - "Sleep current meets power budget target"
+      - "Wake-up time within specification"
+      - "All wake-up sources functional"
+
+  - name: "Validation and Reporting"
+    description: "Validate the optimized power management against vehicle-level requirements"
+    inputs:
+      - "Optimized firmware with all power improvements"
+      - "Vehicle power budget requirements"
+      - "Power validation test procedures"
+    steps:
+      - "Execute complete power measurement campaign"
+      - "Verify all operating modes meet power targets"
+      - "Execute vehicle-level quiescent current test"
+      - "Verify 12V battery drain over simulated parking period"
+      - "Test power mode transitions during drive cycle"
+      - "Verify thermal behavior does not worsen with optimizations"
+      - "Execute EMC pre-test after power supply changes"
+      - "Document all optimizations applied and their impact"
+      - "Compile power optimization report"
+      - "Obtain vehicle integration approval"
+    outputs:
+      - "Power validation measurement report"
+      - "Power optimization summary"
+      - "Vehicle integration approval"
+    tools:
+      - "Power measurement suite"
+      - "Vehicle integration test bench"
+      - "Report generation tool"
+    quality_gates:
+      - "All power mode targets achieved"
+      - "Vehicle quiescent current within specification"
+      - "No functional or EMC regressions"

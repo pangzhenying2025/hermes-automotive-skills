@@ -1,0 +1,39 @@
+name: end-of-life-decommission
+version: 1.0.0
+description: |
+  End-of-Life product decommissioning workflow with phase-out and recycling.
+
+domain: lifecycle_management
+safety_standard: ISO_14001
+estimated_duration: 12-24_months
+
+phases:
+  - phase: sunset_planning
+    name: End-of-Life Planning and Communication
+    duration: 3-6_months
+    outputs:
+      - eol_announcement
+      - last_time_buy_notification
+  - phase: support_phaseout
+    name: Support Phase-Out Strategy
+    duration: 6-12_months
+    outputs:
+      - extended_support_plan
+      - spare_parts_availability
+  - phase: data_retention
+    name: Data Retention and Archival
+    duration: 2-3_months
+    outputs:
+      - archived_documentation
+      - compliance_records
+  - phase: recycling
+    name: Product Recycling and Disposal
+    duration: ongoing
+    outputs:
+      - recycling_program
+      - environmental_compliance_certificate
+
+references:
+  - ISO 14001 (Environmental management)
+  - WEEE Directive (Waste electrical equipment)
+  - ISO 26262-2 (Management of functional safety)

@@ -1,0 +1,162 @@
+name: Release Manager
+description: End-to-end release planning, execution, and post-release management
+role: release_orchestrator
+capabilities:
+  - Release planning and scheduling
+  - Version management and branching strategy
+  - Release notes generation
+  - Deployment coordination
+  - Rollback procedures
+  - Post-release monitoring
+  - Hotfix management
+
+workflow:
+  release_planning:
+    - Define release scope and features
+    - Create release schedule
+    - Identify dependencies and risks
+    - Plan regression testing
+    - Prepare rollback strategy
+    - Schedule deployment windows
+
+  pre_release:
+    - Code freeze and branch creation
+    - Final QA and UAT testing
+    - Security scanning
+    - Performance benchmarking
+    - Documentation review
+    - Stakeholder sign-off
+
+  release_execution:
+    - Execute deployment runbook
+    - Monitor deployment progress
+    - Verify health checks
+    - Enable feature flags (gradual rollout)
+    - Communicate status updates
+
+  post_release:
+    - Monitor system metrics
+    - Track error rates and incidents
+    - Gather user feedback
+    - Generate release report
+    - Conduct retrospective
+    - Plan next release
+
+release_types:
+  major_release:
+    - Breaking changes
+    - New major features
+    - Architecture changes
+    - Semantic versioning: X.0.0
+
+  minor_release:
+    - New features (backward compatible)
+    - Enhancements
+    - Semantic versioning: x.Y.0
+
+  patch_release:
+    - Bug fixes
+    - Security patches
+    - Semantic versioning: x.y.Z
+
+  hotfix:
+    - Critical bug fixes
+    - Expedited process
+    - Immediate deployment
+
+versioning_strategy:
+  semantic_versioning: MAJOR.MINOR.PATCH
+  automotive_versioning: X.Y.Z-ASIL_Level-Build
+
+branching_model:
+  gitflow:
+    - main (production)
+    - develop (integration)
+    - feature/* (new features)
+    - release/* (release preparation)
+    - hotfix/* (emergency fixes)
+
+  trunk_based:
+    - main (single source of truth)
+    - feature flags for incomplete features
+    - Short-lived feature branches
+
+release_checklist:
+  - All tests passing (unit, integration, E2E)
+  - Code coverage >= 80%
+  - Security vulnerabilities resolved
+  - Performance benchmarks met
+  - Documentation updated
+  - Release notes prepared
+  - Deployment runbook reviewed
+  - Rollback plan tested
+  - Stakeholder approval obtained
+
+deployment_strategies:
+  blue_green:
+    - Parallel environments (blue=current, green=new)
+    - Switch traffic after verification
+    - Instant rollback capability
+
+  canary:
+    - Gradual rollout (1% → 10% → 50% → 100%)
+    - Monitor metrics at each stage
+    - Automatic rollback on errors
+
+  rolling:
+    - Update instances incrementally
+    - Maintain service availability
+    - Monitor health during rollout
+
+communication_plan:
+  pre_release:
+    - Release announcement (1 week before)
+    - Downtime notification (if any)
+    - Feature highlights
+
+  during_release:
+    - Status updates every 30 minutes
+    - Issue escalation alerts
+    - Go/No-Go decision communication
+
+  post_release:
+    - Release completion announcement
+    - Known issues and workarounds
+    - Feedback collection
+
+rollback_procedures:
+  triggers:
+    - Critical bug discovered
+    - Performance degradation > 20%
+    - Error rate spike > 5%
+    - Security vulnerability detected
+
+  steps:
+    - Halt deployment immediately
+    - Revert to previous version
+    - Verify system stability
+    - Investigate root cause
+    - Plan hotfix if needed
+
+deliverables:
+  - Release Plan
+  - Release Notes
+  - Deployment Runbook
+  - Rollback Procedure
+  - Release Report
+  - Lessons Learned Document
+
+tools_used:
+  - Git (version control)
+  - Jenkins/GitLab CI (automation)
+  - Jira (release tracking)
+  - Confluence (documentation)
+  - Slack/Teams (communication)
+  - Grafana (monitoring)
+
+metrics:
+  - Deployment frequency
+  - Lead time for changes
+  - Mean time to recovery (MTTR)
+  - Change failure rate
+  - Release success rate

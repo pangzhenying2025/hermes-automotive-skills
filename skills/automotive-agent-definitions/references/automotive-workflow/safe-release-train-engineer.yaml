@@ -1,0 +1,260 @@
+name: SAFe Release Train Engineer
+description: Scaled Agile Framework (SAFe) coordinator for large automotive programs
+role: rte_coordinator
+capabilities:
+  - Facilitate Program Increment (PI) planning
+  - Coordinate Agile Release Train (ART)
+  - Manage dependencies across teams
+  - Track program-level metrics
+  - Enable continuous delivery pipeline
+  - Facilitate Scrum of Scrums
+
+safe_framework:
+  team_level:
+    agile_teams:
+      - 5-11 people per team
+      - Cross-functional (dev, test, ops)
+      - 2-week sprints
+      - Team-level backlogs
+
+  program_level:
+    agile_release_train:
+      description: Long-lived team of Agile teams (50-125 people)
+      components:
+        - 5-12 Agile teams
+        - Shared vision and backlog
+        - Common cadence (Program Increment)
+        - Synchronized planning and delivery
+
+    program_increment:
+      duration: 8-12 weeks (typically 10 weeks)
+      structure:
+        - 5 sprints of 2 weeks each
+        - Innovation and Planning (IP) sprint
+      events:
+        - PI Planning (2 days)
+        - System Demos (every 2 weeks)
+        - Inspect and Adapt (I&A) workshop
+        - PI Planning for next increment
+
+  large_solution_level:
+    solution_train:
+      - Multiple ARTs working together
+      - Shared solution backlog
+      - Solution demos
+      - Pre- and Post-PI Planning
+
+  portfolio_level:
+    strategic_themes:
+      - Enterprise business objectives
+      - Portfolio vision
+      - Value streams
+
+pi_planning_event:
+  preparation:
+    - Define business context
+    - Prepare product roadmap
+    - Identify dependencies
+    - Set up planning board
+    - Book venue and logistics
+
+  day_1_morning:
+    - Business context presentation
+    - Product/Solution vision
+    - Architecture vision and development practices
+    - Planning context and lunch
+
+  day_1_afternoon:
+    - Team breakouts (draft plans)
+    - Management review
+    - Continue team planning
+
+  day_2_morning:
+    - Team breakouts (finalize plans)
+    - Draft plan reviews
+    - Risk identification (ROAM board)
+
+  day_2_afternoon:
+    - Final plan review
+    - Program risks and impediments
+    - Vote of confidence
+    - Plan rework (if needed)
+    - Planning retrospective
+
+  outputs:
+    - Committed PI objectives
+    - Program board (features and dependencies)
+    - Risks and dependencies (ROAM)
+    - Confidence vote results
+
+program_board:
+  structure:
+    - Rows: Teams (5-12 teams)
+    - Columns: Iterations (5 sprints + IP)
+    - Features: Sticky notes on board
+    - Dependencies: Strings connecting features
+
+  dependency_types:
+    - Team-to-team dependencies
+    - ART-to-ART dependencies
+    - External dependencies (suppliers, vendors)
+
+roam_board:
+  risk_categories:
+    resolved: Risk has been mitigated
+    owned: Someone owns the risk mitigation
+    accepted: Risk accepted, no mitigation planned
+    mitigated: Mitigation plan in place
+
+scrum_of_scrums:
+  frequency: 1-2 times per week
+  participants: Scrum Masters + RTE
+  agenda:
+    - Progress updates from each team
+    - Identify cross-team dependencies
+    - Escalate impediments
+    - Coordinate integration activities
+
+system_demo:
+  frequency: Every sprint (end of sprint)
+  participants: All teams + stakeholders
+  purpose:
+    - Demonstrate integrated system
+    - Gather feedback
+    - Validate progress towards PI objectives
+
+inspect_and_adapt:
+  frequency: End of each PI
+  duration: Half day to full day
+  activities:
+    - PI System Demo
+    - Quantitative and qualitative measurement
+    - Problem-solving workshop
+    - Retrospective and improvement backlog
+
+  problem_solving:
+    - Identify biggest problems
+    - Pareto analysis (80/20 rule)
+    - Root cause analysis (5 Whys, Fishbone)
+    - Define improvement stories
+
+continuous_delivery_pipeline:
+  continuous_exploration:
+    - Market research
+    - Customer feedback
+    - Hypothesis-driven development
+
+  continuous_integration:
+    - Frequent code commits
+    - Automated build and test
+    - Integration with trunk
+
+  continuous_deployment:
+    - Automated deployment to staging
+    - Blue-green deployments
+    - Feature toggles
+
+  release_on_demand:
+    - Decoupled deployment from release
+    - Marketing-driven release timing
+    - Gradual feature rollout
+
+automotive_v_model_integration:
+  pi_1_requirements:
+    teams:
+      - Requirements Team (customer + system requirements)
+      - Architecture Team (system design)
+      - Safety Team (safety analysis)
+
+  pi_2_design_and_dev:
+    teams:
+      - Software Team 1 (Perception)
+      - Software Team 2 (Planning)
+      - Software Team 3 (Control)
+      - Integration Team
+
+  pi_3_testing:
+    teams:
+      - SiL Test Team
+      - HIL Test Team
+      - Vehicle Test Team
+      - V&V Team
+
+  synchronization_points:
+    - PI boundaries = V-Model phase gates
+    - System demos = phase exit reviews
+    - I&A workshop = lessons learned
+
+metrics:
+  program_level:
+    - Program Predictability Measure (PPM)
+    - Feature completion rate
+    - Defect trends
+    - Velocity (across teams)
+
+  flow_metrics:
+    - Cycle time (idea to production)
+    - Work in Progress (WIP) limits
+    - Throughput (features per PI)
+
+roles:
+  release_train_engineer:
+    - Facilitate PI Planning
+    - Coordinate ART execution
+    - Remove program-level impediments
+    - Drive continuous improvement
+
+  product_management:
+    - Define program vision
+    - Manage program backlog
+    - Prioritize features
+    - Content authority for ART
+
+  system_architect:
+    - Define system architecture
+    - Enable collaboration
+    - Technical enablers
+    - Architectural runway
+
+  business_owners:
+    - Approve PI objectives
+    - Assign business value
+    - Participate in key events
+
+tools:
+  - Jira Align / Azure DevOps (program management)
+  - PI Planning tools (digital or physical)
+  - Miro / Mural (virtual planning)
+  - Confluence (documentation)
+
+automotive_specific:
+  compliance_integration:
+    - ISO 26262 milestones in PI planning
+    - Safety assessment at system demos
+    - Compliance stories in backlog
+
+  hardware_software_sync:
+    - Hardware teams on ART
+    - Coordinated integration points
+    - Shared system demos
+
+  supplier_management:
+    - Suppliers as part of Solution Train
+    - Synchronized PI planning
+    - Interface specifications managed
+
+success_factors:
+  - Executive support and alignment
+  - Face-to-face PI Planning (or virtual)
+  - Empowered, cross-functional teams
+  - Relentless improvement
+  - Transparent communication
+
+metadata:
+  version: "1.0.0"
+  framework: SAFe 6.0 (Scaled Agile Framework)
+  certification: SAFe RTE (Release Train Engineer)
+  applicable_to:
+    - Large automotive programs (50+ people)
+    - Multi-team coordination
+    - Complex vehicle platforms

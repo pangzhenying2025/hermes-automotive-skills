@@ -1,0 +1,158 @@
+name: perception-validation
+version: 1.0.0
+description: "Comprehensive validation workflow for ADAS perception algorithms including object detection, classification, and tracking"
+trigger: "When perception software is updated, new sensor hardware is integrated, or before ADAS feature release"
+domain: "ADAS"
+safety_level: "ASIL-B"
+
+prerequisites:
+  - "Perception algorithm build artifacts available"
+  - "Validation dataset with ground truth annotations"
+  - "Sensor calibration verified and current"
+  - "Test infrastructure including simulation and vehicle available"
+  - "KPI thresholds defined per perception function"
+
+phases:
+  - name: "Dataset Preparation"
+    description: "Prepare and validate the datasets required for perception testing"
+    inputs:
+      - "Raw sensor recordings from data collection campaigns"
+      - "Annotation guidelines and class taxonomy"
+      - "Dataset split ratios for train, validation, and test"
+    steps:
+      - "Verify dataset coverage across all operational design domain scenarios"
+      - "Check annotation quality through inter-annotator agreement analysis"
+      - "Validate class distribution meets minimum sample requirements"
+      - "Ensure corner cases and edge scenarios are adequately represented"
+      - "Split dataset ensuring no data leakage between sets"
+      - "Generate dataset statistics report including class counts and scene diversity"
+      - "Verify sensor synchronization timestamps across all modalities"
+      - "Create holdout test set sealed from development team access"
+    outputs:
+      - "Validated and split dataset with metadata"
+      - "Dataset statistics and coverage report"
+      - "Annotation quality metrics"
+    tools:
+      - "Annotation management platform"
+      - "Dataset analysis toolkit"
+      - "Scene classification tool"
+    quality_gates:
+      - "Inter-annotator agreement above 90%"
+      - "Minimum 1000 samples per critical object class"
+      - "All ODD scenarios represented in test set"
+
+  - name: "Offline Evaluation"
+    description: "Evaluate perception performance on recorded datasets using standardized metrics"
+    inputs:
+      - "Validated test dataset"
+      - "Perception algorithm under test"
+      - "Baseline algorithm results for regression comparison"
+    steps:
+      - "Run perception algorithm on full test dataset"
+      - "Compute detection metrics including precision, recall, and F1 score"
+      - "Compute classification accuracy per object class"
+      - "Evaluate tracking metrics including MOTA, MOTP, and ID switches"
+      - "Analyze false positive and false negative distributions"
+      - "Generate confusion matrices for classification performance"
+      - "Compare results against baseline for regression detection"
+      - "Analyze performance stratified by distance, weather, and lighting"
+      - "Identify systematic failure modes through clustering analysis"
+      - "Generate detailed performance report with visualizations"
+    outputs:
+      - "Detection performance metrics per class and range"
+      - "Tracking performance metrics"
+      - "Regression analysis against baseline"
+      - "Failure mode analysis report"
+    tools:
+      - "Perception evaluation framework"
+      - "Metrics computation library"
+      - "Visualization dashboard"
+    quality_gates:
+      - "Detection recall above 95% for vehicles within 100 meters"
+      - "Detection recall above 90% for pedestrians within 60 meters"
+      - "No regression in any critical metric compared to baseline"
+      - "False positive rate below 0.1 per frame"
+
+  - name: "Simulation Testing"
+    description: "Validate perception in simulated environments covering rare and dangerous scenarios"
+    inputs:
+      - "Simulation scenario catalog"
+      - "Perception algorithm integrated in simulation framework"
+      - "Virtual sensor models calibrated to match physical sensors"
+    steps:
+      - "Configure virtual sensor models with calibrated noise parameters"
+      - "Execute nominal driving scenario suite in simulation"
+      - "Execute adverse weather scenarios including rain, fog, and snow"
+      - "Execute low-light and high-contrast lighting scenarios"
+      - "Execute rare object scenarios including debris and animals"
+      - "Execute occlusion and sensor degradation scenarios"
+      - "Validate detection latency meets real-time requirements"
+      - "Analyze perception output against simulation ground truth"
+      - "Generate simulation coverage report"
+    outputs:
+      - "Simulation test results per scenario category"
+      - "Latency measurements under various loads"
+      - "Coverage report for rare scenario testing"
+    tools:
+      - "Driving simulator platform"
+      - "Virtual sensor modeling tool"
+      - "Scenario generation framework"
+    quality_gates:
+      - "All nominal scenarios pass detection thresholds"
+      - "Perception latency below 100ms end-to-end"
+      - "Graceful degradation under sensor impairment scenarios"
+
+  - name: "Vehicle Integration Testing"
+    description: "Validate perception performance on the target vehicle in real-world conditions"
+    inputs:
+      - "Perception software integrated on target ECU"
+      - "Vehicle with calibrated sensor suite"
+      - "Test route definitions covering diverse scenarios"
+    steps:
+      - "Flash perception software to target ECU and verify boot"
+      - "Execute structured test track scenarios with known objects"
+      - "Execute public road driving in urban environment"
+      - "Execute highway driving scenarios"
+      - "Monitor CPU and memory utilization during testing"
+      - "Record all sensor data and perception outputs for analysis"
+      - "Verify perception-to-planning interface data integrity"
+      - "Analyze results against ground truth from test track"
+      - "Document any discrepancies between simulation and real-world"
+    outputs:
+      - "Vehicle test results report"
+      - "Resource utilization profile"
+      - "Simulation-to-reality gap analysis"
+    tools:
+      - "Vehicle data logger"
+      - "ECU diagnostic tool"
+      - "Real-time performance monitor"
+    quality_gates:
+      - "All test track scenarios pass acceptance criteria"
+      - "CPU utilization below 80% sustained"
+      - "Memory utilization stable with no leaks over 4-hour test"
+
+  - name: "Release Approval"
+    description: "Review all validation evidence and approve perception software for release"
+    inputs:
+      - "All test results from offline, simulation, and vehicle testing"
+      - "Known issues and limitations list"
+      - "Safety analysis updated with validation evidence"
+    steps:
+      - "Compile validation summary across all test phases"
+      - "Review all open issues and their risk assessment"
+      - "Verify traceability from requirements to test results"
+      - "Present validation results to safety review board"
+      - "Obtain sign-off from perception lead and safety manager"
+      - "Update release notes with known limitations"
+      - "Tag validated software version in repository"
+    outputs:
+      - "Perception validation report signed by reviewers"
+      - "Release approval document"
+      - "Updated safety case with validation evidence"
+    tools:
+      - "Requirements traceability tool"
+      - "Document management system"
+    quality_gates:
+      - "All critical KPIs meet or exceed thresholds"
+      - "No unmitigated critical or high-severity issues"
+      - "Safety review board approval obtained"

@@ -1,0 +1,164 @@
+name: transmission-integration
+version: 1.0.0
+description: "Automatic transmission ECU integration and shift calibration workflow"
+trigger: "When integrating new transmission software, calibrating shift strategies, or adapting to new powertrain variants"
+domain: "Powertrain"
+safety_level: "ASIL-B"
+
+prerequisites:
+  - "Transmission ECU with base software installed"
+  - "Transmission test bench or vehicle with dynamometer"
+  - "Shift quality measurement equipment"
+  - "Calibration tool with TCU access"
+  - "Powertrain simulation model for pre-calibration"
+
+phases:
+  - name: "Interface Integration"
+    description: "Integrate transmission ECU communication with engine management and vehicle systems"
+    inputs:
+      - "CAN communication matrix for powertrain network"
+      - "Torque request interface specification"
+      - "Shift inhibit and mode selection signals"
+    steps:
+      - "Configure CAN communication between TCU and ECM"
+      - "Verify torque request and torque delivery message exchange"
+      - "Verify gear position and speed signal accuracy"
+      - "Test turbine speed and output speed sensor calibration"
+      - "Verify shift lever position signal reception"
+      - "Test mode selection signals: sport, eco, manual"
+      - "Verify integration with stability control system"
+      - "Test gear display signal to instrument cluster"
+      - "Verify limp-home mode communication"
+      - "Document all interface signals with scaling and offsets"
+    outputs:
+      - "Verified communication interface"
+      - "Signal accuracy measurements"
+      - "Interface documentation"
+    tools:
+      - "CAN bus analyzer"
+      - "Calibration tool"
+      - "Signal measurement equipment"
+    quality_gates:
+      - "All CAN messages received and sent correctly"
+      - "Speed sensor accuracy within 0.5%"
+      - "Torque interface responsive within 10ms"
+
+  - name: "Shift Point Calibration"
+    description: "Calibrate upshift and downshift points for all gear transitions"
+    inputs:
+      - "Target shift map from powertrain simulation"
+      - "Engine performance maps"
+      - "Vehicle resistance curves"
+    steps:
+      - "Define upshift points for economy mode across throttle range"
+      - "Define downshift points for economy mode ensuring no hunting"
+      - "Define upshift points for sport mode with higher shift speeds"
+      - "Define downshift points for sport mode with kickdown logic"
+      - "Calibrate shift point hysteresis to prevent gear hunting"
+      - "Optimize shift points for gradient detection scenarios"
+      - "Calibrate torque converter lockup schedule"
+      - "Define coast downshift strategy for engine braking"
+      - "Verify fuel economy impact of shift schedule"
+      - "Validate shift points on chassis dynamometer"
+    outputs:
+      - "Calibrated shift maps for all modes"
+      - "Torque converter lockup schedule"
+      - "Fuel economy measurements with shift maps"
+    tools:
+      - "Calibration tool"
+      - "Chassis dynamometer"
+      - "Fuel measurement system"
+    quality_gates:
+      - "No gear hunting under any steady-state condition"
+      - "Fuel economy meets target with calibrated shift points"
+      - "Shift points provide acceptable acceleration feel"
+
+  - name: "Shift Quality Calibration"
+    description: "Optimize the quality of each gear shift for comfort and durability"
+    inputs:
+      - "Shift point calibration complete"
+      - "Shift quality measurement setup"
+      - "Target shift time and torque profiles"
+    steps:
+      - "Calibrate clutch fill timing for each shift element"
+      - "Optimize torque phase duration for power-on upshifts"
+      - "Calibrate inertia phase for smooth speed change"
+      - "Optimize overlap timing between off-going and on-coming clutches"
+      - "Calibrate engine torque reduction during upshifts"
+      - "Optimize power-on downshift with rev matching"
+      - "Calibrate coast shifts for minimal torque disturbance"
+      - "Optimize garage shifts (P/N to D/R) for smooth engagement"
+      - "Measure shift quality metrics: tie-up, flare, jerk"
+      - "Iterate calibration until all shifts meet quality targets"
+    outputs:
+      - "Shift quality calibration parameters"
+      - "Shift quality measurement data"
+      - "Shift time measurements per transition"
+    tools:
+      - "Transmission calibration tool"
+      - "Accelerometer for shift quality"
+      - "Pressure transducers"
+    quality_gates:
+      - "All shifts complete within target duration"
+      - "No perceptible tie-up or flare events"
+      - "Shift jerk below comfort threshold"
+
+  - name: "Thermal and Protection Calibration"
+    description: "Calibrate thermal protection and safety features of the transmission"
+    inputs:
+      - "Transmission thermal model"
+      - "Component temperature limits"
+      - "Protection strategy requirements"
+    steps:
+      - "Calibrate transmission fluid temperature monitoring"
+      - "Define thermal protection shift strategy for high temperatures"
+      - "Calibrate torque converter lockup at thermal limits"
+      - "Define limp-home mode engagement criteria"
+      - "Calibrate clutch wear protection limits"
+      - "Define overspeed protection for each gear"
+      - "Calibrate park lock engagement safety logic"
+      - "Test protection strategies through simulated fault conditions"
+      - "Verify thermal protection maintains safe component temperatures"
+      - "Validate limp-home mode provides safe mobility"
+    outputs:
+      - "Thermal protection calibration"
+      - "Safety feature verification results"
+      - "Limp-home mode validation data"
+    tools:
+      - "Calibration tool"
+      - "Temperature measurement equipment"
+      - "Fault simulation system"
+    quality_gates:
+      - "Component temperatures stay within limits during worst case"
+      - "All protection features activate correctly"
+      - "Limp-home mode tested and documented"
+
+  - name: "Vehicle Validation and Release"
+    description: "Validate complete transmission calibration in vehicle and release for production"
+    inputs:
+      - "Complete transmission calibration"
+      - "Vehicle validation test procedures"
+      - "Target vehicle"
+    steps:
+      - "Execute vehicle-level shift quality evaluation"
+      - "Conduct drivability evaluation by expert drivers"
+      - "Execute hill start and gradient driving tests"
+      - "Test parking maneuver shift quality"
+      - "Execute hot weather and cold weather driving tests"
+      - "Validate towing and trailer mode if applicable"
+      - "Execute long-term durability driving evaluation"
+      - "Compare fuel economy with transmission targets"
+      - "Freeze transmission calibration parameters"
+      - "Release calibration for production"
+    outputs:
+      - "Vehicle validation test results"
+      - "Drivability evaluation scores"
+      - "Released transmission calibration"
+    tools:
+      - "Vehicle data logger"
+      - "Drivability scoring system"
+      - "Calibration release system"
+    quality_gates:
+      - "Drivability scores meet minimum targets"
+      - "No shift quality complaints from evaluation drivers"
+      - "Fuel economy within specification"

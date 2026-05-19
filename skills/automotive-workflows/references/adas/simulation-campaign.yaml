@@ -1,0 +1,160 @@
+name: simulation-campaign
+version: 1.0.0
+description: "Large-scale simulation campaign workflow for ADAS validation using scenario-based testing at scale"
+trigger: "When ADAS software reaches integration milestone, before vehicle testing, or for regression validation"
+domain: "ADAS"
+safety_level: "ASIL-B"
+
+prerequisites:
+  - "ADAS software stack packaged for simulation deployment"
+  - "Simulation platform configured and compute cluster available"
+  - "Scenario database with parameterized scenario definitions"
+  - "Vehicle dynamics model validated against physical vehicle"
+  - "Virtual sensor models calibrated and verified"
+
+phases:
+  - name: "Campaign Definition"
+    description: "Define the scope, scenarios, and success criteria for the simulation campaign"
+    inputs:
+      - "ADAS feature list under validation"
+      - "Operational design domain specification"
+      - "Regulatory and internal test requirements"
+    steps:
+      - "Identify ADAS functions to be validated in this campaign"
+      - "Select scenario categories from master scenario catalog"
+      - "Define parameter variation ranges for each scenario"
+      - "Calculate total scenario count from combinatorial expansion"
+      - "Estimate compute resource requirements and campaign duration"
+      - "Define key performance indicators and pass/fail thresholds"
+      - "Assign priority levels to scenario categories"
+      - "Create campaign configuration manifest"
+      - "Review campaign definition with validation team"
+    outputs:
+      - "Campaign configuration manifest"
+      - "Resource estimate and schedule"
+      - "KPI definitions with thresholds"
+    tools:
+      - "Scenario catalog manager"
+      - "Campaign planning tool"
+      - "Resource estimation calculator"
+    quality_gates:
+      - "All ODD conditions covered by scenario variations"
+      - "KPI thresholds aligned with safety requirements"
+      - "Campaign scope reviewed and approved"
+
+  - name: "Environment Setup"
+    description: "Prepare the simulation infrastructure and deploy the software under test"
+    inputs:
+      - "Campaign configuration manifest"
+      - "ADAS software build artifacts"
+      - "Simulation platform access credentials"
+    steps:
+      - "Provision compute nodes on simulation cluster"
+      - "Deploy ADAS software containers to worker nodes"
+      - "Deploy simulation runtime environment"
+      - "Configure virtual sensor models per campaign specification"
+      - "Load vehicle dynamics model configuration"
+      - "Set up result collection and storage infrastructure"
+      - "Configure monitoring dashboards for campaign progress"
+      - "Run smoke test with 10 representative scenarios"
+      - "Verify result collection pipeline end-to-end"
+    outputs:
+      - "Deployed simulation environment"
+      - "Smoke test results confirming readiness"
+      - "Monitoring dashboard URL"
+    tools:
+      - "Container orchestration platform"
+      - "Simulation cluster manager"
+      - "Monitoring and alerting system"
+    quality_gates:
+      - "All worker nodes healthy and responsive"
+      - "Smoke test scenarios complete without errors"
+      - "Result pipeline captures all expected data fields"
+
+  - name: "Campaign Execution"
+    description: "Execute the full simulation campaign distributing scenarios across compute cluster"
+    inputs:
+      - "Deployed simulation environment"
+      - "Parameterized scenario definitions"
+    steps:
+      - "Submit scenario batches to distributed execution engine"
+      - "Monitor execution progress and node utilization"
+      - "Handle failed scenarios with automatic retry logic"
+      - "Detect and quarantine scenarios causing simulation crashes"
+      - "Collect intermediate results as batches complete"
+      - "Verify data integrity of collected results"
+      - "Scale compute resources up or down based on progress"
+      - "Generate progress reports at regular intervals"
+      - "Investigate and resolve any systematic execution failures"
+      - "Confirm all scenarios have been executed or accounted for"
+    outputs:
+      - "Raw simulation results for all executed scenarios"
+      - "Execution log with completion status per scenario"
+      - "List of quarantined scenarios requiring investigation"
+    tools:
+      - "Distributed execution engine"
+      - "Result aggregation service"
+      - "Cluster monitoring dashboard"
+    quality_gates:
+      - "Scenario completion rate above 99%"
+      - "No more than 0.5% scenarios quarantined"
+      - "Result data integrity verified for all completed scenarios"
+
+  - name: "Results Analysis"
+    description: "Analyze simulation results to evaluate ADAS performance and identify issues"
+    inputs:
+      - "Raw simulation results from campaign execution"
+      - "KPI definitions and thresholds"
+      - "Baseline results from previous campaign for regression detection"
+    steps:
+      - "Compute KPIs across all scenario categories"
+      - "Generate statistical summaries with confidence intervals"
+      - "Identify scenarios where KPIs fall below thresholds"
+      - "Cluster failing scenarios to identify systematic patterns"
+      - "Perform regression analysis against baseline results"
+      - "Analyze edge cases and near-miss scenarios"
+      - "Generate visualization of results across parameter space"
+      - "Prioritize identified issues by severity and frequency"
+      - "Create detailed analysis for top failure modes"
+      - "Generate executive summary dashboard"
+    outputs:
+      - "KPI results per scenario category"
+      - "Failure mode analysis report"
+      - "Regression analysis results"
+      - "Executive summary dashboard"
+    tools:
+      - "Statistical analysis toolkit"
+      - "Failure clustering tool"
+      - "Visualization and reporting platform"
+    quality_gates:
+      - "All critical KPIs meet minimum thresholds"
+      - "No new regression detected versus baseline"
+      - "All failure modes classified and prioritized"
+
+  - name: "Reporting and Closure"
+    description: "Generate final campaign report and archive results for traceability"
+    inputs:
+      - "Analysis results and executive summary"
+      - "Issue tracking records"
+      - "Campaign configuration for reproducibility"
+    steps:
+      - "Compile comprehensive campaign report"
+      - "Document all identified issues with severity classification"
+      - "Record campaign configuration for exact reproducibility"
+      - "Archive raw data and results to long-term storage"
+      - "Update validation status in requirements management tool"
+      - "Present findings to ADAS development team"
+      - "Create action items for identified issues"
+      - "Release simulation resources"
+    outputs:
+      - "Final simulation campaign report"
+      - "Issue list with action items"
+      - "Archived campaign data package"
+    tools:
+      - "Report generation tool"
+      - "Issue tracking system"
+      - "Long-term archival storage"
+    quality_gates:
+      - "Report reviewed and approved by validation lead"
+      - "All critical issues have assigned owners"
+      - "Campaign data archived with integrity verification"

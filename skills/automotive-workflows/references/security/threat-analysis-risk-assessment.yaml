@@ -1,0 +1,164 @@
+name: threat-analysis-risk-assessment
+version: 1.0.0
+description: "Automotive cybersecurity threat analysis and risk assessment workflow per ISO/SAE 21434"
+trigger: "During concept phase, when architecture changes, or when new attack vectors are identified"
+domain: "Cybersecurity"
+standard: "ISO/SAE 21434"
+
+prerequisites:
+  - "System architecture documentation available"
+  - "Asset identification completed"
+  - "Cybersecurity team with TARA expertise assigned"
+  - "Threat intelligence feeds accessible"
+  - "Risk assessment framework and criteria defined"
+
+phases:
+  - name: "Asset Identification"
+    description: "Identify and classify all cybersecurity-relevant assets in the system"
+    inputs:
+      - "System architecture diagrams"
+      - "Data flow diagrams"
+      - "Communication interface specifications"
+    steps:
+      - "Enumerate all electronic components and ECUs in scope"
+      - "Identify all external communication interfaces"
+      - "Identify all internal communication buses and protocols"
+      - "Catalog stored data assets including keys, certificates, and calibration"
+      - "Identify firmware and software assets"
+      - "Classify each asset by confidentiality, integrity, and availability needs"
+      - "Map data flows between assets across trust boundaries"
+      - "Identify user interaction points and physical access points"
+      - "Document asset dependencies and trust relationships"
+    outputs:
+      - "Asset inventory with classification"
+      - "Data flow diagrams with trust boundaries"
+      - "Asset dependency map"
+    tools:
+      - "TARA analysis tool"
+      - "Architecture modeling tool"
+      - "Asset management database"
+    quality_gates:
+      - "All ECUs and interfaces cataloged"
+      - "All trust boundaries identified"
+      - "Asset classification reviewed by security team"
+
+  - name: "Threat Identification"
+    description: "Systematically identify threats to each asset using structured methods"
+    inputs:
+      - "Asset inventory with data flow diagrams"
+      - "STRIDE threat model framework"
+      - "Known automotive attack patterns database"
+    steps:
+      - "Apply STRIDE analysis to each data flow across trust boundaries"
+      - "Identify spoofing threats for all authentication points"
+      - "Identify tampering threats for all data at rest and in transit"
+      - "Identify repudiation threats for all logged actions"
+      - "Identify information disclosure threats for sensitive data"
+      - "Identify denial of service threats for availability-critical functions"
+      - "Identify elevation of privilege threats for access control points"
+      - "Cross-reference with known automotive CVEs and attack patterns"
+      - "Conduct attack tree analysis for high-value targets"
+      - "Document each threat with attack scenario description"
+    outputs:
+      - "Threat catalog with unique identifiers"
+      - "Attack trees for critical assets"
+      - "Threat-to-asset mapping"
+    tools:
+      - "Threat modeling tool"
+      - "Attack tree editor"
+      - "CVE database"
+    quality_gates:
+      - "All trust boundary crossings analyzed"
+      - "All STRIDE categories evaluated per asset"
+      - "Threat catalog reviewed by independent security expert"
+
+  - name: "Risk Assessment"
+    description: "Evaluate the risk of each identified threat based on impact and attack feasibility"
+    inputs:
+      - "Threat catalog"
+      - "Impact rating criteria from safety and privacy analysis"
+      - "Attack feasibility rating methodology"
+    steps:
+      - "Assess safety impact for each threat scenario"
+      - "Assess financial impact for each threat scenario"
+      - "Assess operational impact for each threat scenario"
+      - "Assess privacy impact for personal data related threats"
+      - "Determine overall impact level per threat"
+      - "Evaluate attack feasibility based on elapsed time"
+      - "Evaluate attack feasibility based on required expertise"
+      - "Evaluate attack feasibility based on required equipment"
+      - "Evaluate attack feasibility based on knowledge of target"
+      - "Calculate risk level from impact and feasibility combination"
+      - "Prioritize threats by risk level"
+    outputs:
+      - "Risk assessment results per threat"
+      - "Risk matrix visualization"
+      - "Prioritized threat list"
+    tools:
+      - "Risk assessment calculator"
+      - "Impact evaluation framework"
+      - "Risk visualization tool"
+    quality_gates:
+      - "All threats have impact and feasibility ratings"
+      - "Risk levels consistent with organizational criteria"
+      - "High-risk items flagged for immediate attention"
+
+  - name: "Risk Treatment"
+    description: "Define cybersecurity goals and treatment strategies for unacceptable risks"
+    inputs:
+      - "Prioritized threat list with risk levels"
+      - "Available security control catalog"
+      - "Implementation feasibility constraints"
+    steps:
+      - "Define cybersecurity goals for each unacceptable risk"
+      - "Select risk treatment option per threat: mitigate, transfer, avoid, or accept"
+      - "Design security controls for threats to be mitigated"
+      - "Specify secure communication requirements"
+      - "Define access control and authentication requirements"
+      - "Specify secure boot and firmware integrity requirements"
+      - "Define intrusion detection requirements"
+      - "Evaluate residual risk after proposed controls"
+      - "Verify residual risk is within acceptable levels"
+      - "Document risk acceptance rationale for accepted risks"
+    outputs:
+      - "Cybersecurity goals document"
+      - "Security control specifications"
+      - "Residual risk assessment"
+    tools:
+      - "Security requirements tool"
+      - "Control catalog database"
+      - "Residual risk calculator"
+    quality_gates:
+      - "All high and critical risks have treatment plans"
+      - "Residual risk within acceptable thresholds"
+      - "Cybersecurity goals traceable to threats"
+
+  - name: "TARA Documentation and Review"
+    description: "Compile the complete TARA work product and obtain stakeholder approval"
+    inputs:
+      - "All TARA analysis results"
+      - "Cybersecurity goals and requirements"
+      - "Residual risk assessment"
+    steps:
+      - "Compile TARA report following ISO 21434 work product requirements"
+      - "Include asset inventory with classifications"
+      - "Include threat catalog with risk assessments"
+      - "Include cybersecurity goals and control specifications"
+      - "Include residual risk analysis and acceptance rationale"
+      - "Conduct internal peer review of TARA document"
+      - "Address review findings and update document"
+      - "Present TARA results to cybersecurity management"
+      - "Obtain formal approval and sign-off"
+      - "Distribute approved cybersecurity goals to development teams"
+    outputs:
+      - "Approved TARA report"
+      - "Cybersecurity goals for development"
+      - "Review and approval records"
+    tools:
+      - "Document management system"
+      - "Review tracking tool"
+      - "Requirements distribution system"
+    quality_gates:
+      - "TARA report complete per ISO 21434 requirements"
+      - "Peer review completed with all findings resolved"
+      - "Management approval obtained"

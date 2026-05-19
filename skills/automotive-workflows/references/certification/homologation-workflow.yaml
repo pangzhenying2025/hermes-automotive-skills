@@ -1,0 +1,36 @@
+name: homologation-workflow
+version: 1.0.0
+description: |
+  Vehicle type approval (homologation) workflow for regulatory compliance.
+
+domain: certification
+safety_standard: UNECE_Regulations
+estimated_duration: 12-18_months
+
+phases:
+  - phase: documentation
+    name: Technical Documentation Preparation
+    duration: 3-6_months
+    outputs:
+      - type_approval_dossier
+      - test_reports
+      - conformity_of_production_plan
+  - phase: testing
+    name: Regulatory Testing Campaign
+    duration: 6-12_months
+    outputs:
+      - safety_test_results (crash, braking)
+      - emissions_test_results
+      - emc_compliance_certificate
+  - phase: authority_submission
+    name: Submission to Homologation Authority
+    duration: 3-6_months
+    outputs:
+      - submitted_application
+      - authority_questions_responses
+      - type_approval_certificate
+
+references:
+  - UNECE WP.29 (Global vehicle regulations)
+  - EU Type Approval Directive
+  - FMVSS (US Federal Motor Vehicle Safety Standards)

@@ -1,0 +1,379 @@
+name: emc-test-campaign
+version: 1.0.0
+description: |
+  Electromagnetic Compatibility (EMC) test campaign workflow for automotive ECUs.
+  Covers radiated and conducted emissions, immunity testing, and compliance with
+  CISPR 25, ISO 11452, and regulatory requirements for vehicle type approval.
+
+domain: testing
+safety_standard: ISO_11452
+estimated_duration: 4-6_weeks
+
+phases:
+  - phase: preparation
+    name: EMC Test Preparation and Pre-Scan
+    description: Prepare ECU, test setup, and conduct pre-compliance testing
+    duration: 1-2_weeks
+    inputs:
+      - ecu_hardware_sample (5+ units)
+      - wiring_harness_spec
+      - system_integration_diagram
+      - emc_requirements_spec
+      - applicable_standards_list
+    outputs:
+      - test_plan
+      - dut_configuration (Device Under Test)
+      - pre_scan_results
+      - risk_assessment
+      - test_facility_booking
+    tools:
+      - EMC chamber booking system
+      - GTEM cell (pre-compliance)
+      - Near-field probes
+      - Spectrum analyzer
+      - LISN (Line Impedance Stabilization Network)
+    skills_used:
+      - emc-testing
+      - automotive-validation
+      - test-planning
+    agents_involved:
+      - emc-specialist
+      - test-engineer
+      - hardware-engineer
+    tasks:
+      dut_preparation:
+        - Configure ECU with production software
+        - Prepare wiring harness per vehicle installation
+        - Set up power supply with LISN for conducted emissions
+        - Connect loads (actuators, lamps) to ECU outputs
+        - Install ferrite beads/filters as in production
+      pre_compliance_testing:
+        - Conduct pre-scan in GTEM cell (radiated emissions)
+        - Measure conducted emissions on power lines
+        - Identify emission hotspots with near-field probes
+        - Check against CISPR 25 Class 5 limits
+        - Estimate safety margin to specification
+      test_planning:
+        - Define test matrix (frequencies, modulation, severity levels)
+        - Select test methods (direct injection, BCI, radiated)
+        - Determine pass/fail criteria per standard
+        - Schedule accredited test lab (TÜV, DEKRA, EMC Compliance)
+        - Prepare test documentation package
+    acceptance_criteria:
+      - Pre-scan emissions <10dB below limit (safety margin)
+      - DUT operates in representative mode during test
+      - Test plan approved by homologation authority
+      - Test facility booked for 2-week campaign
+    safety_considerations:
+      - ESD protection during handling
+      - Power supply current limiting to prevent damage
+      - Monitoring of ECU temperature during high-power tests
+
+  - phase: radiated_emissions
+    name: Radiated Emissions Testing (CISPR 25)
+    description: Measure electromagnetic emissions from ECU and wiring harness
+    duration: 3-5_days
+    inputs:
+      - dut_configuration
+      - cispr25_test_setup_spec
+      - frequency_range (150kHz to 2.5GHz)
+    outputs:
+      - radiated_emissions_report
+      - emission_spectra
+      - limit_comparison_plots
+      - compliance_certificate
+    tools:
+      - Semi-anechoic chamber (SAC)
+      - Biconical antenna (150kHz-200MHz)
+      - Log-periodic antenna (200MHz-1GHz)
+      - Horn antenna (1GHz-2.5GHz)
+      - EMI receiver (Rohde & Schwarz ESR, Keysight N9038A)
+      - Turntable for DUT rotation
+    skills_used:
+      - emc-testing
+      - rf-measurement
+      - automotive-standards
+    agents_involved:
+      - emc-test-engineer
+      - certification-specialist
+    test_procedure:
+      setup:
+        - Install DUT on wooden table 50mm above ground plane
+        - Position antenna 1m from DUT (CISPR 25 Class 5)
+        - Route wiring harness per vehicle installation (no coiling)
+        - Operate ECU in maximum emission mode (all outputs active)
+      measurement:
+        - Scan frequency range with peak/quasi-peak detector
+        - Rotate DUT 0-360° to find maximum emission angle
+        - Measure in both vertical and horizontal polarization
+        - Record worst-case emissions at each frequency
+        - Capture screenshots of limit violations
+      analysis:
+        - Compare emissions against CISPR 25 Class 5 limits
+        - Identify dominant emission frequencies
+        - Correlate emissions with ECU clock frequencies
+        - Determine margin to limit (pass if <6dB below limit)
+    pass_fail_criteria:
+      - Emissions <CISPR 25 Class 5 limits (150kHz-2.5GHz)
+      - Narrowband: 24-34 dBμV/m (frequency dependent)
+      - Broadband: 14-24 dBμV/m (frequency dependent)
+      - Margin >6dB recommended for production variation
+    acceptance_criteria:
+      - All frequencies within limits
+      - Emissions stable over 30-minute test duration
+      - No intermittent spikes during functional operation
+    safety_considerations:
+      - Monitor ECU for overheating during prolonged test
+      - Check for functional safety impact if emissions borderline
+
+  - phase: conducted_emissions
+    name: Conducted Emissions Testing (CISPR 25)
+    description: Measure emissions conducted on power and signal lines
+    duration: 2-3_days
+    inputs:
+      - dut_configuration
+      - power_supply_specification
+      - lisn_calibration_certificate
+    outputs:
+      - conducted_emissions_report
+      - voltage_spectra_power_lines
+      - current_spectra_signal_lines
+      - filtering_recommendations
+    tools:
+      - LISN (5μH + 1μF, 50Ω)
+      - Current probe (Fischer F-61, 10kHz-400MHz)
+      - EMI receiver
+      - Power supply (programmable, 6V-16V)
+    skills_used:
+      - emc-testing
+      - power-electronics
+    agents_involved:
+      - emc-test-engineer
+    test_procedure:
+      voltage_method:
+        - Insert LISN between power supply and ECU
+        - Measure voltage across LISN 50Ω resistor
+        - Scan 150kHz-108MHz frequency range
+        - Record peak and average detector values
+      current_method:
+        - Clamp current probe around power cable
+        - Measure conducted current on power and ground
+        - Scan 150kHz-245MHz frequency range
+        - Measure on CAN/LIN signal lines if applicable
+    pass_fail_criteria:
+      - Voltage emissions <CISPR 25 limits (36-56 dBμV, frequency dependent)
+      - Current emissions <CISPR 25 limits (14-34 dBμA, frequency dependent)
+    acceptance_criteria:
+      - All power lines within limits
+      - Signal line emissions within limits
+      - Transients during ECU power-up <CISPR 25 limits
+    safety_considerations:
+      - Validate power line filtering doesn't affect safety functions
+
+  - phase: radiated_immunity
+    name: Radiated Immunity Testing (ISO 11452-2)
+    description: Test ECU immunity to radiated electromagnetic fields
+    duration: 5-7_days
+    inputs:
+      - dut_configuration
+      - iso11452_test_matrix
+      - immunity_levels (20-200V/m)
+    outputs:
+      - radiated_immunity_report
+      - immunity_test_log
+      - failure_modes_analysis
+      - susceptibility_frequencies
+    tools:
+      - Anechoic chamber or stripline
+      - RF amplifier (100W-1kW)
+      - Signal generator (80MHz-18GHz)
+      - Field strength probe
+      - Monitoring equipment (oscilloscope, CAN analyzer)
+    skills_used:
+      - emc-testing
+      - automotive-diagnostics
+      - failure-analysis
+    agents_involved:
+      - emc-test-engineer
+      - embedded-software-engineer
+    test_procedure:
+      frequency_sweep:
+        - Sweep 80MHz-18GHz in 1% steps
+        - Apply field strength per immunity level (20V/m, 60V/m, 200V/m)
+        - Modulate RF with 1kHz 80% AM (amplitude modulation)
+        - Expose DUT for 2 seconds per frequency
+      monitoring:
+        - Continuously monitor ECU functionality
+        - Log CAN messages for anomalies
+        - Record supply current for resets
+        - Capture video of DUT status LEDs
+      failure_classification:
+        - Class A: Normal operation (pass)
+        - Class B: Temporary malfunction, self-recoverable (pass)
+        - Class C: Temporary malfunction, requires reset (fail)
+        - Class D: Permanent damage (fail)
+    pass_fail_criteria:
+      - No Class C or D failures at specified immunity level
+      - Class B failures acceptable if recovery <1 second
+      - Critical safety functions must be Class A
+    acceptance_criteria:
+      - ECU passes at 200V/m for commercial vehicles
+      - ECU passes at 60V/m minimum for passenger cars
+      - No safety-critical failures at any frequency
+    safety_considerations:
+      - Monitor for unintended motor activation during test
+      - Verify watchdog resets ECU if temporary malfunction
+
+  - phase: conducted_immunity
+    name: Conducted Immunity Testing (ISO 11452-4)
+    description: Test ECU immunity to conducted disturbances on cables
+    duration: 3-4_days
+    inputs:
+      - dut_configuration
+      - bci_test_specification (Bulk Current Injection)
+      - coupling_clamp_calibration
+    outputs:
+      - conducted_immunity_report
+      - bci_test_log
+      - susceptibility_frequencies
+      - filtering_effectiveness
+    tools:
+      - BCI coupling clamp (Fischer F-130A-1)
+      - RF amplifier (300W)
+      - Signal generator (1MHz-400MHz)
+      - Forward/reflected power meter
+      - Oscilloscope with current probe
+    skills_used:
+      - emc-testing
+      - cable-coupling-theory
+    agents_involved:
+      - emc-test-engineer
+    test_procedure:
+      bci_setup:
+        - Clamp BCI probe around wiring harness
+        - Position clamp 50mm from ECU connector
+        - Inject RF current (1MHz-400MHz sweep)
+        - Apply current levels per ISO 11452-4 (60mA, 200mA)
+        - Monitor ECU functionality
+      direct_injection:
+        - Couple RF directly to signal lines via capacitor (optional)
+        - Test individual CAN/LIN lines for susceptibility
+        - Measure voltage at ECU pin during injection
+    pass_fail_criteria:
+      - No Class C/D failures at specified current level
+      - ECU passes at 200mA for severe immunity requirement
+    acceptance_criteria:
+      - BCI test passed at required current level
+      - No ECU reset or communication loss
+    safety_considerations:
+      - Ensure injected current doesn't exceed ECU pin ratings
+
+  - phase: esd_testing
+    name: Electrostatic Discharge Testing (ISO 10605)
+    description: Test ECU immunity to electrostatic discharge events
+    duration: 2_days
+    inputs:
+      - dut_configuration
+      - esd_test_points_map
+      - iso10605_test_levels
+    outputs:
+      - esd_test_report
+      - discharge_test_log
+      - failure_analysis
+    tools:
+      - ESD simulator (Noiseken ESS-2000, Schaffner NSG 438)
+      - HBM/IEC guns (150pF/330Ω)
+      - Ground plane and test bench
+    skills_used:
+      - emc-testing
+      - esd-protection-design
+    agents_involved:
+      - emc-test-engineer
+      - hardware-engineer
+    test_procedure:
+      - Apply ±2kV, ±4kV, ±8kV contact discharge to ECU enclosure
+      - Apply ±8kV, ±15kV air discharge near connector pins
+      - Test in both positive and negative polarity
+      - Apply 10 discharges per test point
+      - Monitor for malfunction or damage
+    pass_fail_criteria:
+      - No Class C/D failures at ±4kV contact discharge
+      - No damage to ECU at ±8kV contact discharge
+    acceptance_criteria:
+      - ECU passes at required ESD level per vehicle class
+      - No latch-up or permanent damage
+    safety_considerations:
+      - Verify safety functions not disrupted by ESD
+
+  - phase: reporting
+    name: EMC Test Reporting and Certification
+    description: Compile test results and obtain certification for homologation
+    duration: 1_week
+    inputs:
+      - all_test_reports
+      - test_lab_accreditation_certificate
+      - applicable_regulations (ECE R10, FCC Part 15)
+    outputs:
+      - consolidated_emc_report
+      - compliance_certificate
+      - homologation_submission_package
+      - corrective_action_plan (if failures)
+    tools:
+      - Microsoft Word/LaTeX (report generation)
+      - Excel (data analysis)
+      - Homologation portal (government submission)
+    skills_used:
+      - technical-writing
+      - regulatory-compliance
+    agents_involved:
+      - certification-specialist
+      - technical-writer
+    tasks:
+      - Consolidate all test results into single report
+      - Compare results against all applicable standards
+      - Document test setup with photos and diagrams
+      - Analyze any failures and propose corrective actions
+      - Submit to homologation authority (NHTSA, EU Type Approval)
+      - Obtain e-mark or FCC certification
+    acceptance_criteria:
+      - All required tests completed per standard
+      - Test report approved by accredited lab
+      - Certification obtained for target markets
+    safety_considerations:
+      - EMC compliance critical for functional safety (ISO 26262-5)
+
+quality_gates:
+  - gate: pre_scan_pass
+    phase: preparation
+    criteria:
+      - Emissions <10dB below limit in pre-scan
+      - DUT functional during test
+  - gate: emissions_compliance
+    phase: radiated_emissions
+    criteria:
+      - All frequencies within CISPR 25 Class 5 limits
+  - gate: immunity_compliance
+    phase: radiated_immunity
+    criteria:
+      - No Class C/D failures at required immunity level
+  - gate: certification_approval
+    phase: reporting
+    criteria:
+      - Test report approved by accredited lab
+      - Certification obtained
+
+metrics:
+  - Margin to emission limits (dB)
+  - Immunity level achieved (V/m)
+  - ESD immunity level (kV)
+  - Test pass rate
+  - Number of corrective actions
+  - Time to certification
+
+references:
+  - CISPR 25 (Radiated and conducted emissions)
+  - ISO 11452-2 (Radiated immunity)
+  - ISO 11452-4 (BCI conducted immunity)
+  - ISO 10605 (Electrostatic discharge)
+  - ECE R10 (Electromagnetic compatibility for vehicles)
+  - ISO 26262-5 (Hardware EMC requirements)

@@ -1,0 +1,224 @@
+name: system-integration
+version: 1.0.0
+description: |
+  Multi-ECU system integration workflow for validating distributed automotive systems.
+  Covers interface verification, bus communication, timing analysis, and end-to-end
+  functional validation per ASPICE SYS.4/SYS.5 requirements.
+
+domain: integration
+safety_standard: ISO_26262
+estimated_duration: 4-6_weeks
+
+phases:
+  - phase: integration_planning
+    name: Integration Strategy and Planning
+    description: Define integration approach, test environment, and dependencies
+    duration: 1_week
+    inputs:
+      - system_architecture
+      - interface_control_documents (ICDs)
+      - software_builds (all ECUs)
+      - integration_test_spec
+    outputs:
+      - integration_plan
+      - test_environment_spec
+      - interface_verification_matrix
+      - dependency_graph
+    tools:
+      - Enterprise Architect (architecture modeling)
+      - DOORS (requirements management)
+      - MS Project (scheduling)
+    skills_used:
+      - system-integration
+      - project-planning
+    agents_involved:
+      - integration-engineer
+      - system-architect
+    tasks:
+      - Define integration sequence (bottom-up, top-down, or sandwich)
+      - Identify ECU dependencies and integration order
+      - Allocate test benches (HIL, vehicle prototype)
+      - Define interface verification test cases
+      - Schedule integration milestones
+    acceptance_criteria:
+      - Integration plan approved
+      - All ECU software builds available
+      - Test environment ready
+
+  - phase: interface_verification
+    name: ECU Interface Verification
+    description: Verify all electrical and communication interfaces between ECUs
+    duration: 1-2_weeks
+    inputs:
+      - interface_control_documents
+      - ecu_pinout_diagrams
+      - bus_matrix (CAN/LIN/FlexRay/Ethernet)
+    outputs:
+      - interface_test_results
+      - signal_timing_measurements
+      - bus_load_analysis
+      - pin_compatibility_report
+    tools:
+      - CANoe/CANalyzer
+      - Oscilloscope
+      - Multimeter
+      - Vector vTESTstudio
+    skills_used:
+      - automotive-protocols
+      - signal-analysis
+    agents_involved:
+      - integration-engineer
+      - test-engineer
+    tasks:
+      - Verify pin assignments (power, ground, communication)
+      - Test CAN bus termination (120Ω)
+      - Measure signal integrity (rise time, voltage levels)
+      - Validate message IDs and DLC (Data Length Code)
+      - Check diagnostic addressing (physical, functional)
+    acceptance_criteria:
+      - All interfaces electrically compatible
+      - Zero bus errors during steady-state operation
+      - Signal timing within specification
+
+  - phase: communication_integration
+    name: Bus Communication Integration
+    description: Integrate ECUs on common communication buses
+    duration: 2-3_weeks
+    inputs:
+      - bus_matrix
+      - network_management_spec
+      - diagnostic_specification
+    outputs:
+      - communication_test_results
+      - network_management_validation
+      - diagnostic_coverage_report
+    tools:
+      - CANoe (simulation and analysis)
+      - Vector vFlash (ECU flashing)
+      - ETAS INCA (calibration)
+    skills_used:
+      - can-lin-flexray-protocols
+      - network-management
+      - uds-diagnostics
+    agents_involved:
+      - integration-engineer
+      - diagnostics-specialist
+    tasks:
+      - Integrate ECUs on CAN/LIN/FlexRay networks
+      - Test network management (sleep, wakeup, partial networking)
+      - Verify diagnostic services (UDS 0x10, 0x22, 0x27, 0x2E, 0x31)
+      - Validate gateway routing (CAN to FlexRay, etc.)
+      - Test error handling (bus-off recovery, AUTOSAR E2E)
+    acceptance_criteria:
+      - All ECUs communicate successfully
+      - Network management transitions work
+      - Diagnostic services accessible
+
+  - phase: timing_analysis
+    name: End-to-End Timing Verification
+    description: Verify system meets real-time timing requirements
+    duration: 1_week
+    inputs:
+      - timing_requirements
+      - task_scheduling_spec
+      - communication_schedule
+    outputs:
+      - timing_analysis_report
+      - worst_case_execution_time
+      - bus_load_utilization
+      - deadline_verification
+    tools:
+      - CANoe (bus timing)
+      - Lauterbach TRACE32 (CPU profiling)
+      - TA Tool Suite (AUTOSAR timing analysis)
+    skills_used:
+      - timing-analysis
+      - real-time-systems
+    agents_involved:
+      - integration-engineer
+      - embedded-software-engineer
+    tasks:
+      - Measure sensor-to-actuator latency
+      - Analyze RTOS task scheduling
+      - Verify CAN message deadlines
+      - Check for priority inversion
+    acceptance_criteria:
+      - All timing requirements met
+      - CPU load <80%
+      - Bus load <70%
+
+  - phase: functional_testing
+    name: End-to-End Functional Testing
+    description: Validate system-level functionality across multiple ECUs
+    duration: 2-3_weeks
+    inputs:
+      - system_requirements
+      - use_case_scenarios
+      - integrated_system
+    outputs:
+      - functional_test_results
+      - requirements_coverage_matrix
+      - defect_log
+    tools:
+      - Vector vTESTstudio
+      - dSPACE HIL
+      - Vehicle prototype
+    skills_used:
+      - system-testing
+      - automotive-validation
+    agents_involved:
+      - test-engineer
+      - validation-engineer
+    tasks:
+      - Execute system-level test scenarios
+      - Validate multi-ECU coordination (powertrain + chassis)
+      - Test safety mechanisms (dual redundancy, voting)
+      - Verify degraded mode operation
+    acceptance_criteria:
+      - 95% requirements coverage
+      - Zero critical defects
+
+  - phase: reporting
+    name: Integration Test Reporting
+    description: Document integration results and handoff to validation
+    duration: 3_days
+    inputs:
+      - all_test_results
+    outputs:
+      - integration_test_report
+      - handoff_package
+    tools:
+      - DOORS (traceability)
+      - Confluence (documentation)
+    skills_used:
+      - technical-writing
+    agents_involved:
+      - integration-manager
+    acceptance_criteria:
+      - Report approved
+      - System ready for validation
+
+quality_gates:
+  - gate: interface_compatibility
+    criteria:
+      - All interfaces verified
+  - gate: communication_functional
+    criteria:
+      - All ECUs communicating
+  - gate: timing_met
+    criteria:
+      - Timing requirements satisfied
+  - gate: integration_complete
+    criteria:
+      - Functional tests passed
+
+metrics:
+  - Requirements coverage
+  - Defect density
+  - Integration success rate
+  - Bus utilization
+
+references:
+  - ASPICE SYS.4 (System integration)
+  - ASPICE SYS.5 (System qualification)
+  - ISO 26262-4 (System integration)

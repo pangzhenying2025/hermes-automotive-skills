@@ -1,0 +1,419 @@
+# Skill Router Agent
+# Intelligent routing of tasks to appropriate skills and agents
+
+name: skill-router
+version: "1.0.0"
+description: |
+  Routes incoming tasks to the most appropriate skills and agents based on
+  task analysis, available tools, and domain expertise requirements.
+
+capabilities:
+  - "Analyze task requirements and match to domains"
+  - "Route tasks to appropriate skills and agents"
+  - "Score and rank candidate tools by relevance"
+  - "Detect automotive domain from keywords and patterns"
+  - "Suggest opensource alternatives when commercial tools unavailable"
+metadata:
+  author: Automotive Claude Code Team
+  license: MIT
+  domain: orchestration
+  keywords:
+    - routing
+    - skill-selection
+    - task-analysis
+    - agent-dispatch
+
+# Routing Configuration
+routing:
+  strategy: weighted_score
+  fallback_behavior: ask_user
+  cache_routing_decisions: true
+  cache_ttl_seconds: 3600
+
+# Domain Categories
+domains:
+  autosar:
+    description: AUTOSAR Classic and Adaptive platform development
+    keywords:
+      - autosar
+      - swc
+      - rte
+      - bsw
+      - arxml
+      - ara-com
+      - ara-diag
+      - classic
+      - adaptive
+    skills:
+      - autosar/classic/swc-generation
+      - autosar/classic/rte-configuration
+      - autosar/classic/bsw-integration
+      - autosar/adaptive/ara-com
+      - autosar/adaptive/ara-diag
+      - autosar/adaptive/ara-per
+    agents:
+      - autosar/architect
+      - autosar/classic-engineer
+      - autosar/adaptive-engineer
+    tools:
+      commercial:
+        - tresos
+        - davinci
+        - isolar
+      opensource:
+        - arctic-core
+
+  adas:
+    description: Advanced Driver Assistance Systems development
+    keywords:
+      - adas
+      - perception
+      - lidar
+      - radar
+      - camera
+      - sensor-fusion
+      - planning
+      - control
+      - autonomous
+    skills:
+      - adas/perception/lidar-processing
+      - adas/perception/camera-processing
+      - adas/perception/sensor-fusion
+      - adas/planning/path-planning
+      - adas/control/mpc-controller
+    agents:
+      - adas/perception-engineer
+      - adas/planning-engineer
+      - adas/control-engineer
+    tools:
+      commercial:
+        - carmaker
+        - prescan
+      opensource:
+        - carla
+        - lgsvl
+        - autoware
+
+  battery:
+    description: Battery Management System development
+    keywords:
+      - battery
+      - bms
+      - soc
+      - soh
+      - cell
+      - thermal
+      - balancing
+      - charging
+    skills:
+      - battery/bms/state-estimation
+      - battery/soc-soh/kalman-filter
+      - battery/thermal/cooling-strategy
+    agents:
+      - battery/bms-engineer
+      - battery/cell-engineer
+      - battery/thermal-engineer
+    tools:
+      commercial:
+        - avl-estorage
+        - gt-suite
+      opensource:
+        - pybamm
+        - openbms
+
+  calibration:
+    description: ECU calibration and measurement
+    keywords:
+      - calibration
+      - measurement
+      - xcp
+      - a2l
+      - ccp
+      - ecu-tuning
+    skills:
+      - calibration/xcp-configuration
+      - calibration/a2l-generation
+      - calibration/measurement-campaign
+    agents:
+      - calibration/calibration-engineer
+      - calibration/measurement-engineer
+    tools:
+      commercial:
+        - inca
+        - canape
+        - vision
+      opensource:
+        - openxcp
+        - asammdf
+
+  network:
+    description: Vehicle network protocols and analysis
+    keywords:
+      - can
+      - canfd
+      - lin
+      - flexray
+      - ethernet
+      - dbc
+      - network
+      - bus
+    skills:
+      - network/can-analysis
+      - network/dbc-editing
+      - network/ethernet-configuration
+    agents:
+      - network/network-engineer
+      - network/protocol-specialist
+    tools:
+      commercial:
+        - canoe
+        - canalyzer
+        - busmaster
+      opensource:
+        - savvycan
+        - python-can
+        - cantools
+
+  mbd:
+    description: Model-Based Design and code generation
+    keywords:
+      - simulink
+      - stateflow
+      - mbd
+      - code-generation
+      - model
+      - simulation
+    skills:
+      - mbd/model-development
+      - mbd/code-generation
+      - mbd/simulation-setup
+    agents:
+      - mbd/model-engineer
+      - mbd/codegen-specialist
+    tools:
+      commercial:
+        - simulink
+        - targetlink
+        - embedded-coder
+      opensource:
+        - openmodelica
+        - scilab-xcos
+        - modelio
+
+  safety:
+    description: Functional safety and ISO 26262 compliance
+    keywords:
+      - iso26262
+      - asil
+      - fmea
+      - fta
+      - hara
+      - safety
+      - functional-safety
+    skills:
+      - safety/iso26262/hazard-analysis
+      - safety/iso26262/fmea
+      - safety/iso26262/fta
+    agents:
+      - safety/safety-architect
+      - safety/fmea-specialist
+      - safety/iso26262-auditor
+    tools:
+      commercial:
+        - medini-analyze
+        - ansys-medini
+      opensource:
+        - foss-fmea
+        - openfta
+
+  security:
+    description: Automotive cybersecurity and ISO 21434 compliance
+    keywords:
+      - cybersecurity
+      - iso21434
+      - tara
+      - secoc
+      - hse
+      - crypto
+      - penetration
+    skills:
+      - security/tara-analysis
+      - security/secoc-configuration
+      - security/penetration-testing
+    agents:
+      - security/security-architect
+      - security/tara-specialist
+      - security/penetration-tester
+    tools:
+      commercial:
+        - itemis-security
+        - escrypt
+      opensource:
+        - caringcaribou
+        - can-utils
+
+  diagnostics:
+    description: ECU diagnostics and flashing
+    keywords:
+      - uds
+      - obd
+      - odx
+      - pdx
+      - flash
+      - bootloader
+      - diagnostics
+    skills:
+      - diagnostics/uds-configuration
+      - diagnostics/odx-parsing
+      - diagnostics/flash-sequence
+    agents:
+      - diagnostics/diagnostics-engineer
+      - diagnostics/flash-specialist
+    tools:
+      commercial:
+        - vflash
+        - odxstudio
+        - diagnostic-toolset
+      opensource:
+        - python-uds
+        - caringcaribou
+        - iso-tp
+
+  embedded:
+    description: Embedded systems development
+    keywords:
+      - embedded
+      - rtos
+      - bare-metal
+      - interrupt
+      - driver
+      - hal
+      - bsp
+    skills:
+      - embedded/rtos-configuration
+      - embedded/driver-development
+      - embedded/debug-trace
+    agents:
+      - embedded/embedded-engineer
+      - embedded/rtos-specialist
+    tools:
+      commercial:
+        - trace32
+        - jtrace
+        - ulink
+      opensource:
+        - openocd
+        - gdb
+        - black-magic-probe
+
+  testing:
+    description: Hardware-in-the-loop and software testing
+    keywords:
+      - hil
+      - sil
+      - mil
+      - test
+      - simulation
+      - hardware-in-loop
+    skills:
+      - testing/hil-setup
+      - testing/sil-configuration
+      - testing/test-automation
+    agents:
+      - testing/hil-engineer
+      - testing/sil-engineer
+      - testing/test-automation
+    tools:
+      commercial:
+        - scalexio
+        - ni-pxi
+        - etas-labcar
+      opensource:
+        - carla
+        - verilator
+
+# Scoring Weights
+scoring:
+  keyword_match: 0.3
+  tool_availability: 0.25
+  agent_expertise: 0.2
+  recent_usage: 0.15
+  user_preference: 0.1
+
+# Task Analysis Patterns
+task_patterns:
+  - pattern: "generate.*swc|create.*component"
+    domain: autosar
+    skill: autosar/classic/swc-generation
+    confidence: 0.9
+
+  - pattern: "calibrat|measur|xcp|a2l"
+    domain: calibration
+    skill: calibration/xcp-configuration
+    confidence: 0.85
+
+  - pattern: "can.*analyz|bus.*trace|dbc"
+    domain: network
+    skill: network/can-analysis
+    confidence: 0.85
+
+  - pattern: "battery|bms|soc|soh|cell"
+    domain: battery
+    skill: battery/bms/state-estimation
+    confidence: 0.8
+
+  - pattern: "safety|iso.?26262|asil|fmea|hazard"
+    domain: safety
+    skill: safety/iso26262/hazard-analysis
+    confidence: 0.9
+
+  - pattern: "security|iso.?21434|tara|cyber|penetration"
+    domain: security
+    skill: security/tara-analysis
+    confidence: 0.9
+
+  - pattern: "flash|bootload|uds|obd|diagnos"
+    domain: diagnostics
+    skill: diagnostics/uds-configuration
+    confidence: 0.85
+
+  - pattern: "perception|lidar|radar|camera|sensor.?fusion"
+    domain: adas
+    skill: adas/perception/sensor-fusion
+    confidence: 0.85
+
+  - pattern: "simulink|model.?based|code.?gen|stateflow"
+    domain: mbd
+    skill: mbd/model-development
+    confidence: 0.85
+
+  - pattern: "hil|hardware.?in.?loop|sil|test.?bench"
+    domain: testing
+    skill: testing/hil-setup
+    confidence: 0.85
+
+# Fallback Configuration
+fallback:
+  unknown_domain:
+    action: ask_user
+    prompt: |
+      I couldn't determine the best domain for your task.
+      Please select from the following:
+      {available_domains}
+
+  no_tool_available:
+    action: suggest_opensource
+    prompt: |
+      No commercial tool is available for {domain}.
+      Would you like to use the opensource alternative: {opensource_tool}?
+
+  multiple_matches:
+    action: select_highest_score
+    threshold: 0.1
+
+# Learning Configuration
+learning:
+  enabled: true
+  store_decisions: true
+  decision_history_size: 1000
+  weight_adjustment_rate: 0.05

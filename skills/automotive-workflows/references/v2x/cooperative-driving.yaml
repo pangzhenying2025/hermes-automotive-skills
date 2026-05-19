@@ -1,0 +1,165 @@
+name: cooperative-driving
+version: 1.0.0
+description: "Cooperative driving function development workflow for V2X-enabled collaborative vehicle maneuvers"
+trigger: "When developing platooning, cooperative merging, or collaborative perception features"
+domain: "V2X"
+safety_level: "ASIL-C"
+standard: "ETSI ITS, SAE J3216"
+
+prerequisites:
+  - "V2X communication stack deployed and interoperable"
+  - "Cooperative driving use case specification approved"
+  - "Multi-vehicle test fleet available"
+  - "Simulation environment with V2X-enabled vehicles"
+  - "Safety concept for cooperative functions developed"
+
+phases:
+  - name: "Cooperative Function Design"
+    description: "Design the cooperative driving function including negotiation protocols and safety constraints"
+    inputs:
+      - "Cooperative driving use case requirements"
+      - "V2X message set capabilities"
+      - "Vehicle dynamics and automation capabilities"
+    steps:
+      - "Define cooperative maneuver state machine"
+      - "Design negotiation protocol between cooperating vehicles"
+      - "Define role assignment: leader, follower, coordinator"
+      - "Design trajectory sharing format and update rate"
+      - "Define safety envelope for cooperative following distance"
+      - "Design fallback behavior for communication loss"
+      - "Define minimum communication quality for cooperation"
+      - "Design cooperative perception data sharing"
+      - "Define trust model for cooperating vehicles"
+      - "Document cooperative function specification"
+    outputs:
+      - "Cooperative function specification"
+      - "Negotiation protocol definition"
+      - "Safety constraint documentation"
+    tools:
+      - "Protocol design tool"
+      - "State machine modeler"
+      - "Safety analysis tool"
+    quality_gates:
+      - "All cooperative states and transitions defined"
+      - "Fallback behavior specified for all failure modes"
+      - "Safety constraints reviewed by safety team"
+
+  - name: "Simulation Development and Testing"
+    description: "Develop and validate cooperative functions in multi-vehicle simulation"
+    inputs:
+      - "Cooperative function specification"
+      - "Multi-vehicle simulation environment"
+      - "V2X communication model"
+    steps:
+      - "Implement cooperative function in simulation framework"
+      - "Configure V2X communication channel model with latency and loss"
+      - "Simulate cooperative lane change with two vehicles"
+      - "Simulate platooning formation and dissolution"
+      - "Simulate cooperative merging at highway on-ramp"
+      - "Test behavior under communication degradation"
+      - "Test behavior with mixed cooperative and non-cooperative traffic"
+      - "Simulate emergency scenarios during cooperative maneuver"
+      - "Analyze safety margins during all cooperative maneuvers"
+      - "Optimize timing parameters for smooth cooperation"
+    outputs:
+      - "Simulation test results"
+      - "Safety margin analysis"
+      - "Optimized timing parameters"
+    tools:
+      - "Multi-vehicle driving simulator"
+      - "V2X channel simulator"
+      - "Safety analysis tool"
+    quality_gates:
+      - "No collisions in any simulated scenario"
+      - "Safety margins maintained under communication degradation"
+      - "Cooperative maneuvers complete within time requirements"
+
+  - name: "Multi-Vehicle Track Testing"
+    description: "Validate cooperative functions with real vehicles on closed test track"
+    inputs:
+      - "Simulation-validated cooperative algorithms"
+      - "Multi-vehicle test fleet"
+      - "Closed test track facility"
+    steps:
+      - "Deploy cooperative software to test fleet vehicles"
+      - "Verify V2X communication between all fleet vehicles"
+      - "Execute cooperative following at low speed"
+      - "Gradually increase speed and decrease following distance"
+      - "Test cooperative lane change with two vehicles"
+      - "Test platoon formation from individual vehicles"
+      - "Test platoon dissolution and individual separation"
+      - "Test emergency braking during cooperative following"
+      - "Test cooperative function with injected communication faults"
+      - "Measure actual versus planned trajectory deviation"
+    outputs:
+      - "Track test results per maneuver"
+      - "Trajectory accuracy measurements"
+      - "Communication fault handling verification"
+    tools:
+      - "Multi-vehicle data acquisition"
+      - "DGPS positioning system"
+      - "V2X communication logger"
+    quality_gates:
+      - "Trajectory deviation within specification at all speeds"
+      - "Emergency braking maintains safe separation"
+      - "Communication fault handling prevents unsafe states"
+
+  - name: "Safety Validation"
+    description: "Validate cooperative function safety through systematic fault injection and analysis"
+    inputs:
+      - "Track-tested cooperative functions"
+      - "Safety requirements from safety concept"
+      - "Fault injection capabilities"
+    steps:
+      - "Execute systematic V2X message loss scenarios"
+      - "Test response to corrupted cooperative messages"
+      - "Test response to spoofed position data from partner"
+      - "Validate safe state transition timing requirements"
+      - "Test simultaneous failures in multiple cooperative functions"
+      - "Validate driver takeover request and response"
+      - "Test cooperative function handover to manual driving"
+      - "Verify diagnostic reporting for cooperative function faults"
+      - "Execute long-duration cooperative operation test"
+      - "Generate safety validation evidence report"
+    outputs:
+      - "Safety validation test results"
+      - "Fault injection test results"
+      - "Safety evidence report"
+    tools:
+      - "V2X fault injection tool"
+      - "Safety monitoring system"
+      - "Driver state monitoring"
+    quality_gates:
+      - "Safe state achieved within fault tolerance time for all faults"
+      - "No unsafe behavior during any fault injection"
+      - "Driver handover successful in all tested scenarios"
+
+  - name: "Regulatory Engagement and Approval"
+    description: "Engage regulatory authorities and obtain approval for cooperative driving features"
+    inputs:
+      - "All validation evidence"
+      - "Safety case documentation"
+      - "Regulatory framework analysis"
+    steps:
+      - "Analyze regulatory framework for cooperative driving"
+      - "Identify any regulatory gaps for cooperative functions"
+      - "Compile safety case with all validation evidence"
+      - "Prepare regulatory submission documentation"
+      - "Engage with regulatory authority for pre-submission dialog"
+      - "Demonstrate cooperative function to regulatory inspectors"
+      - "Address regulatory authority questions and concerns"
+      - "Obtain conditional approval or exemption if needed"
+      - "Define field monitoring requirements from authority"
+      - "Plan production launch with regulatory conditions"
+    outputs:
+      - "Regulatory submission package"
+      - "Regulatory approval or exemption"
+      - "Field monitoring plan"
+    tools:
+      - "Safety case editor"
+      - "Regulatory submission system"
+      - "Demonstration vehicle fleet"
+    quality_gates:
+      - "Safety case accepted by regulatory authority"
+      - "Regulatory conditions achievable"
+      - "Field monitoring plan satisfies authority requirements"

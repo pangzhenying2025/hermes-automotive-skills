@@ -1,0 +1,45 @@
+name: field-issue-triage
+version: 1.0.0
+description: |
+  Field issue triage workflow from customer report to fix deployment.
+
+domain: field_support
+safety_standard: ISO_26262
+estimated_duration: 2-8_weeks
+
+phases:
+  - phase: data_collection
+    name: Field Data Collection and Initial Triage
+    duration: 2-3_days
+    outputs:
+      - issue_report
+      - diagnostic_logs
+      - fault_codes
+  - phase: reproduction
+    name: Issue Reproduction in Lab
+    duration: 1-2_weeks
+    outputs:
+      - reproduction_steps
+      - test_case
+  - phase: root_cause
+    name: Root Cause Analysis
+    duration: 1-2_weeks
+    outputs:
+      - rca_report
+      - failure_mode_analysis
+  - phase: fix_development
+    name: Fix Development and Validation
+    duration: 2-4_weeks
+    outputs:
+      - software_patch
+      - validation_test_results
+  - phase: deployment
+    name: Field Fix Deployment via OTA or Service Campaign
+    duration: 1-4_weeks
+    outputs:
+      - deployment_plan
+      - field_fix_monitoring
+
+references:
+  - ISO 26262-8 (Field monitoring)
+  - 8D Problem Solving (Automotive standard)

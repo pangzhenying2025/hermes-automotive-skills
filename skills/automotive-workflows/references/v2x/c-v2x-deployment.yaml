@@ -1,0 +1,164 @@
+name: c-v2x-deployment
+version: 1.0.0
+description: "Cellular V2X communication deployment workflow for vehicle-to-everything connectivity"
+trigger: "When deploying C-V2X on new vehicle platform, upgrading to PC5 sidelink, or expanding V2X coverage"
+domain: "V2X"
+standard: "3GPP Release 16, SAE J3161, ETSI ITS"
+
+prerequisites:
+  - "C-V2X modem hardware selected and available"
+  - "V2X application layer software developed"
+  - "Test infrastructure including RSU and OBU equipment"
+  - "Spectrum allocation and licensing confirmed"
+  - "Security credential management system available"
+
+phases:
+  - name: "System Architecture Design"
+    description: "Design the V2X communication architecture including protocol stack and message handling"
+    inputs:
+      - "V2X use case requirements"
+      - "C-V2X modem specifications"
+      - "Vehicle network architecture"
+    steps:
+      - "Define supported V2X use cases: BSM, SPaT, MAP, TIM"
+      - "Design V2X protocol stack: access, network, facilities, application"
+      - "Configure PC5 sidelink parameters for direct communication"
+      - "Configure Uu interface for network-assisted V2X"
+      - "Design message generation and parsing framework"
+      - "Define message rate and congestion control strategy"
+      - "Design V2X message integration with vehicle sensor fusion"
+      - "Configure positioning data source for V2X messages"
+      - "Define security integration with SCMS"
+      - "Document architecture with data flow diagrams"
+    outputs:
+      - "V2X system architecture document"
+      - "Protocol stack configuration"
+      - "Message handling design"
+    tools:
+      - "Protocol stack configurator"
+      - "V2X simulation tool"
+      - "Architecture design tool"
+    quality_gates:
+      - "All required V2X use cases supported by architecture"
+      - "Protocol stack compliant with standards"
+      - "Security integration designed per SCMS requirements"
+
+  - name: "Communication Stack Integration"
+    description: "Integrate and configure the C-V2X communication stack on the vehicle platform"
+    inputs:
+      - "Architecture design"
+      - "C-V2X modem SDK"
+      - "Vehicle middleware platform"
+    steps:
+      - "Integrate C-V2X modem driver on vehicle platform"
+      - "Configure PC5 sidelink transmission parameters"
+      - "Implement BSM generation from vehicle data sources"
+      - "Implement BSM reception and parsing"
+      - "Implement SPaT and MAP message reception"
+      - "Configure message signing with security credentials"
+      - "Implement certificate management and rotation"
+      - "Configure congestion control per SAE J3161"
+      - "Implement message plausibility checking"
+      - "Test basic V2V communication in loopback"
+    outputs:
+      - "Integrated V2X communication stack"
+      - "Loopback test results"
+      - "Security integration verification"
+    tools:
+      - "V2X development kit"
+      - "Protocol analyzer"
+      - "Security testing tool"
+    quality_gates:
+      - "BSM generation and reception verified"
+      - "Message signing and verification functional"
+      - "Congestion control operational"
+
+  - name: "Interoperability Testing"
+    description: "Test V2X communication interoperability with other vendors and infrastructure"
+    inputs:
+      - "Integrated V2X stack on test vehicle"
+      - "Multi-vendor test equipment"
+      - "Interoperability test specifications"
+    steps:
+      - "Test V2V communication with OBUs from three different vendors"
+      - "Test V2I communication with RSUs from two different vendors"
+      - "Verify BSM content and format per SAE J2735"
+      - "Test SPaT message reception from reference RSU"
+      - "Verify message timing and latency"
+      - "Test communication range at maximum and minimum distances"
+      - "Test communication in congested RF environments"
+      - "Verify misbehavior detection for invalid messages"
+      - "Test SCMS credential acquisition and renewal"
+      - "Document all interoperability test results"
+    outputs:
+      - "Interoperability test results"
+      - "Range measurements"
+      - "Multi-vendor compatibility matrix"
+    tools:
+      - "Multi-vendor OBU/RSU equipment"
+      - "RF spectrum analyzer"
+      - "V2X message logger"
+    quality_gates:
+      - "Interoperable with all tested vendor equipment"
+      - "Communication range meets specification"
+      - "SCMS credential management functional"
+
+  - name: "Application Layer Validation"
+    description: "Validate V2X applications providing safety and mobility benefits"
+    inputs:
+      - "Interoperability-tested V2X stack"
+      - "V2X application software"
+      - "Test scenarios for each V2X use case"
+    steps:
+      - "Test Forward Collision Warning using V2V data"
+      - "Test Intersection Movement Assist with SPaT/MAP"
+      - "Test Emergency Electronic Brake Light warning"
+      - "Test Signal Phase and Timing display"
+      - "Test work zone warning with TIM messages"
+      - "Validate HMI presentation of V2X warnings"
+      - "Test false alarm filtering and relevance checking"
+      - "Verify V2X data integration with ADAS functions"
+      - "Test V2X application performance at maximum vehicle density"
+      - "Conduct driver acceptance evaluation of V2X warnings"
+    outputs:
+      - "Application validation results per use case"
+      - "HMI evaluation results"
+      - "Performance at scale results"
+    tools:
+      - "V2X scenario simulation tool"
+      - "Driver acceptance test setup"
+      - "HMI evaluation framework"
+    quality_gates:
+      - "All safety applications trigger within required time"
+      - "False alarm rate below acceptance threshold"
+      - "Driver acceptance rating positive"
+
+  - name: "Deployment and Certification"
+    description: "Obtain regulatory certification and deploy V2X on production vehicles"
+    inputs:
+      - "Validated V2X system"
+      - "Regulatory certification requirements"
+      - "Production deployment plan"
+    steps:
+      - "Execute RF emission testing for FCC/CE certification"
+      - "Submit V2X device for spectrum regulation compliance"
+      - "Verify V2X system meets automotive EMC requirements"
+      - "Complete OmniAir certification testing if required"
+      - "Obtain security credential enrollment for production fleet"
+      - "Configure production V2X modem parameters"
+      - "Validate V2X function on production vehicle"
+      - "Release V2X software for production"
+      - "Establish field monitoring for V2X performance"
+      - "Plan V2X software update process for future enhancements"
+    outputs:
+      - "RF regulatory certifications"
+      - "OmniAir certification if applicable"
+      - "Production release documentation"
+    tools:
+      - "EMC and RF test facility"
+      - "Certification test equipment"
+      - "Production configuration tool"
+    quality_gates:
+      - "RF certifications obtained for target markets"
+      - "SCMS enrollment verified for production"
+      - "V2X functional on production vehicle"

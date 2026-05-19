@@ -1,0 +1,164 @@
+name: secure-development-lifecycle
+version: 1.0.0
+description: "Automotive secure software development lifecycle workflow ensuring cybersecurity throughout product development"
+trigger: "At project kickoff, during development milestones, and before production release"
+domain: "Cybersecurity"
+standard: "ISO/SAE 21434, UNECE R155"
+
+prerequisites:
+  - "Cybersecurity management system established"
+  - "Development team trained in secure coding practices"
+  - "Security tools integrated into CI/CD pipeline"
+  - "Cybersecurity goals from TARA available"
+  - "Coding standards with security requirements defined"
+
+phases:
+  - name: "Security Requirements Definition"
+    description: "Derive and specify cybersecurity requirements for the software component"
+    inputs:
+      - "Cybersecurity goals from TARA"
+      - "System architecture and component boundaries"
+      - "Applicable security standards and regulations"
+    steps:
+      - "Map cybersecurity goals to software component scope"
+      - "Define authentication requirements for all interfaces"
+      - "Define encryption requirements for data at rest and in transit"
+      - "Specify input validation requirements for external data"
+      - "Define access control requirements per interface"
+      - "Specify secure boot and integrity verification requirements"
+      - "Define logging and audit requirements for security events"
+      - "Specify key management and certificate handling requirements"
+      - "Define secure update requirements"
+      - "Review requirements with cybersecurity team for completeness"
+    outputs:
+      - "Cybersecurity requirements specification"
+      - "Requirements traceability to cybersecurity goals"
+      - "Review approval record"
+    tools:
+      - "Requirements management tool"
+      - "Traceability matrix tool"
+      - "Review management system"
+    quality_gates:
+      - "All cybersecurity goals have derived requirements"
+      - "Requirements are testable and unambiguous"
+      - "Cybersecurity team review approved"
+
+  - name: "Secure Design"
+    description: "Design the software architecture with security principles integrated"
+    inputs:
+      - "Cybersecurity requirements specification"
+      - "Software architecture template"
+      - "Security design patterns catalog"
+    steps:
+      - "Apply defense-in-depth principle to architecture layers"
+      - "Design authentication mechanisms for each interface"
+      - "Select cryptographic algorithms per security level requirements"
+      - "Design secure communication channels with appropriate protocols"
+      - "Implement principle of least privilege in access control design"
+      - "Design secure state management and mode transitions"
+      - "Define error handling strategy that avoids information leakage"
+      - "Design key storage using hardware security modules where available"
+      - "Specify memory protection and isolation boundaries"
+      - "Conduct design review with threat model validation"
+    outputs:
+      - "Security architecture document"
+      - "Cryptographic concept specification"
+      - "Design review results"
+    tools:
+      - "Architecture modeling tool"
+      - "Threat modeling tool"
+      - "Design review checklist"
+    quality_gates:
+      - "All security requirements addressed in design"
+      - "Design review passed with no critical findings"
+      - "Cryptographic selections approved by security expert"
+
+  - name: "Secure Implementation"
+    description: "Implement software following secure coding standards with integrated security analysis"
+    inputs:
+      - "Security architecture document"
+      - "Secure coding guidelines"
+      - "CI/CD pipeline with security tools"
+    steps:
+      - "Implement code following secure coding standards"
+      - "Use approved cryptographic libraries, never custom implementations"
+      - "Implement input validation at all trust boundaries"
+      - "Use parameterized queries for any database operations"
+      - "Implement proper error handling without information leakage"
+      - "Run static application security testing (SAST) on each commit"
+      - "Run software composition analysis for dependency vulnerabilities"
+      - "Conduct peer code review with security checklist"
+      - "Fix all critical and high SAST findings before merge"
+      - "Document any security-relevant design decisions in code"
+    outputs:
+      - "Implemented source code passing security checks"
+      - "SAST results showing no critical findings"
+      - "Code review records with security checklist"
+    tools:
+      - "Static analysis security tool"
+      - "Software composition analysis tool"
+      - "Code review platform"
+    quality_gates:
+      - "Zero critical SAST findings"
+      - "No known vulnerable dependencies"
+      - "Security code review checklist complete"
+
+  - name: "Security Testing"
+    description: "Execute security-specific testing to validate implementation against requirements"
+    inputs:
+      - "Implemented software"
+      - "Cybersecurity requirements for test derivation"
+      - "Security test tools and environments"
+    steps:
+      - "Execute security unit tests for authentication modules"
+      - "Execute security unit tests for encryption functions"
+      - "Run fuzz testing on all external input parsing code"
+      - "Execute dynamic application security testing (DAST)"
+      - "Test authentication bypass scenarios"
+      - "Test authorization enforcement across all roles"
+      - "Verify encryption is applied correctly to all specified data"
+      - "Test certificate validation including revocation checking"
+      - "Execute negative security tests for known attack patterns"
+      - "Verify security logging captures all required events"
+    outputs:
+      - "Security test results"
+      - "Fuzz testing coverage report"
+      - "Security requirement verification matrix"
+    tools:
+      - "Fuzz testing framework"
+      - "DAST scanner"
+      - "Security test automation framework"
+    quality_gates:
+      - "All security requirements verified by tests"
+      - "Fuzz testing completed with no crashes"
+      - "No exploitable vulnerabilities found in DAST"
+
+  - name: "Security Release and Monitoring"
+    description: "Perform final security assessment and establish post-release monitoring"
+    inputs:
+      - "All security testing results"
+      - "Vulnerability scan results"
+      - "Security documentation package"
+    steps:
+      - "Conduct final vulnerability assessment"
+      - "Review all open security findings and their dispositions"
+      - "Compile cybersecurity case documentation"
+      - "Verify compliance with applicable regulations"
+      - "Perform security sign-off review"
+      - "Configure post-release vulnerability monitoring"
+      - "Set up security advisory subscription for dependencies"
+      - "Define security patch process for post-release updates"
+      - "Archive security work products for audit trail"
+      - "Release software with security clearance"
+    outputs:
+      - "Cybersecurity case documentation"
+      - "Security release clearance"
+      - "Post-release monitoring configuration"
+    tools:
+      - "Vulnerability scanner"
+      - "Compliance checker"
+      - "Security monitoring platform"
+    quality_gates:
+      - "No unmitigated critical vulnerabilities"
+      - "Cybersecurity case accepted by assessor"
+      - "Post-release monitoring operational"

@@ -1,0 +1,38 @@
+name: launch-readiness
+version: 1.0.0
+description: |
+  Production launch readiness workflow from PPAP to SOP.
+
+domain: manufacturing
+safety_standard: IATF_16949
+estimated_duration: 8-12_weeks
+
+phases:
+  - phase: ppap
+    name: Production Part Approval Process
+    duration: 4-6_weeks
+    outputs:
+      - ppap_package (18 elements)
+      - customer_approval
+  - phase: run_at_rate
+    name: Run-at-Rate Production Trial
+    duration: 2-4_weeks
+    outputs:
+      - run_at_rate_report
+      - process_capability_study
+  - phase: quality_gate
+    name: Launch Quality Gate Review
+    duration: 1_week
+    outputs:
+      - quality_metrics_dashboard
+      - launch_approval
+  - phase: sop
+    name: Start of Production
+    duration: 1_week
+    outputs:
+      - sop_declaration
+      - initial_production_monitoring
+
+references:
+  - AIAG PPAP (Production Part Approval)
+  - IATF 16949 (Quality management)

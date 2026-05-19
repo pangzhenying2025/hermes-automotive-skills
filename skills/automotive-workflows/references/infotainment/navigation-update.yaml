@@ -1,0 +1,164 @@
+name: navigation-update
+version: 1.0.0
+description: "Navigation system map and software update workflow for in-vehicle and cloud-connected navigation"
+trigger: "When new map data is available, navigation features updated, or over-the-air update deployment needed"
+domain: "Infotainment"
+safety_level: "QM"
+
+prerequisites:
+  - "Map data supplier contract and data pipeline established"
+  - "Navigation software development environment configured"
+  - "OTA update infrastructure for map data delivery"
+  - "Test vehicles with navigation system"
+  - "Map validation tooling available"
+
+phases:
+  - name: "Map Data Preparation"
+    description: "Process and validate new map data from supplier for vehicle integration"
+    inputs:
+      - "Raw map data delivery from supplier"
+      - "Map data specification for navigation engine"
+      - "Previous map version for comparison"
+    steps:
+      - "Receive map data delivery and verify integrity checksums"
+      - "Convert map data to navigation engine native format"
+      - "Validate road network topology for connectivity"
+      - "Verify address database completeness and accuracy"
+      - "Validate point of interest database"
+      - "Check speed limit data accuracy against reference"
+      - "Verify ADAS road attribute data: lane count, curvature"
+      - "Compare against previous version for regression detection"
+      - "Generate regional data packages for incremental updates"
+      - "Calculate storage requirements per region"
+    outputs:
+      - "Processed map data in navigation format"
+      - "Map validation report"
+      - "Regional update packages"
+    tools:
+      - "Map compiler"
+      - "Topology validation tool"
+      - "Map comparison tool"
+    quality_gates:
+      - "Road network fully connected with no isolated segments"
+      - "Address geocoding accuracy above 95%"
+      - "No regressions in previously correct data"
+
+  - name: "Navigation Software Update"
+    description: "Integrate map data with navigation software updates and new features"
+    inputs:
+      - "Validated map data"
+      - "Navigation software change list"
+      - "Feature requirements for new version"
+    steps:
+      - "Integrate new map data with navigation engine build"
+      - "Implement route calculation improvements if any"
+      - "Update POI search and display features"
+      - "Implement traffic data integration improvements"
+      - "Update turn-by-turn guidance algorithms"
+      - "Implement electric vehicle range-aware routing if applicable"
+      - "Update lane guidance and junction view rendering"
+      - "Test route calculation accuracy with benchmark routes"
+      - "Verify navigation display rendering performance"
+      - "Execute regression test suite for existing features"
+    outputs:
+      - "Updated navigation software build"
+      - "Route calculation benchmark results"
+      - "Regression test results"
+    tools:
+      - "Navigation development environment"
+      - "Route benchmark tool"
+      - "Regression test framework"
+    quality_gates:
+      - "Route calculation matches expected results for benchmarks"
+      - "Rendering performance meets frame rate targets"
+      - "No regressions in existing features"
+
+  - name: "Field Validation"
+    description: "Validate navigation system accuracy through real-world driving tests"
+    inputs:
+      - "Updated navigation on test vehicle"
+      - "Field test routes with known reference data"
+      - "GPS reference data"
+    steps:
+      - "Execute urban navigation test route"
+      - "Execute highway navigation test route"
+      - "Execute rural and unpaved road test route"
+      - "Verify turn-by-turn instructions accuracy"
+      - "Test real-time traffic integration and rerouting"
+      - "Verify ETA accuracy against actual arrival times"
+      - "Test address search with various input formats"
+      - "Verify map display matches real-world road layout"
+      - "Test navigation during GPS signal degradation"
+      - "Validate charging station routing for EV variant"
+    outputs:
+      - "Field validation test results"
+      - "Navigation accuracy metrics"
+      - "ETA accuracy measurements"
+    tools:
+      - "Test vehicle with data logger"
+      - "GPS reference receiver"
+      - "Route recording tool"
+    quality_gates:
+      - "Turn instructions correct for 98% of maneuvers"
+      - "ETA accuracy within 10% of actual"
+      - "Map display matches road reality"
+
+  - name: "Update Package Creation"
+    description: "Create the OTA update package for navigation map and software deployment"
+    inputs:
+      - "Validated navigation build"
+      - "OTA package format specification"
+      - "Code signing infrastructure"
+    steps:
+      - "Create full map update package for new installations"
+      - "Create incremental update packages per region"
+      - "Calculate delta between previous and new versions"
+      - "Optimize package size for cellular download"
+      - "Sign update packages with code signing key"
+      - "Generate package metadata with version and compatibility"
+      - "Test package installation on reference head unit"
+      - "Verify navigation function after update installation"
+      - "Verify rollback capability if update fails"
+      - "Stage packages on OTA distribution server"
+    outputs:
+      - "Signed update packages"
+      - "Package metadata"
+      - "Installation test results"
+    tools:
+      - "Package builder"
+      - "Code signing system"
+      - "OTA staging server"
+    quality_gates:
+      - "Package installs correctly on reference unit"
+      - "Navigation functional after update"
+      - "Rollback tested and verified"
+
+  - name: "OTA Deployment"
+    description: "Deploy navigation update to fleet vehicles through OTA infrastructure"
+    inputs:
+      - "Staged update packages"
+      - "Deployment plan with phased rollout"
+      - "Fleet targeting criteria"
+    steps:
+      - "Configure deployment campaign in OTA platform"
+      - "Set targeting criteria: vehicle model, region, current version"
+      - "Deploy to internal test fleet first"
+      - "Monitor test fleet for installation issues"
+      - "Analyze test fleet feedback and navigation usage"
+      - "Expand to early adopter customer segment"
+      - "Monitor download success rates and install completion"
+      - "Track customer feedback through connected vehicle channels"
+      - "Expand to full fleet deployment"
+      - "Generate deployment completion report"
+    outputs:
+      - "Deployment campaign metrics"
+      - "Installation success rates"
+      - "Deployment completion report"
+    tools:
+      - "OTA campaign manager"
+      - "Fleet monitoring dashboard"
+      - "Customer feedback system"
+    quality_gates:
+      - "Test fleet deployment 100% successful"
+      - "Installation success rate above 99%"
+      - "No critical issues from early adopter feedback"

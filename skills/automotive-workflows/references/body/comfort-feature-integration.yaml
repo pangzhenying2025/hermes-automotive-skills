@@ -1,0 +1,164 @@
+name: comfort-feature-integration
+version: 1.0.0
+description: "Vehicle comfort feature integration workflow for climate, seat, and cabin experience systems"
+trigger: "When integrating new comfort features, updating HVAC controls, or adding premium comfort packages"
+domain: "Body Electronics"
+safety_level: "QM"
+
+prerequisites:
+  - "Comfort feature hardware installed and functional"
+  - "HVAC unit with electronic controls operational"
+  - "Seat ECUs with heating, cooling, and adjustment motors"
+  - "HMI integration for comfort controls defined"
+  - "Comfort feature specification document"
+
+phases:
+  - name: "Feature Specification Review"
+    description: "Review and clarify comfort feature requirements and integration points"
+    inputs:
+      - "Comfort feature specification"
+      - "Vehicle configuration options and trim levels"
+      - "Customer experience requirements"
+    steps:
+      - "Review HVAC automatic climate control requirements"
+      - "Define seat memory position storage and recall requirements"
+      - "Specify heated and ventilated seat control parameters"
+      - "Define steering wheel heating control requirements"
+      - "Specify ambient lighting color and brightness control"
+      - "Define automatic dimming mirror control requirements"
+      - "Specify rain-sensing wiper control parameters"
+      - "Define personalization profiles linked to key or phone"
+      - "Map all comfort features to HMI control interfaces"
+      - "Identify cross-feature dependencies and interactions"
+    outputs:
+      - "Detailed comfort feature specifications"
+      - "HMI control mapping"
+      - "Feature dependency matrix"
+    tools:
+      - "Requirements management tool"
+      - "HMI specification tool"
+      - "Feature interaction matrix"
+    quality_gates:
+      - "All comfort features fully specified"
+      - "HMI controls defined for each feature"
+      - "Feature interactions identified and resolved"
+
+  - name: "Software Implementation"
+    description: "Implement comfort feature control algorithms and integration logic"
+    inputs:
+      - "Feature specifications"
+      - "ECU software frameworks"
+      - "Communication interface definitions"
+    steps:
+      - "Implement automatic climate control algorithm"
+      - "Implement seat position memory: store and recall logic"
+      - "Implement heated seat temperature controller"
+      - "Implement ventilated seat fan speed controller"
+      - "Implement ambient lighting color and brightness control"
+      - "Implement personalization profile management"
+      - "Implement comfort feature CAN/LIN message handling"
+      - "Implement HMI command processing for all features"
+      - "Implement power management for comfort features"
+      - "Write unit tests for all control algorithms"
+    outputs:
+      - "Implemented comfort feature software"
+      - "Unit test results"
+      - "Control algorithm documentation"
+    tools:
+      - "Development environment"
+      - "Unit test framework"
+      - "Simulation tools"
+    quality_gates:
+      - "All unit tests pass"
+      - "Control algorithms stable in simulation"
+      - "Code review completed"
+
+  - name: "Bench Integration Testing"
+    description: "Test comfort features on integration bench with actual components"
+    inputs:
+      - "Implemented software on target ECUs"
+      - "Integration test bench with comfort components"
+      - "Test specifications"
+    steps:
+      - "Test HVAC blower speed and temperature door control"
+      - "Test seat position motor control: forward, back, tilt, lumbar"
+      - "Verify seat memory stores and recalls positions accurately"
+      - "Test heated seat reaches target temperature within time limit"
+      - "Test ventilated seat fan operation and cycling"
+      - "Verify ambient lighting color accuracy and transition smoothness"
+      - "Test personalization profile switching on key change"
+      - "Verify all features respond to HMI commands"
+      - "Test feature interactions: climate vs seat heating coordination"
+      - "Measure power consumption of all comfort features"
+    outputs:
+      - "Bench test results per feature"
+      - "Power consumption measurements"
+      - "HMI response verification"
+    tools:
+      - "Comfort feature test bench"
+      - "Temperature measurement equipment"
+      - "Power measurement tools"
+    quality_gates:
+      - "All features function per specification"
+      - "Temperature targets reached within time limits"
+      - "Power consumption within budget"
+
+  - name: "Vehicle Climate Testing"
+    description: "Validate comfort features in vehicle under various climate conditions"
+    inputs:
+      - "Vehicle with all comfort features integrated"
+      - "Climate chamber facility"
+      - "Climate test procedures"
+    steps:
+      - "Test HVAC performance at minus 20 degrees ambient: heat up time"
+      - "Test HVAC performance at plus 45 degrees ambient: cool down time"
+      - "Verify heated seat comfort at cold ambient temperatures"
+      - "Verify ventilated seat effectiveness at hot ambient"
+      - "Test defrost and demist performance per regulation"
+      - "Verify automatic climate control maintains set temperature"
+      - "Test comfort feature behavior during solar load simulation"
+      - "Measure cabin temperature uniformity at steady state"
+      - "Test comfort feature behavior during vehicle speed changes"
+      - "Evaluate subjective comfort impression with test occupants"
+    outputs:
+      - "Climate test results"
+      - "Cabin temperature profiles"
+      - "Subjective comfort evaluation"
+    tools:
+      - "Climate wind tunnel"
+      - "Temperature sensor array"
+      - "Solar simulation equipment"
+    quality_gates:
+      - "Heat-up and cool-down times within targets"
+      - "Defrost performance meets regulation"
+      - "Subjective comfort rating meets target"
+
+  - name: "Final Validation and Release"
+    description: "Complete validation and release comfort features for production"
+    inputs:
+      - "Climate-tested vehicle"
+      - "Final validation procedures"
+      - "Production release criteria"
+    steps:
+      - "Execute final functional verification of all features"
+      - "Verify comfort features across all vehicle variants"
+      - "Test comfort features with production HMI software"
+      - "Verify over-the-air update capability for comfort parameters"
+      - "Execute EMC testing for comfort electronics"
+      - "Verify diagnostic access to all comfort features"
+      - "Document all comfort feature calibration values"
+      - "Freeze comfort feature software and calibration"
+      - "Obtain release approval from vehicle integration team"
+      - "Release for production programming"
+    outputs:
+      - "Final validation results"
+      - "Production release documentation"
+      - "Comfort feature calibration package"
+    tools:
+      - "Validation test vehicles"
+      - "EMC test facility"
+      - "Release management system"
+    quality_gates:
+      - "All variants validated"
+      - "EMC compliance verified"
+      - "Release approval obtained"

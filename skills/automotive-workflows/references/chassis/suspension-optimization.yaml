@@ -1,0 +1,164 @@
+name: suspension-optimization
+version: 1.0.0
+description: "Suspension system optimization workflow for balancing ride comfort, handling, and durability"
+trigger: "During new vehicle development, model year updates, or customer ride quality improvement programs"
+domain: "Chassis"
+safety_level: "ASIL-A"
+
+prerequisites:
+  - "Vehicle prototype with instrumented suspension"
+  - "Ride and handling test facility"
+  - "Multi-body dynamics simulation model"
+  - "Suspension component test equipment"
+  - "Subjective evaluation team assembled"
+
+phases:
+  - name: "Suspension Characterization"
+    description: "Measure and characterize current suspension parameters and performance"
+    inputs:
+      - "Vehicle with production-intent suspension"
+      - "Measurement equipment for ride and handling"
+      - "Characterization test procedures"
+    steps:
+      - "Measure spring rates front and rear on component bench"
+      - "Measure damper force-velocity characteristics"
+      - "Characterize bushing stiffness in all axes"
+      - "Measure suspension travel and bump stop engagement"
+      - "Record static ride height and wheel alignment"
+      - "Measure body roll rate during steady-state cornering"
+      - "Characterize ride frequency at front and rear axles"
+      - "Measure suspension compliance under braking and acceleration"
+      - "Record tire stiffness and force characteristics"
+      - "Build validated suspension model from measurements"
+    outputs:
+      - "Suspension parameter database"
+      - "Validated multi-body dynamics model"
+      - "Baseline ride and handling measurements"
+    tools:
+      - "Component test bench"
+      - "Kinematics and compliance rig"
+      - "Ride measurement system"
+    quality_gates:
+      - "Model matches vehicle response within 10%"
+      - "All critical parameters measured"
+      - "Baseline documented under controlled conditions"
+
+  - name: "Simulation Optimization"
+    description: "Use simulation to explore parameter space and identify optimal settings"
+    inputs:
+      - "Validated suspension model"
+      - "Ride comfort and handling targets"
+      - "Parameter variation ranges from feasibility analysis"
+    steps:
+      - "Define optimization objectives: ride index, handling metrics"
+      - "Set up parameter sweep for spring rates"
+      - "Set up parameter sweep for damper rates"
+      - "Set up parameter sweep for anti-roll bar stiffness"
+      - "Run ride comfort simulations on standard road profiles"
+      - "Run handling simulations: step steer, lane change, cornering"
+      - "Analyze Pareto front between comfort and handling"
+      - "Select candidate parameter sets from Pareto analysis"
+      - "Validate candidates against durability load predictions"
+      - "Recommend parameter sets for physical testing"
+    outputs:
+      - "Simulation optimization results"
+      - "Pareto analysis"
+      - "Candidate parameter sets for testing"
+    tools:
+      - "Multi-body dynamics solver"
+      - "Optimization algorithm"
+      - "Post-processing tool"
+    quality_gates:
+      - "Optimization converged with sufficient exploration"
+      - "Candidate sets are feasible with available components"
+      - "Durability loads within component ratings"
+
+  - name: "Physical Tuning"
+    description: "Implement and tune candidate suspension setups on the physical vehicle"
+    inputs:
+      - "Candidate parameter sets from simulation"
+      - "Adjustable suspension components"
+      - "Test track and road surfaces"
+    steps:
+      - "Install first candidate spring and damper set"
+      - "Set wheel alignment to recommended specification"
+      - "Measure ride comfort on standardized road surfaces"
+      - "Measure handling response on test track maneuvers"
+      - "Record body motion at various speeds and surfaces"
+      - "Install second candidate setup and repeat measurements"
+      - "Compare candidate setups against each other and baseline"
+      - "Fine-tune selected setup based on measurement feedback"
+      - "Optimize damper low-speed valving for body control"
+      - "Optimize damper high-speed valving for impact absorption"
+    outputs:
+      - "Physical test results per candidate"
+      - "Optimized damper specifications"
+      - "Comparison analysis"
+    tools:
+      - "Ride quality measurement system"
+      - "Handling measurement system"
+      - "Adjustable damper set"
+    quality_gates:
+      - "Ride comfort improvement over baseline measurable"
+      - "Handling not degraded versus baseline"
+      - "Optimized setup consistent with simulation predictions"
+
+  - name: "Subjective Evaluation"
+    description: "Conduct expert subjective evaluation of the optimized suspension"
+    inputs:
+      - "Optimized suspension setup on vehicle"
+      - "Evaluation route with diverse road conditions"
+      - "Expert evaluation team"
+    steps:
+      - "Evaluate primary ride quality on smooth highway"
+      - "Evaluate secondary ride on rough country roads"
+      - "Evaluate impact harshness over potholes and expansion joints"
+      - "Evaluate body roll during cornering"
+      - "Evaluate pitch control during braking and acceleration"
+      - "Evaluate float or wallow on undulating roads"
+      - "Evaluate tire impact noise contribution"
+      - "Compare against benchmark competition vehicles"
+      - "Score each ride and handling attribute"
+      - "Iterate if any attributes below target"
+    outputs:
+      - "Subjective evaluation score cards"
+      - "Benchmark comparison results"
+      - "Remaining improvement areas"
+    tools:
+      - "Standardized evaluation form"
+      - "Evaluation route"
+      - "Benchmark vehicles"
+    quality_gates:
+      - "All ride attributes meet minimum target scores"
+      - "All handling attributes meet minimum target scores"
+      - "Overall balance acceptable to evaluation team"
+
+  - name: "Specification Freeze and Release"
+    description: "Freeze suspension specifications and release for production sourcing"
+    inputs:
+      - "Optimized and subjectively approved suspension setup"
+      - "Component drawing requirements"
+      - "Production feasibility confirmation"
+    steps:
+      - "Finalize spring rate specifications with tolerance"
+      - "Finalize damper specification with force-velocity envelope"
+      - "Finalize anti-roll bar stiffness specification"
+      - "Finalize bushing durometer and stiffness specifications"
+      - "Finalize wheel alignment specifications"
+      - "Document all specifications in engineering standard format"
+      - "Validate specifications against durability predictions"
+      - "Review specifications with supplier for producibility"
+      - "Release specifications for production tooling"
+      - "Archive optimization data and analysis for reference"
+    outputs:
+      - "Frozen suspension specifications"
+      - "Component specification documents"
+      - "Supplier feasibility confirmation"
+    tools:
+      - "Specification management system"
+      - "Drawing system"
+      - "Supplier communication portal"
+    quality_gates:
+      - "Specifications have appropriate manufacturing tolerances"
+      - "Supplier confirms producibility"
+      - "Durability analysis supports specifications"

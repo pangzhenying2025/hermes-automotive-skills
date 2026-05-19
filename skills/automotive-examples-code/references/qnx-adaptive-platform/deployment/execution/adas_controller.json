@@ -1,0 +1,416 @@
+{
+  "$schema": "https://www.autosar.org/schema/r23-11/execution_manifest.json",
+  "shortName": "AdasController",
+  "version": "1.0.0",
+  "description": "ADAS Controller Execution Manifest - Fusion of radar/camera data for collision avoidance",
+  "lastModified": "2026-03-19T10:00:00Z",
+
+  "executable": {
+    "path": "/opt/adaptive/bin/adas_controller",
+    "arguments": [
+      "--config",
+      "/etc/adaptive/adas_config.json"
+    ],
+    "workingDirectory": "/var/adaptive/adas",
+    "environmentVariables": [
+      {
+        "name": "LD_LIBRARY_PATH",
+        "value": "/opt/adaptive/lib:$LD_LIBRARY_PATH"
+      },
+      {
+        "name": "VSOMEIP_CONFIGURATION",
+        "value": "/etc/vsomeip.json"
+      },
+      {
+        "name": "ARA_LOG_LEVEL",
+        "value": "info"
+      }
+    ]
+  },
+
+  "startup": {
+    "mode": "automatic",
+    "functionGroup": "ADAS",
+    "startupTimeout": 5000,
+    "dependencies": [
+      {
+        "service": "RadarInterface",
+        "version": "1.0",
+        "instance": "RadarFront",
+        "optional": false
+      },
+      {
+        "service": "CameraInterface",
+        "version": "1.0",
+        "instance": "CameraFront",
+        "optional": true
+      },
+      {
+        "service": "VehicleDynamicsInterface",
+        "version": "1.0",
+        "instance": "Main",
+        "optional": false
+      }
+    ],
+    "stateTransitions": [
+      {
+        "from": "Initializing",
+        "to": "Running",
+        "timeout": 3000,
+        "action": "findServices"
+      },
+      {
+        "from": "Running",
+        "to": "ShuttingDown",
+        "timeout": 2000,
+        "action": "stopServices"
+      },
+      {
+        "from": "ShuttingDown",
+        "to": "Terminated",
+        "timeout": 1000,
+        "action": "cleanup"
+      }
+    ]
+  },
+
+  "resources": {
+    "memory": {
+      "minMB": 32,
+      "maxMB": 128,
+      "stackSizeKB": 256,
+      "heapSizeKB": 8192,
+      "lockMemory": true
+    },
+    "cpu": {
+      "partition": "adas_partition",
+      "affinity": [0, 1],
+      "shares": 2048,
+      "schedulingPolicy": "SCHED_FIFO",
+      "priority": 80,
+      "budgetUs": 5000,
+      "periodUs": 20000
+    },
+    "storage": {
+      "persistencyPath": "/fs/qnx6/adaptive/per/adas",
+      "maxStorageMB": 10,
+      "redundancy": true
+    },
+    "network": {
+      "interfaces": ["eth0"],
+      "requiredBandwidthMbps": 10,
+      "maxConnections": 10
+    }
+  },
+
+  "providedServices": [
+    {
+      "shortName": "AdasCommands",
+      "serviceId": 4660,
+      "majorVersion": 1,
+      "minorVersion": 0,
+      "instanceIdentifier": "Main",
+      "instanceId": 1,
+      "communicationBinding": "SOME/IP",
+      "transportProtocol": {
+        "local": {
+          "mechanism": "QNX_CHANNELS",
+          "channelName": "/dev/ara/adas/commands"
+        },
+        "remote": {
+          "protocol": "TCP",
+          "port": 30600,
+          "multicast": false
+        }
+      },
+      "methods": [
+        {
+          "shortName": "EnableAdas",
+          "methodId": 1,
+          "fireAndForget": false,
+          "timeout": 100
+        },
+        {
+          "shortName": "DisableAdas",
+          "methodId": 2,
+          "fireAndForget": false,
+          "timeout": 100
+        },
+        {
+          "shortName": "SetCollisionWarningThreshold",
+          "methodId": 3,
+          "fireAndForget": false,
+          "timeout": 50
+        }
+      ],
+      "events": [
+        {
+          "shortName": "CollisionWarning",
+          "eventId": 100,
+          "maxSampleSize": 64,
+          "queueSize": 10
+        },
+        {
+          "shortName": "EmergencyBraking",
+          "eventId": 101,
+          "maxSampleSize": 32,
+          "queueSize": 5
+        }
+      ],
+      "fields": [
+        {
+          "shortName": "AdasStatus",
+          "fieldId": 200,
+          "hasGetter": true,
+          "hasSetter": false,
+          "hasNotifier": true,
+          "updateCycleMs": 100
+        }
+      ]
+    }
+  ],
+
+  "requiredServices": [
+    {
+      "shortName": "RadarInterface",
+      "serviceId": 4352,
+      "majorVersion": 1,
+      "minorVersion": 0,
+      "instanceIdentifier": "RadarFront",
+      "findTimeout": 5000,
+      "communicationBinding": "SOME/IP",
+      "methods": [
+        {
+          "shortName": "GetTargets",
+          "methodId": 1,
+          "timeout": 20
+        }
+      ],
+      "events": [
+        {
+          "shortName": "TargetDetected",
+          "eventId": 100,
+          "subscribe": true,
+          "queueSize": 20
+        }
+      ],
+      "fields": [
+        {
+          "shortName": "SensorStatus",
+          "fieldId": 200,
+          "subscribe": true
+        }
+      ]
+    },
+    {
+      "shortName": "CameraInterface",
+      "serviceId": 4353,
+      "majorVersion": 1,
+      "minorVersion": 0,
+      "instanceIdentifier": "CameraFront",
+      "findTimeout": 5000,
+      "optional": true,
+      "communicationBinding": "SOME/IP",
+      "methods": [
+        {
+          "shortName": "GetImage",
+          "methodId": 1,
+          "timeout": 50
+        }
+      ],
+      "events": [
+        {
+          "shortName": "ObjectDetected",
+          "eventId": 100,
+          "subscribe": true,
+          "queueSize": 10
+        }
+      ]
+    },
+    {
+      "shortName": "VehicleDynamicsInterface",
+      "serviceId": 4354,
+      "majorVersion": 1,
+      "minorVersion": 0,
+      "instanceIdentifier": "Main",
+      "findTimeout": 5000,
+      "communicationBinding": "SOME/IP",
+      "methods": [
+        {
+          "shortName": "GetSpeed",
+          "methodId": 1,
+          "timeout": 10
+        },
+        {
+          "shortName": "GetSteeringAngle",
+          "methodId": 2,
+          "timeout": 10
+        }
+      ],
+      "fields": [
+        {
+          "shortName": "CurrentSpeed",
+          "fieldId": 200,
+          "subscribe": true
+        }
+      ]
+    }
+  ],
+
+  "logging": {
+    "contextId": "ADAS",
+    "defaultLogLevel": "info",
+    "logToFile": true,
+    "logFilePath": "/var/log/adaptive/adas_controller.log",
+    "maxFileSizeMB": 10,
+    "rotateOnSize": true,
+    "contexts": [
+      {
+        "name": "Main",
+        "level": "info"
+      },
+      {
+        "name": "SensorFusion",
+        "level": "debug"
+      },
+      {
+        "name": "CollisionDetection",
+        "level": "warn"
+      }
+    ]
+  },
+
+  "persistency": {
+    "keyValuePairs": [
+      {
+        "key": "collision_warning_threshold",
+        "defaultValue": "15.0",
+        "type": "float",
+        "unit": "meters"
+      },
+      {
+        "key": "emergency_braking_threshold",
+        "defaultValue": "0.5",
+        "type": "float",
+        "unit": "seconds"
+      },
+      {
+        "key": "adas_enabled",
+        "defaultValue": "true",
+        "type": "boolean"
+      },
+      {
+        "key": "calibration_data",
+        "maxSizeKB": 64,
+        "type": "binary"
+      }
+    ],
+    "files": [
+      {
+        "path": "event_log.bin",
+        "maxSizeMB": 5,
+        "redundancy": true
+      }
+    ]
+  },
+
+  "healthMonitoring": {
+    "enabled": true,
+    "supervisionCycleMs": 100,
+    "checkpoints": [
+      {
+        "id": 1,
+        "name": "MainLoop",
+        "expectedIntervalMs": 20,
+        "toleranceMs": 5
+      },
+      {
+        "id": 2,
+        "name": "SensorProcessing",
+        "expectedIntervalMs": 50,
+        "toleranceMs": 10
+      }
+    ],
+    "aliveness": {
+      "intervalMs": 50,
+      "timeoutMs": 150
+    },
+    "restart": {
+      "enabled": true,
+      "maxAttempts": 3,
+      "delayMs": 100,
+      "escalation": "safe_state"
+    }
+  },
+
+  "security": {
+    "runAsUser": "adas",
+    "runAsGroup": "automotive",
+    "capabilities": [
+      "CAP_SYS_NICE",
+      "CAP_IPC_LOCK"
+    ],
+    "seccomp": {
+      "enabled": false,
+      "profile": "adas_profile"
+    },
+    "selinux": {
+      "enabled": false,
+      "context": "adas_context"
+    }
+  },
+
+  "performance": {
+    "cycleTimeMs": 20,
+    "maxLatencyMs": 10,
+    "targetCpuUsagePercent": 25,
+    "peakCpuUsagePercent": 80,
+    "monitoring": {
+      "enabled": true,
+      "reportingIntervalMs": 1000,
+      "metrics": [
+        "cycle_time",
+        "cpu_usage",
+        "memory_usage",
+        "ipc_latency"
+      ]
+    }
+  },
+
+  "diagnostics": {
+    "supportedServices": [
+      "ReadDataByIdentifier",
+      "ReadDTCInformation",
+      "ClearDiagnosticInformation"
+    ],
+    "dataIdentifiers": [
+      {
+        "did": 61440,
+        "name": "AdasControllerVersion",
+        "type": "string",
+        "length": 16
+      },
+      {
+        "did": 61441,
+        "name": "CollisionWarningCount",
+        "type": "uint32"
+      },
+      {
+        "did": 61442,
+        "name": "EmergencyBrakingCount",
+        "type": "uint32"
+      }
+    ],
+    "dtcSettings": {
+      "storeFaultMemory": true,
+      "maxStoredDtcs": 100
+    }
+  },
+
+  "testing": {
+    "testMode": false,
+    "mockServices": false,
+    "recordingEnabled": false,
+    "recordingPath": "/var/adaptive/adas/recordings"
+  }
+}

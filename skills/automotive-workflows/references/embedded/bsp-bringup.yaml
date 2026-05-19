@@ -1,0 +1,166 @@
+name: bsp-bringup
+version: 1.0.0
+description: "Board Support Package bringup workflow for new automotive ECU hardware platforms"
+trigger: "When new ECU hardware prototype arrives, or when porting to a new microcontroller or SoC"
+domain: "Embedded"
+safety_level: "ASIL-B"
+
+prerequisites:
+  - "Hardware prototype boards available and powered up"
+  - "Microcontroller or SoC reference manual and datasheet"
+  - "JTAG/SWD debug probe and debug software"
+  - "Oscilloscope and logic analyzer available"
+  - "Schematic and PCB layout documents"
+
+phases:
+  - name: "Hardware Verification"
+    description: "Verify basic hardware functionality before software bringup"
+    inputs:
+      - "ECU prototype board"
+      - "Schematic and BOM"
+      - "Power supply requirements"
+    steps:
+      - "Inspect board for manufacturing defects and solder quality"
+      - "Verify power supply rails with oscilloscope"
+      - "Check voltage regulator outputs and ripple"
+      - "Verify clock oscillator frequency and stability"
+      - "Check reset circuit behavior and timing"
+      - "Verify JTAG/SWD debug connection to microcontroller"
+      - "Read microcontroller device ID through debug interface"
+      - "Check memory bus signals if using external memory"
+      - "Verify I/O voltage levels match connected peripherals"
+      - "Document any hardware issues found during inspection"
+    outputs:
+      - "Hardware verification checklist"
+      - "Power rail measurement report"
+      - "Debug interface connectivity confirmation"
+    tools:
+      - "Oscilloscope"
+      - "Multimeter"
+      - "JTAG debug probe"
+    quality_gates:
+      - "All power rails within specification"
+      - "Debug interface responsive"
+      - "No critical hardware defects found"
+
+  - name: "Boot and Memory Initialization"
+    description: "Bring up the boot process, initialize memory, and establish basic execution"
+    inputs:
+      - "Verified hardware"
+      - "Microcontroller startup code template"
+      - "Linker script for target memory map"
+    steps:
+      - "Write minimal startup code with vector table"
+      - "Configure flash wait states for target clock frequency"
+      - "Initialize RAM sections including BSS and data copy"
+      - "Configure clock tree to target operating frequency"
+      - "Verify PLL lock and clock output on test pin"
+      - "Initialize external SDRAM controller if present"
+      - "Run memory test pattern on internal and external RAM"
+      - "Configure MPU regions for basic memory protection"
+      - "Implement and test minimal exception handlers"
+      - "Verify successful transition from reset to main function"
+    outputs:
+      - "Working startup and initialization code"
+      - "Memory test results"
+      - "Clock configuration verified"
+    tools:
+      - "Debug IDE"
+      - "Logic analyzer"
+      - "Oscilloscope"
+    quality_gates:
+      - "Processor reaches main function reliably"
+      - "Memory test passes with zero errors"
+      - "Clock frequency within 0.1% of target"
+
+  - name: "Peripheral Driver Bringup"
+    description: "Bring up essential peripheral drivers for communication and I/O"
+    inputs:
+      - "Working boot and memory initialization"
+      - "Peripheral configuration from schematic"
+      - "Driver framework or HAL"
+    steps:
+      - "Implement and test GPIO driver for LED and switch control"
+      - "Implement and test UART driver for debug console output"
+      - "Implement and test CAN driver with loopback mode"
+      - "Verify CAN communication with external bus analyzer"
+      - "Implement and test SPI driver for connected peripherals"
+      - "Implement and test I2C driver for sensor interfaces"
+      - "Implement and test ADC driver for analog inputs"
+      - "Implement and test PWM driver for actuator outputs"
+      - "Implement and test DMA controller for high-throughput peripherals"
+      - "Implement and test watchdog timer"
+      - "Implement and test RTC if present"
+    outputs:
+      - "Working peripheral drivers"
+      - "Driver test results per peripheral"
+      - "Peripheral configuration documentation"
+    tools:
+      - "Debug IDE"
+      - "CAN bus analyzer"
+      - "Logic analyzer"
+      - "Signal generator"
+    quality_gates:
+      - "All communication peripherals verified with external equipment"
+      - "ADC accuracy within specification"
+      - "All drivers pass basic functional tests"
+
+  - name: "OS and Middleware Integration"
+    description: "Integrate the operating system and middleware layer on the BSP"
+    inputs:
+      - "Working peripheral drivers"
+      - "AUTOSAR OS or RTOS configuration"
+      - "Middleware requirements"
+    steps:
+      - "Port OS timer tick to hardware timer peripheral"
+      - "Configure OS interrupt priority scheme"
+      - "Implement OS-level peripheral driver wrappers"
+      - "Integrate MCAL drivers if AUTOSAR Classic"
+      - "Configure DIO, Port, and MCU modules"
+      - "Verify OS task scheduling with test application"
+      - "Measure interrupt latency and context switch time"
+      - "Integrate communication middleware stack"
+      - "Verify CAN communication through full stack"
+      - "Measure CPU utilization with diagnostic loads"
+    outputs:
+      - "OS running on target hardware"
+      - "Timing measurements"
+      - "Communication stack verified"
+    tools:
+      - "RTOS configuration tool"
+      - "Trace debugger"
+      - "Timing analysis tool"
+    quality_gates:
+      - "OS scheduling verified with test tasks"
+      - "Interrupt latency within requirements"
+      - "Communication stack passes basic tests"
+
+  - name: "BSP Validation and Release"
+    description: "Validate the complete BSP and release for application development"
+    inputs:
+      - "Integrated BSP with OS and drivers"
+      - "BSP validation test suite"
+      - "Documentation requirements"
+    steps:
+      - "Execute comprehensive BSP validation test suite"
+      - "Test all peripheral drivers under stress conditions"
+      - "Execute long-duration stability test over 72 hours"
+      - "Measure and document power consumption in all modes"
+      - "Verify low-power mode entry and wake-up functionality"
+      - "Document all BSP APIs and configuration options"
+      - "Create board configuration header file template"
+      - "Write BSP release notes with known limitations"
+      - "Tag BSP release in version control"
+      - "Distribute BSP to application development teams"
+    outputs:
+      - "BSP validation test results"
+      - "BSP documentation package"
+      - "Tagged BSP release"
+    tools:
+      - "Test automation framework"
+      - "Power analyzer"
+      - "Documentation generator"
+    quality_gates:
+      - "All validation tests pass"
+      - "72-hour stability test completes without failures"
+      - "Documentation complete and reviewed"

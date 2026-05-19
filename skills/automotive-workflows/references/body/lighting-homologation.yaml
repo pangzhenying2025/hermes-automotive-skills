@@ -1,0 +1,164 @@
+name: lighting-homologation
+version: 1.0.0
+description: "Vehicle exterior lighting homologation workflow for regulatory compliance across global markets"
+trigger: "During new vehicle development, lighting design changes, or market expansion requiring new regulations"
+domain: "Body Electronics"
+standard: "ECE R48, R112, R119, FMVSS 108"
+
+prerequisites:
+  - "Lighting hardware design complete and prototype available"
+  - "BCM lighting control software implemented"
+  - "Photometric test laboratory access"
+  - "Applicable regulation analysis complete"
+  - "Test fixtures and goniometer setup available"
+
+phases:
+  - name: "Regulation Mapping"
+    description: "Map all applicable lighting regulations for target markets"
+    inputs:
+      - "Target market list"
+      - "Vehicle category and classification"
+      - "Lighting component list"
+    steps:
+      - "Identify ECE regulations for European market approval"
+      - "Identify FMVSS 108 requirements for US market"
+      - "Map additional requirements for Chinese GB standards"
+      - "Identify regulations for each lamp function: headlamp, tail, turn, etc."
+      - "Determine requirements for daytime running lamps"
+      - "Identify adaptive driving beam regulation requirements"
+      - "Map color requirements per function and regulation"
+      - "Identify installation requirements: height, angle, spacing"
+      - "Determine marking and approval mark requirements"
+      - "Create regulation compliance matrix"
+    outputs:
+      - "Regulation compliance matrix"
+      - "Requirement summary per lighting function"
+      - "Installation requirement specifications"
+    tools:
+      - "Regulatory database"
+      - "Compliance matrix tool"
+      - "Regulation reference library"
+    quality_gates:
+      - "All target market regulations identified"
+      - "All lighting functions covered"
+      - "Matrix reviewed by homologation specialist"
+
+  - name: "Photometric Testing"
+    description: "Execute photometric tests to verify luminous intensity and distribution"
+    inputs:
+      - "Prototype lighting components"
+      - "Goniometer and photometric equipment"
+      - "Test specifications per regulation"
+    steps:
+      - "Mount headlamp on goniometer per regulation procedure"
+      - "Measure luminous intensity distribution for low beam"
+      - "Measure luminous intensity distribution for high beam"
+      - "Verify cut-off line sharpness and position for low beam"
+      - "Measure front turn signal photometric performance"
+      - "Measure rear combination lamp photometry per function"
+      - "Measure DRL photometric performance"
+      - "Verify no color mixing between adjacent functions"
+      - "Test photometric performance at temperature extremes"
+      - "Generate photometric test reports per regulation format"
+    outputs:
+      - "Photometric test reports per component"
+      - "Luminous intensity distribution data"
+      - "Cut-off line measurements"
+    tools:
+      - "Goniometer"
+      - "Photometer"
+      - "Temperature chamber for photometric lab"
+    quality_gates:
+      - "All photometric values within regulation limits"
+      - "Cut-off line meets sharpness requirements"
+      - "Temperature stability verified"
+
+  - name: "Functional Testing"
+    description: "Test lighting control functions and dynamic behaviors"
+    inputs:
+      - "Lighting system on vehicle"
+      - "BCM with lighting control software"
+      - "Functional test specifications"
+    steps:
+      - "Verify automatic headlamp leveling function"
+      - "Test adaptive front lighting system mode switching"
+      - "Verify turn signal flash rate: 1.5Hz plus/minus 0.5Hz"
+      - "Test hazard warning function activation"
+      - "Verify DRL dimming when turn signal active"
+      - "Test welcome and goodbye lighting sequences"
+      - "Verify headlamp washer activation with headlamps"
+      - "Test cornering light activation logic"
+      - "Verify rear fog lamp activation and indication"
+      - "Test all lighting diagnostic monitoring and fault reporting"
+    outputs:
+      - "Functional test results"
+      - "Flash rate measurements"
+      - "Adaptive lighting mode verification"
+    tools:
+      - "Lighting function test bench"
+      - "Flash rate measurement tool"
+      - "BCM diagnostic tester"
+    quality_gates:
+      - "Flash rate within regulation tolerance"
+      - "Automatic leveling meets angle requirements"
+      - "All control logic functions per specification"
+
+  - name: "Durability and Environmental Testing"
+    description: "Validate lighting components survive environmental conditions per regulations"
+    inputs:
+      - "Lighting components for environmental testing"
+      - "Environmental test specifications from regulations"
+      - "Test chamber access"
+    steps:
+      - "Execute thermal cycling test per ECE requirements"
+      - "Execute humidity resistance test"
+      - "Execute dust ingress protection test per IP rating"
+      - "Execute water spray and immersion tests"
+      - "Execute vibration endurance test per vehicle specification"
+      - "Execute UV exposure aging test for lens material"
+      - "Execute chemical resistance test for lens"
+      - "Verify photometric performance after each environmental test"
+      - "Check for condensation inside lamp housing"
+      - "Document any degradation or failures"
+    outputs:
+      - "Environmental test results"
+      - "Post-test photometric measurements"
+      - "Durability assessment"
+    tools:
+      - "Environmental test chambers"
+      - "Vibration test equipment"
+      - "UV aging chamber"
+    quality_gates:
+      - "Photometric performance maintained after environmental tests"
+      - "No water ingress beyond allowable level"
+      - "No structural failures during endurance"
+
+  - name: "Type Approval Submission"
+    description: "Compile all test evidence and submit for lighting type approval"
+    inputs:
+      - "All photometric and functional test results"
+      - "Environmental test results"
+      - "Component and vehicle documentation"
+    steps:
+      - "Compile component type approval application per ECE format"
+      - "Include photometric test reports from approved laboratory"
+      - "Include environmental durability test evidence"
+      - "Submit component approval application to authority"
+      - "Prepare vehicle installation verification documentation"
+      - "Verify installation compliance: position, angle, spacing"
+      - "Submit vehicle lighting installation approval"
+      - "Support authority inspection if required"
+      - "Obtain E-mark approval for components"
+      - "Obtain vehicle lighting system approval"
+    outputs:
+      - "Component type approval certificates"
+      - "Vehicle installation approval"
+      - "E-mark documentation"
+    tools:
+      - "Type approval documentation system"
+      - "Regulatory submission portal"
+      - "Installation measurement tools"
+    quality_gates:
+      - "All component approvals obtained"
+      - "Vehicle installation meets all regulations"
+      - "Approval marks correctly applied to components"

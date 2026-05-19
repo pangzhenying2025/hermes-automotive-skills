@@ -1,0 +1,164 @@
+name: media-system-integration
+version: 1.0.0
+description: "In-vehicle media system integration workflow for audio, video, and streaming services"
+trigger: "When integrating new media sources, updating audio processing, or adding streaming capabilities"
+domain: "Infotainment"
+safety_level: "QM"
+
+prerequisites:
+  - "Infotainment head unit hardware available"
+  - "Audio amplifier and speaker system installed"
+  - "Media source hardware: USB, Bluetooth, cellular modem"
+  - "Streaming service SDK access and agreements"
+  - "Audio measurement equipment"
+
+phases:
+  - name: "Media Source Integration"
+    description: "Integrate all media source inputs into the infotainment platform"
+    inputs:
+      - "Media source specifications"
+      - "Audio codec requirements"
+      - "Infotainment platform media framework"
+    steps:
+      - "Integrate FM/AM/DAB radio tuner module"
+      - "Implement USB media playback: audio and video formats"
+      - "Integrate Bluetooth A2DP audio streaming"
+      - "Implement Apple CarPlay wired and wireless connectivity"
+      - "Implement Android Auto wired and wireless connectivity"
+      - "Integrate cellular streaming service SDK"
+      - "Implement podcast and audiobook playback"
+      - "Configure audio codec support: AAC, MP3, FLAC, ALAC, WAV"
+      - "Implement media metadata display: artist, album, artwork"
+      - "Test source switching and audio routing"
+    outputs:
+      - "Integrated media sources"
+      - "Codec compatibility test results"
+      - "Source switching test results"
+    tools:
+      - "Media playback test suite"
+      - "USB compliance test tool"
+      - "Bluetooth profile tester"
+    quality_gates:
+      - "All target codecs play without artifacts"
+      - "Source switching gap-free within 500ms"
+      - "CarPlay and Android Auto certification tests pass"
+
+  - name: "Audio Processing and Tuning"
+    description: "Configure and tune the audio processing chain for optimal sound quality"
+    inputs:
+      - "Speaker system specifications and locations"
+      - "Vehicle acoustic characteristics"
+      - "Audio processing DSP capabilities"
+    steps:
+      - "Measure vehicle cabin acoustic response at each seat position"
+      - "Configure speaker crossover frequencies"
+      - "Tune equalizer for flat response at driver position"
+      - "Implement speed-dependent volume compensation"
+      - "Configure surround sound processing for multi-speaker setup"
+      - "Tune bass management and subwoofer integration"
+      - "Implement loudness compensation for low volume listening"
+      - "Configure audio balance and fade controls"
+      - "Implement dynamic range compression for road noise"
+      - "Tune notification and warning sound mixing levels"
+    outputs:
+      - "Audio processing configuration"
+      - "Tuning measurement data"
+      - "Sound quality assessment"
+    tools:
+      - "Audio measurement microphone array"
+      - "Acoustic analysis software"
+      - "DSP configuration tool"
+    quality_gates:
+      - "Frequency response within target tolerance at driver seat"
+      - "No audible distortion at maximum volume"
+      - "Speed-dependent volume provides consistent perceived level"
+
+  - name: "User Interface Integration"
+    description: "Integrate media controls into the HMI and multi-modal interfaces"
+    inputs:
+      - "HMI design specifications for media screens"
+      - "Steering wheel button assignments"
+      - "Voice command specifications"
+    steps:
+      - "Implement now-playing screen with media controls"
+      - "Implement source selection and browsing interface"
+      - "Integrate album artwork display and music visualization"
+      - "Implement steering wheel media controls: next, previous, volume"
+      - "Implement voice commands: play artist, tune to station"
+      - "Integrate media information into instrument cluster"
+      - "Implement notification overlay for incoming calls during media"
+      - "Configure audio ducking for navigation prompts"
+      - "Implement persistent media state across ignition cycles"
+      - "Test all control modalities for each media source"
+    outputs:
+      - "Integrated media UI"
+      - "Multi-modal control verification"
+      - "Persistent state test results"
+    tools:
+      - "HMI development framework"
+      - "Voice recognition engine"
+      - "Media UI test suite"
+    quality_gates:
+      - "All control modalities function for all sources"
+      - "Navigation audio mixing does not mask prompts"
+      - "Media state persists correctly across key cycles"
+
+  - name: "Compatibility and Conformance Testing"
+    description: "Test media system compatibility with wide range of devices and content"
+    inputs:
+      - "Media system with all sources integrated"
+      - "Device compatibility test matrix"
+      - "Content format test library"
+    steps:
+      - "Test USB playback with 20 different USB drive formats"
+      - "Test Bluetooth pairing with 30 phone models"
+      - "Verify A2DP streaming quality across phone brands"
+      - "Test CarPlay with various iPhone models and iOS versions"
+      - "Test Android Auto with various Android phone models"
+      - "Test streaming service playback and account management"
+      - "Test radio reception quality in various RF environments"
+      - "Verify DAB service following and announcement handling"
+      - "Test graceful handling of corrupted media files"
+      - "Verify media system does not crash on malformed metadata"
+    outputs:
+      - "Device compatibility matrix results"
+      - "Content format test results"
+      - "Robustness test results"
+    tools:
+      - "Device test library"
+      - "Content test suite"
+      - "Crash monitoring tool"
+    quality_gates:
+      - "Compatibility rate above 95% for tested devices"
+      - "No crashes from malformed content"
+      - "Streaming services maintain playback during network transitions"
+
+  - name: "System Validation and Release"
+    description: "Validate complete media system in vehicle and release for production"
+    inputs:
+      - "Compatibility-tested media system"
+      - "Vehicle validation procedures"
+      - "Production release criteria"
+    steps:
+      - "Execute vehicle-level audio quality evaluation"
+      - "Verify media system boot time and ready state"
+      - "Test media continuity during ignition off and restart"
+      - "Verify audio quality on road at highway speeds"
+      - "Test media system during phone call interruption"
+      - "Verify no audio interference from vehicle electronics"
+      - "Execute long-duration stability test over 7 days"
+      - "Verify software update capability for media codecs"
+      - "Conduct subjective listening evaluation by audio panel"
+      - "Release media system software for production"
+    outputs:
+      - "Vehicle validation results"
+      - "Audio quality evaluation scores"
+      - "Production release documentation"
+    tools:
+      - "Vehicle audio test equipment"
+      - "Stability monitoring system"
+      - "Release management tool"
+    quality_gates:
+      - "Audio quality meets subjective panel target"
+      - "Boot time within specification"
+      - "7-day stability test passes without issues"

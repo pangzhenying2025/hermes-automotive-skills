@@ -1,0 +1,398 @@
+name: hil-test-campaign
+version: 1.0.0
+description: |
+  Hardware-in-the-Loop (HIL) test campaign workflow for ECU validation.
+  Covers test bench setup, signal verification, automated test execution,
+  fault injection, and comprehensive reporting per ISO 26262 requirements.
+
+domain: testing
+safety_standard: ISO_26262
+estimated_duration: 3-6_weeks
+
+phases:
+  - phase: preparation
+    name: HIL Test Bench Preparation
+    description: Configure HIL test environment and prepare test artifacts
+    duration: 3-5_days
+    inputs:
+      - ecu_software_build
+      - system_requirements_spec
+      - interface_specification (CAN, LIN, FlexRay, Ethernet)
+      - test_scenario_catalog
+      - hil_platform_config (dSPACE, NI, ETAS)
+    outputs:
+      - hil_bench_configuration
+      - signal_mapping_database
+      - test_harness_setup
+      - calibration_dataset
+      - test_execution_plan
+    tools:
+      - dSPACE ControlDesk (real-time control)
+      - CANoe/CANalyzer (bus simulation)
+      - Vector vTESTstudio (test automation)
+      - ETAS INCA (calibration)
+      - TargetLink (code generation)
+    skills_used:
+      - hil-testing
+      - test-automation
+      - automotive-integration
+    agents_involved:
+      - test-engineer
+      - integration-engineer
+      - calibration-specialist
+    tasks:
+      bench_setup:
+        - Install ECU on HIL test bench with proper power supply
+        - Connect all communication buses (CAN, LIN, FlexRay, Ethernet)
+        - Configure load simulation (actuators, sensors)
+        - Set up environmental chamber if thermal testing required
+        - Install ECU software via flash tool (Vector vFlash, ETAS INCA)
+      signal_preparation:
+        - Import signal database from DBC/ARXML/LDF files
+        - Map ECU signals to HIL I/O channels
+        - Configure stimuli generators for sensor inputs
+        - Set up monitoring channels for actuator outputs
+        - Validate signal scaling and conversion factors
+      test_scripts:
+        - Develop automated test scripts in Python/CAPL/TestStand
+        - Implement test oracles for pass/fail criteria
+        - Create fault injection scenarios
+        - Set up data logging configuration
+        - Prepare test reports templates
+    acceptance_criteria:
+      - All ECU interfaces connected and verified
+      - Signal database imported with 100% coverage
+      - Test bench safety checks passed (emergency stop, voltage limits)
+      - Calibration parameters loaded and verified
+      - Test harness executes smoke test successfully
+    safety_considerations:
+      - Emergency stop circuit functional
+      - Voltage and current limits configured
+      - Isolation barriers for high-voltage systems
+      - Proper grounding to prevent EMI
+
+  - phase: signal_verification
+    name: Signal and Interface Verification
+    description: Verify all ECU interfaces and signal integrity
+    duration: 2-3_days
+    inputs:
+      - hil_bench_configuration
+      - signal_mapping_database
+      - interface_specification
+    outputs:
+      - signal_verification_report
+      - interface_compliance_matrix
+      - baseline_measurements
+      - issue_tracker_entries
+    tools:
+      - CANoe (bus analysis)
+      - Oscilloscope (signal integrity)
+      - Vector CANape (calibration and measurement)
+      - Wireshark (Ethernet diagnostics)
+    skills_used:
+      - automotive-protocols
+      - signal-analysis
+      - debugging
+    agents_involved:
+      - test-engineer
+      - embedded-software-engineer
+    tasks:
+      communication_check:
+        - Verify CAN bus termination and baud rate (125k, 250k, 500k, 1M)
+        - Check LIN slave response timing
+        - Validate FlexRay cycle timing and slot allocation
+        - Test Automotive Ethernet link speed (100BASE-T1, 1000BASE-T1)
+        - Monitor DoIP routing activation
+      signal_integrity:
+        - Measure signal rise/fall times on oscilloscope
+        - Check for reflections and ringing on bus
+        - "Validate voltage levels (CAN: 2.5V differential, LIN: 12V)"
+        - Test EMC immunity (ISO 11452-2 radiated, ISO 11452-4 BCI)
+      functional_check:
+        - Transmit known signals and verify ECU reception
+        - Stimulate sensor inputs and read actuator outputs
+        - Validate diagnostic messages (UDS 0x22, 0x2E, 0x31)
+        - Test network management (sleep, wakeup, limp-home)
+    acceptance_criteria:
+      - All communication buses operational with zero frame errors
+      - Signal timing meets specification (jitter < 1%, latency < 10ms)
+      - Diagnostic services respond correctly
+      - Network management transitions work as expected
+    safety_considerations:
+      - Verify fail-safe behavior on bus error
+      - Test watchdog triggering on communication loss
+      - Validate degraded mode operation
+
+  - phase: test_execution
+    name: Automated Test Execution
+    description: Execute comprehensive test suite covering functional and safety requirements
+    duration: 2-3_weeks
+    inputs:
+      - test_execution_plan
+      - signal_verification_report
+      - test_scenario_catalog
+      - requirements_traceability_matrix
+    outputs:
+      - test_execution_results
+      - requirements_coverage_report
+      - defect_tracking_log
+      - test_metrics_dashboard
+    tools:
+      - Vector vTESTstudio (test automation)
+      - Jenkins (CI/CD for test execution)
+      - TestRail (test management)
+      - JIRA (defect tracking)
+    skills_used:
+      - test-automation
+      - requirements-traceability
+      - data-analytics
+    agents_involved:
+      - test-automation-engineer
+      - test-engineer
+      - safety-engineer
+    test_categories:
+      functional_tests:
+        - Normal operation scenarios (nominal input ranges)
+        - Boundary value testing (min/max sensor readings)
+        - State machine transitions (startup, operation, shutdown)
+        - Mode switching (normal, sport, eco, safe)
+        - Coordination between ECUs (multi-ECU scenarios)
+      robustness_tests:
+        - Out-of-range input handling (sensor faults)
+        - Bus off recovery (CAN error handling)
+        - Power supply variations (6V-16V automotive range)
+        - Temperature extremes (-40C to +125C)
+        - EMC immunity per ISO 11452
+      safety_tests:
+        - Watchdog monitoring (timeout detection)
+        - Memory protection (MPU violations)
+        - Plausibility checks (redundant sensor comparison)
+        - Fail-safe transitions (safe state on critical failure)
+        - Diagnostic coverage (DTC generation and clearing)
+      performance_tests:
+        - Response time measurement (sensor to actuator latency)
+        - CPU load monitoring (RTOS task execution time)
+        - Memory usage profiling (stack, heap, flash)
+        - Communication bandwidth utilization
+        - Real-time deadline adherence
+    acceptance_criteria:
+      - 95% requirements coverage achieved
+      - Zero critical defects open
+      - All safety-related tests passed
+      - Performance metrics within specification
+      - Test execution repeatable (variance < 2%)
+    safety_considerations:
+      - ASIL-D functions tested with 100% coverage
+      - Safety mechanisms verified (end-to-end protection, range checks)
+      - Fault injection testing for all identified failure modes
+
+  - phase: fault_injection
+    name: Fault Injection and Robustness Testing
+    description: Inject faults to validate ECU error handling and fail-safe behavior
+    duration: 1-2_weeks
+    inputs:
+      - fmea_analysis
+      - fault_tree_analysis
+      - safety_mechanisms_spec
+    outputs:
+      - fault_injection_results
+      - diagnostic_coverage_report
+      - safe_state_validation
+      - robustness_assessment
+    tools:
+      - dSPACE Fault Insertion Unit (FIU)
+      - CANoe Fault Injection
+      - NI PXI fault simulation modules
+      - Custom fault injection scripts
+    skills_used:
+      - fault-injection-testing
+      - safety-analysis
+      - automotive-diagnostics
+    agents_involved:
+      - safety-engineer
+      - test-engineer
+      - embedded-software-engineer
+    fault_scenarios:
+      sensor_faults:
+        - Open circuit (infinite resistance)
+        - Short circuit to GND or VCC
+        - Out-of-range values (below min, above max)
+        - Stuck-at faults (frozen sensor reading)
+        - Intermittent failures (glitches)
+      communication_faults:
+        - CAN bus off (excessive error frames)
+        - Message loss (drop rate 10%, 50%, 100%)
+        - Message corruption (bit flips, CRC errors)
+        - Babbling node (flooding bus with frames)
+        - Network timeout (no messages for T_timeout)
+      power_faults:
+        - Voltage drop (8V, 6V, reset threshold)
+        - Voltage spike (18V, 24V transient)
+        - Brown-out conditions (slow voltage decay)
+        - Power interruption (hard reset)
+      memory_faults:
+        - RAM bit flip (single-event upset simulation)
+        - Flash corruption (calibration data integrity)
+        - Stack overflow (deep recursion or large allocation)
+        - EEPROM write failure
+      timing_faults:
+        - Task overrun (deadline miss injection)
+        - Watchdog timeout (delay SW execution)
+        - Interrupt storm (high-frequency interrupts)
+    acceptance_criteria:
+      - All injected faults detected by ECU diagnostics
+      - DTC (Diagnostic Trouble Code) generated for each fault
+      - ECU transitions to safe state within 100ms
+      - No unintended acceleration/braking/steering
+      - Diagnostic coverage > 90% for ASIL-C/D
+    safety_considerations:
+      - Validate fail-operational vs fail-safe behavior
+      - Test redundancy mechanisms (dual sensors, voting)
+      - Ensure graceful degradation (limited functionality mode)
+
+  - phase: regression_testing
+    name: Regression Testing After SW Updates
+    description: Re-run critical test scenarios after each software update
+    duration: 3-5_days
+    inputs:
+      - new_software_build
+      - regression_test_suite
+      - previous_baseline_results
+    outputs:
+      - regression_test_results
+      - delta_analysis_report
+      - version_comparison_matrix
+    tools:
+      - Vector vTESTstudio (automated regression)
+      - Git (version control)
+      - Jenkins (CI pipeline integration)
+    skills_used:
+      - test-automation
+      - version-control
+      - continuous-integration
+    agents_involved:
+      - test-automation-engineer
+      - devops-engineer
+    tasks:
+      - Flash new software version to ECU
+      - Execute smoke test to verify basic functionality
+      - Run full regression test suite
+      - Compare results against baseline
+      - Investigate any new failures
+      - Update test suite if new features added
+    acceptance_criteria:
+      - No regression failures (previously passing tests still pass)
+      - New functionality covered by new test cases
+      - Performance metrics within 5% of baseline
+      - All critical paths retested
+    safety_considerations:
+      - Safety-critical functions retested with 100% coverage
+      - Impact analysis for code changes performed
+
+  - phase: reporting
+    name: Test Reporting and Traceability
+    description: Generate comprehensive test reports with requirements traceability
+    duration: 2-3_days
+    inputs:
+      - test_execution_results
+      - fault_injection_results
+      - requirements_traceability_matrix
+      - defect_tracking_log
+    outputs:
+      - hil_test_report
+      - requirements_coverage_matrix
+      - test_metrics_summary
+      - lessons_learned_document
+      - certification_evidence_package
+    tools:
+      - TestRail (test management)
+      - DOORS (requirements traceability)
+      - Confluence (documentation)
+      - Excel/Tableau (metrics visualization)
+    skills_used:
+      - technical-writing
+      - data-analytics
+      - requirements-traceability
+    agents_involved:
+      - test-manager
+      - technical-writer
+      - safety-engineer
+    report_sections:
+      executive_summary:
+        - Test campaign overview
+        - Pass/fail summary
+        - Critical findings
+        - Recommendations
+      test_environment:
+        - HIL bench configuration
+        - ECU software version
+        - Test tool versions
+        - Test duration and resource allocation
+      test_results:
+        - Test case execution summary (passed, failed, blocked, not run)
+        - Requirements coverage (by feature, by ASIL level)
+        - Defect summary (severity, status, trend)
+        - Performance metrics (latency, CPU, memory)
+      traceability:
+        - Requirements to test case mapping
+        - Test case to defect linking
+        - Safety requirements verification status
+      appendices:
+        - Detailed test logs
+        - Fault injection scenarios
+        - Signal timing diagrams
+        - Screenshots and waveforms
+    acceptance_criteria:
+      - 100% requirements traced to test cases
+      - All test results documented with evidence
+      - Metrics trends analyzed (improvement or degradation)
+      - Report reviewed and approved by stakeholders
+    safety_considerations:
+      - ISO 26262 Part 6 test documentation requirements met
+      - Safety case evidence package complete
+
+quality_gates:
+  - gate: bench_readiness
+    phase: preparation
+    criteria:
+      - HIL bench safety check passed
+      - All signals mapped and verified
+      - Smoke test successful
+  - gate: signal_integrity_check
+    phase: signal_verification
+    criteria:
+      - Zero bus errors over 1 hour continuous operation
+      - Signal timing within specification
+  - gate: functional_validation
+    phase: test_execution
+    criteria:
+      - 95% requirements coverage
+      - Zero critical defects
+      - All safety tests passed
+  - gate: robustness_validation
+    phase: fault_injection
+    criteria:
+      - Diagnostic coverage >90%
+      - All faults detected and handled
+      - Safe state transitions verified
+  - gate: release_approval
+    phase: reporting
+    criteria:
+      - Test report approved
+      - Certification evidence complete
+      - Regression test passed
+
+metrics:
+  - Requirements coverage percentage
+  - Test execution pass rate
+  - Defect density (defects per KLOC)
+  - Diagnostic coverage percentage
+  - Test automation percentage
+  - Mean time to detect fault (MTTDF)
+  - Test execution duration
+
+references:
+  - ISO 26262-6 (Software testing)
+  - ISO 26262-8 (Supporting processes)
+  - ASPICE SWE.4 (Software unit verification)
+  - ASPICE SWE.5 (Software integration and test)

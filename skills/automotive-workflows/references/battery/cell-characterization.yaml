@@ -1,0 +1,165 @@
+name: cell-characterization
+version: 1.0.0
+description: "Battery cell characterization workflow for determining electrical, thermal, and aging parameters"
+trigger: "When evaluating new cell chemistry, qualifying new suppliers, or establishing baseline cell parameters"
+domain: "Battery"
+safety_level: "High Voltage Safety"
+
+prerequisites:
+  - "Cell samples from approved production batch"
+  - "Environmental test chambers calibrated"
+  - "Battery cycler equipment with required current and voltage range"
+  - "Data acquisition system configured"
+  - "Safety equipment and emergency procedures in place"
+
+phases:
+  - name: "Incoming Inspection"
+    description: "Inspect and document received cell samples before testing"
+    inputs:
+      - "Cell samples with batch traceability"
+      - "Cell specification sheet from manufacturer"
+      - "Incoming inspection checklist"
+    steps:
+      - "Record cell batch number, manufacturing date, and serial numbers"
+      - "Measure and record physical dimensions of each cell"
+      - "Weigh each cell and compare to specification"
+      - "Measure open circuit voltage and compare to expected range"
+      - "Perform visual inspection for damage, swelling, or leakage"
+      - "Measure AC impedance at 1kHz for initial health assessment"
+      - "Verify cell polarity and terminal integrity"
+      - "Group cells by initial OCV for matched testing sets"
+      - "Store cells at specified temperature until testing begins"
+    outputs:
+      - "Incoming inspection report per cell"
+      - "Cell grouping assignments"
+      - "Dimensional and mass measurements"
+    tools:
+      - "Digital caliper and precision scale"
+      - "Multimeter and impedance analyzer"
+      - "Environmental storage chamber"
+    quality_gates:
+      - "All cells within dimensional specification"
+      - "OCV within manufacturer specified range"
+      - "No visible defects on any test cell"
+
+  - name: "Capacity and Energy Characterization"
+    description: "Determine capacity and energy at multiple C-rates and temperatures"
+    inputs:
+      - "Inspected and grouped cell samples"
+      - "Test protocol with C-rate and temperature matrix"
+      - "Battery cycler channel assignments"
+    steps:
+      - "Condition cells with three formation cycles at C/10 rate"
+      - "Measure capacity at C/20 rate at 25 degrees Celsius as reference"
+      - "Measure capacity at C/5, C/3, C/2, 1C, and 2C rates at 25 degrees"
+      - "Repeat capacity measurements at minus 10, 0, 10, 35, and 45 degrees"
+      - "Record charge and discharge voltage profiles at each condition"
+      - "Calculate energy density for each rate and temperature combination"
+      - "Determine usable capacity window based on voltage limits"
+      - "Compute Peukert coefficient from multi-rate data"
+      - "Analyze capacity spread across cell samples"
+      - "Generate capacity map as function of C-rate and temperature"
+    outputs:
+      - "Capacity versus C-rate curves at each temperature"
+      - "Energy density characterization data"
+      - "Voltage profile database"
+      - "Capacity map"
+    tools:
+      - "Battery cycler system"
+      - "Environmental test chamber"
+      - "Data analysis platform"
+    quality_gates:
+      - "Reference capacity within 3% of manufacturer specification"
+      - "Cell-to-cell capacity variation below 2%"
+      - "All test conditions completed without safety events"
+
+  - name: "Impedance Characterization"
+    description: "Characterize cell impedance across frequency, SOC, and temperature domains"
+    inputs:
+      - "Cells from capacity characterization"
+      - "EIS measurement protocol"
+      - "HPPC test protocol"
+    steps:
+      - "Perform electrochemical impedance spectroscopy at 100% SOC"
+      - "Repeat EIS at 80%, 60%, 40%, 20%, and 10% SOC"
+      - "Repeat EIS sweeps at minus 10, 0, 25, and 45 degrees"
+      - "Execute hybrid pulse power characterization test"
+      - "Extract DC resistance from HPPC pulse data"
+      - "Fit equivalent circuit model to EIS data"
+      - "Determine R0, R1, C1 parameters versus SOC and temperature"
+      - "Validate model predictions against pulse test data"
+      - "Create impedance lookup tables for BMS parameterization"
+      - "Document impedance characterization results"
+    outputs:
+      - "EIS Nyquist and Bode plots"
+      - "Equivalent circuit model parameters"
+      - "DC resistance maps versus SOC and temperature"
+      - "HPPC test results"
+    tools:
+      - "Electrochemical impedance spectrometer"
+      - "Battery cycler with pulse capability"
+      - "Circuit model fitting software"
+    quality_gates:
+      - "EIS data quality verified by Kramers-Kronig consistency"
+      - "Model fit residual below 2% across frequency range"
+      - "DC resistance values consistent with EIS at low frequency"
+
+  - name: "Thermal Characterization"
+    description: "Determine thermal properties including heat generation and thermal conductivity"
+    inputs:
+      - "Cells from impedance characterization"
+      - "Calorimetry test protocol"
+      - "Thermal conductivity measurement setup"
+    steps:
+      - "Measure heat capacity using accelerating rate calorimeter"
+      - "Measure heat generation during C/2 charge and discharge"
+      - "Measure heat generation during 1C and 2C charge and discharge"
+      - "Determine entropy coefficient from OCV-temperature relationship"
+      - "Separate reversible and irreversible heat generation"
+      - "Measure thermal conductivity in through-plane direction"
+      - "Measure thermal conductivity in in-plane direction"
+      - "Determine thermal runaway onset temperature"
+      - "Create thermal model parameters from measured data"
+    outputs:
+      - "Heat generation profiles at various C-rates"
+      - "Thermal property measurements"
+      - "Thermal model parameters"
+      - "Safety characterization data"
+    tools:
+      - "Accelerating rate calorimeter"
+      - "Isothermal calorimeter"
+      - "Thermal conductivity measurement device"
+    quality_gates:
+      - "Heat generation measurements repeatable within 5%"
+      - "Thermal properties consistent with cell chemistry expectations"
+      - "Thermal runaway data consistent with safety datasheet"
+
+  - name: "Data Compilation and Model Delivery"
+    description: "Compile all characterization data into parameterized cell model for system design"
+    inputs:
+      - "All characterization measurement data"
+      - "Cell model template for BMS and simulation"
+      - "Quality requirements for model accuracy"
+    steps:
+      - "Compile all raw measurement data into structured database"
+      - "Create parameterized electrochemical model"
+      - "Create parameterized thermal model"
+      - "Validate combined model against independent test data"
+      - "Generate cell datasheet with key specifications"
+      - "Create BMS parameterization package"
+      - "Document model validity range and limitations"
+      - "Deliver model package to system design team"
+      - "Archive all raw data with full traceability"
+    outputs:
+      - "Parameterized cell model package"
+      - "Cell datasheet"
+      - "BMS parameterization data"
+      - "Raw data archive"
+    tools:
+      - "Model parameterization tool"
+      - "Data archival system"
+      - "Documentation generator"
+    quality_gates:
+      - "Model accuracy within 2% for voltage prediction"
+      - "Model accuracy within 5% for thermal prediction"
+      - "All data traceable to calibrated instruments"

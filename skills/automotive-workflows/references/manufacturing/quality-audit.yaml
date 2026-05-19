@@ -1,0 +1,165 @@
+name: quality-audit
+version: 1.0.0
+description: "Manufacturing quality audit workflow for assessing process compliance and product quality"
+trigger: "At scheduled intervals, after quality incidents, or for new supplier qualification"
+domain: "Manufacturing"
+standard: "IATF 16949, VDA 6.3"
+
+prerequisites:
+  - "Quality management system documented and implemented"
+  - "Audit program and schedule approved"
+  - "Qualified auditors assigned and available"
+  - "Previous audit findings and corrective actions available"
+  - "Audit checklist aligned with applicable standard"
+
+phases:
+  - name: "Audit Preparation"
+    description: "Prepare for the quality audit including scope definition and documentation review"
+    inputs:
+      - "Audit scope and objectives"
+      - "Previous audit reports and open findings"
+      - "Process documentation for audit area"
+    steps:
+      - "Define audit scope: processes, areas, and timeframe"
+      - "Review previous audit findings and corrective action status"
+      - "Review process documentation: work instructions, control plans"
+      - "Prepare audit checklist based on applicable standard"
+      - "Customize checklist for specific process risks"
+      - "Review relevant quality data: scrap rates, customer complaints"
+      - "Schedule interviews with process owners and operators"
+      - "Prepare audit notification to area management"
+      - "Assemble audit team and assign responsibilities"
+      - "Conduct audit team briefing"
+    outputs:
+      - "Audit plan and schedule"
+      - "Customized audit checklist"
+      - "Pre-audit documentation review findings"
+    tools:
+      - "Audit management system"
+      - "Document management system"
+      - "Quality data analytics"
+    quality_gates:
+      - "Audit checklist covers all applicable requirements"
+      - "Previous corrective actions reviewed"
+      - "Audit team briefed and prepared"
+
+  - name: "On-Site Audit Execution"
+    description: "Execute the audit through observation, interviews, and evidence collection"
+    inputs:
+      - "Audit plan and checklist"
+      - "Access to production area and documentation"
+      - "Auditee availability for interviews"
+    steps:
+      - "Conduct opening meeting with area management"
+      - "Observe production processes at each audit station"
+      - "Interview operators about process knowledge and training"
+      - "Verify work instructions are current and accessible"
+      - "Check measurement equipment calibration status"
+      - "Verify statistical process control is maintained"
+      - "Review material traceability through production"
+      - "Check nonconforming material handling and segregation"
+      - "Verify corrective action implementation from previous audits"
+      - "Review environmental and safety compliance"
+      - "Document findings with objective evidence"
+    outputs:
+      - "Audit observation notes with evidence"
+      - "Finding classification: major, minor, observation"
+      - "Process compliance assessment"
+    tools:
+      - "Audit checklist (digital)"
+      - "Camera for evidence documentation"
+      - "Measurement verification tools"
+    quality_gates:
+      - "All checklist items assessed"
+      - "Findings supported by objective evidence"
+      - "Auditee given opportunity to clarify observations"
+
+  - name: "Audit Reporting"
+    description: "Compile audit findings into formal report and present to management"
+    inputs:
+      - "Audit observation notes and evidence"
+      - "Finding classifications"
+      - "Audit scoring methodology"
+    steps:
+      - "Classify each finding: nonconformity, observation, positive"
+      - "Reference specific standard clause for each nonconformity"
+      - "Describe objective evidence for each finding"
+      - "Calculate overall audit score if scoring method applies"
+      - "Identify systemic issues versus isolated incidents"
+      - "Draft audit report following standard template"
+      - "Include positive findings to balance report"
+      - "Conduct closing meeting with management"
+      - "Present key findings and request corrective actions"
+      - "Issue formal audit report within 5 business days"
+    outputs:
+      - "Formal audit report"
+      - "Finding list with classifications"
+      - "Audit score if applicable"
+    tools:
+      - "Audit report template"
+      - "Finding management system"
+      - "Presentation tool"
+    quality_gates:
+      - "All findings have objective evidence"
+      - "Report reviewed by lead auditor"
+      - "Report issued within timeline"
+
+  - name: "Corrective Action Management"
+    description: "Track and verify corrective actions for all audit findings"
+    inputs:
+      - "Audit findings requiring corrective action"
+      - "Corrective action request forms"
+      - "Agreed timelines for closure"
+    steps:
+      - "Issue corrective action requests for all nonconformities"
+      - "Auditee identifies root cause for each finding"
+      - "Auditee proposes corrective and preventive actions"
+      - "Review proposed actions for adequacy"
+      - "Track implementation progress per agreed timeline"
+      - "Verify implementation through evidence review"
+      - "Conduct on-site verification for major findings"
+      - "Confirm effectiveness of corrective actions"
+      - "Close findings when corrective actions verified effective"
+      - "Escalate overdue corrective actions to management"
+    outputs:
+      - "Corrective action records"
+      - "Verification results"
+      - "Closure records for findings"
+    tools:
+      - "Corrective action tracking system"
+      - "Root cause analysis tools"
+      - "Verification checklist"
+    quality_gates:
+      - "Root cause analysis completed for all findings"
+      - "Corrective actions address root cause not just symptom"
+      - "All findings closed within agreed timeline"
+
+  - name: "Trend Analysis and Program Update"
+    description: "Analyze audit trends and update the audit program based on findings"
+    inputs:
+      - "Completed audit reports from current period"
+      - "Historical audit data"
+      - "Quality performance trends"
+    steps:
+      - "Compile finding statistics by category and area"
+      - "Analyze repeat finding trends across audit periods"
+      - "Identify areas with improving or deteriorating performance"
+      - "Correlate audit findings with product quality data"
+      - "Identify systemic issues requiring management action"
+      - "Recommend audit frequency adjustments based on risk"
+      - "Update audit program for next period"
+      - "Present trend analysis to quality management"
+      - "Incorporate lessons learned into auditor training"
+      - "Update audit checklists based on new risks identified"
+    outputs:
+      - "Audit trend analysis report"
+      - "Updated audit program"
+      - "Management recommendations"
+    tools:
+      - "Statistical analysis tool"
+      - "Audit program management system"
+      - "Trend visualization dashboard"
+    quality_gates:
+      - "Trend analysis covers minimum 12-month period"
+      - "Repeat findings identified and addressed"
+      - "Audit program updated and approved"

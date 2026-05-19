@@ -1,0 +1,165 @@
+name: hybrid-control
+version: 1.0.0
+description: "Hybrid powertrain control strategy development and validation workflow for HEV/PHEV systems"
+trigger: "When developing new hybrid configurations, optimizing energy management, or adding driving modes"
+domain: "Powertrain"
+safety_level: "ASIL-C"
+
+prerequisites:
+  - "Hybrid powertrain simulation model validated"
+  - "All powertrain component ECUs integrated on bench"
+  - "Battery management system operational"
+  - "Motor controller calibrated for torque accuracy"
+  - "Vehicle-level energy management requirements defined"
+
+phases:
+  - name: "Energy Management Strategy Design"
+    description: "Design the supervisory control strategy for hybrid energy management"
+    inputs:
+      - "Powertrain configuration and component specifications"
+      - "Fuel economy and emission targets"
+      - "Battery usable energy window and power limits"
+      - "Electric motor torque and speed characteristics"
+    steps:
+      - "Define operating modes: EV, hybrid, engine-only, regenerative"
+      - "Design mode transition logic with hysteresis"
+      - "Define torque split strategy between engine and motor"
+      - "Design optimal operating line for engine in hybrid mode"
+      - "Define SOC management strategy for charge-sustaining"
+      - "Design charge-depleting strategy for PHEV"
+      - "Define regenerative braking blending with friction brakes"
+      - "Design engine start-stop control with motor cranking"
+      - "Define thermal management coordination strategy"
+      - "Design predictive energy management using route data"
+    outputs:
+      - "Energy management strategy specification"
+      - "Mode transition state machine"
+      - "Torque split strategy definition"
+    tools:
+      - "Powertrain simulation tool"
+      - "Optimization algorithm framework"
+      - "State machine design tool"
+    quality_gates:
+      - "Simulation shows fuel economy target achievable"
+      - "Mode transitions smooth in simulation"
+      - "SOC maintained within target window"
+
+  - name: "Control Algorithm Implementation"
+    description: "Implement the hybrid control algorithms in the supervisory controller"
+    inputs:
+      - "Energy management strategy specification"
+      - "Supervisory controller platform and API"
+      - "Component interface specifications"
+    steps:
+      - "Implement torque arbitration module"
+      - "Implement mode manager with transition logic"
+      - "Implement SOC controller for charge-sustaining mode"
+      - "Implement engine operating point optimizer"
+      - "Implement regenerative braking controller"
+      - "Implement motor torque request generation"
+      - "Implement engine torque request generation"
+      - "Implement clutch control for mode transitions"
+      - "Implement thermal derating logic for battery and motor"
+      - "Implement diagnostic monitoring for hybrid-specific faults"
+    outputs:
+      - "Implemented hybrid control software"
+      - "Algorithm documentation"
+      - "Unit test results"
+    tools:
+      - "Model-based development tool"
+      - "Auto-code generation"
+      - "Unit test framework"
+    quality_gates:
+      - "Auto-generated code passes MISRA checks"
+      - "Unit tests cover all mode transitions"
+      - "Algorithm documentation complete"
+
+  - name: "HIL Integration and Calibration"
+    description: "Integrate and calibrate hybrid control on hardware-in-the-loop test bench"
+    inputs:
+      - "Implemented control software on target ECU"
+      - "HIL bench with powertrain plant models"
+      - "Calibration parameters from simulation"
+    steps:
+      - "Deploy software to supervisory controller on HIL"
+      - "Verify communication with all component ECU models"
+      - "Calibrate EV-to-hybrid mode transition thresholds"
+      - "Calibrate engine start-stop conditions and timing"
+      - "Optimize torque split maps for economy and performance"
+      - "Calibrate regenerative braking blending curve"
+      - "Tune SOC controller gains for stable operation"
+      - "Calibrate thermal derating curves for battery and motor"
+      - "Execute drive cycle simulation on HIL"
+      - "Verify fuel economy prediction matches targets"
+    outputs:
+      - "Calibrated hybrid control parameters"
+      - "HIL test results"
+      - "Fuel economy simulation data"
+    tools:
+      - "HIL test bench"
+      - "Calibration tool"
+      - "Drive cycle simulation"
+    quality_gates:
+      - "All mode transitions smooth on HIL"
+      - "Drive cycle fuel economy within 5% of target"
+      - "No unintended engine starts or stops"
+
+  - name: "Vehicle Calibration and Validation"
+    description: "Calibrate and validate hybrid control strategy on the target vehicle"
+    inputs:
+      - "HIL-calibrated parameters"
+      - "Prototype vehicle with hybrid powertrain"
+      - "Vehicle test procedures"
+    steps:
+      - "Deploy calibration to vehicle supervisory controller"
+      - "Verify all component communications on vehicle"
+      - "Calibrate EV mode maximum speed and power limits"
+      - "Fine-tune engine start NVH for driver acceptance"
+      - "Calibrate creep torque in EV and hybrid modes"
+      - "Optimize hill-hold and launch control"
+      - "Execute WLTP drive cycle for fuel economy measurement"
+      - "Execute real-world driving for drivability evaluation"
+      - "Verify battery SOC management over extended driving"
+      - "Test extreme temperature operation: cold start and hot soak"
+    outputs:
+      - "Vehicle-validated calibration parameters"
+      - "Fuel economy test results"
+      - "Drivability evaluation results"
+    tools:
+      - "Chassis dynamometer"
+      - "Vehicle data logger"
+      - "Emission measurement system"
+    quality_gates:
+      - "WLTP fuel economy meets type approval target"
+      - "Drivability rating meets minimum score"
+      - "SOC management stable over all test conditions"
+
+  - name: "Certification and Production Release"
+    description: "Complete type approval testing and release hybrid control calibration"
+    inputs:
+      - "Validated hybrid calibration"
+      - "Type approval test requirements"
+      - "Production release criteria"
+    steps:
+      - "Execute official WLTP test for CO2 certification"
+      - "Execute charge-depleting range test for PHEV"
+      - "Execute charge-sustaining emission test"
+      - "Document electric range and combined fuel economy"
+      - "Verify OBD compliance for hybrid-specific monitors"
+      - "Execute electromagnetic compatibility testing"
+      - "Freeze hybrid control calibration dataset"
+      - "Generate calibration documentation"
+      - "Obtain type approval for hybrid variant"
+      - "Release calibration for production programming"
+    outputs:
+      - "Type approval test results"
+      - "Certified CO2 and range values"
+      - "Production-released calibration"
+    tools:
+      - "Official emission test facility"
+      - "Range test equipment"
+      - "Calibration release system"
+    quality_gates:
+      - "CO2 value meets fleet target contribution"
+      - "Electric range meets regulatory minimum for PHEV"
+      - "Type approval obtained"

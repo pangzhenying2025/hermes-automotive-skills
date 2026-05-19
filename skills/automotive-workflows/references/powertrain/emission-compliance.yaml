@@ -1,0 +1,164 @@
+name: emission-compliance
+version: 1.0.0
+description: "Vehicle emission compliance workflow for meeting regulatory standards from development through type approval"
+trigger: "During new vehicle development, for regulation change adaptation, or emission compliance renewal"
+domain: "Powertrain"
+standard: "Euro 7, EPA Tier 3, CARB LEV III"
+
+prerequisites:
+  - "Powertrain development reaching emission calibration phase"
+  - "Emission test facility with regulatory measurement equipment"
+  - "Chassis dynamometer with driver robot"
+  - "Portable emission measurement system for RDE testing"
+  - "After-treatment system optimized and installed"
+
+phases:
+  - name: "Regulatory Analysis"
+    description: "Analyze applicable emission regulations and derive compliance targets"
+    inputs:
+      - "Vehicle class and mass specifications"
+      - "Target market regulatory requirements"
+      - "Powertrain configuration details"
+    steps:
+      - "Identify all applicable emission regulations per market"
+      - "Determine emission limit values per pollutant species"
+      - "Calculate compliance targets with engineering margin"
+      - "Identify required drive cycle tests per regulation"
+      - "Determine OBD threshold values per regulation"
+      - "Identify in-use conformity requirements"
+      - "Determine durability demonstration requirements"
+      - "Identify evaporative emission requirements"
+      - "Plan test sequence and dependencies"
+      - "Create compliance management plan"
+    outputs:
+      - "Emission compliance target matrix"
+      - "Test plan per regulation"
+      - "Compliance management plan"
+    tools:
+      - "Regulatory database"
+      - "Compliance planning tool"
+      - "Test scheduling system"
+    quality_gates:
+      - "All applicable regulations identified"
+      - "Compliance targets include sufficient margin"
+      - "Test plan covers all regulatory requirements"
+
+  - name: "Development Testing"
+    description: "Execute development emission tests to guide calibration optimization"
+    inputs:
+      - "Current powertrain calibration"
+      - "Emission test facility resources"
+      - "Development test matrix"
+    steps:
+      - "Execute WLTP cold start test"
+      - "Execute WLTP hot start test"
+      - "Analyze second-by-second emission data by phase"
+      - "Identify calibration areas needing optimization"
+      - "Execute US FTP-75 test if applicable"
+      - "Execute US06 supplemental test for high-speed emissions"
+      - "Analyze particulate number emission results"
+      - "Test after-treatment system conversion efficiency"
+      - "Evaluate cold start catalyst heating strategy"
+      - "Execute iterative test-calibrate-retest cycles"
+    outputs:
+      - "Development emission test results"
+      - "Calibration optimization recommendations"
+      - "After-treatment efficiency data"
+    tools:
+      - "CVS emission measurement system"
+      - "Particulate measurement system"
+      - "Chassis dynamometer"
+    quality_gates:
+      - "Emission trends moving toward compliance targets"
+      - "Catalyst light-off time acceptable"
+      - "Particulate emissions within development targets"
+
+  - name: "Real Driving Emissions Testing"
+    description: "Validate emission performance under real driving conditions per RDE regulations"
+    inputs:
+      - "Development-optimized calibration"
+      - "PEMS equipment installed on vehicle"
+      - "RDE route definitions meeting boundary conditions"
+    steps:
+      - "Install and calibrate PEMS equipment on test vehicle"
+      - "Plan RDE routes meeting regulatory boundary conditions"
+      - "Execute urban-rural-motorway RDE route"
+      - "Analyze PEMS data with official evaluation tool"
+      - "Verify conformity factors are within limits"
+      - "Test with varying ambient temperatures"
+      - "Test with varying altitude conditions"
+      - "Test with varying payload conditions"
+      - "Identify operating conditions with high emission risk"
+      - "Optimize calibration for identified risk areas"
+    outputs:
+      - "RDE test results with conformity factors"
+      - "PEMS data per test run"
+      - "Risk area identification for calibration"
+    tools:
+      - "Portable emission measurement system"
+      - "GPS and weather station"
+      - "RDE evaluation tool"
+    quality_gates:
+      - "Conformity factors within regulatory limits"
+      - "All boundary conditions met during testing"
+      - "No exceedance of emission limits during any trip"
+
+  - name: "Durability Demonstration"
+    description: "Demonstrate emission compliance over the regulatory useful life"
+    inputs:
+      - "Optimized emission calibration"
+      - "Durability test protocol"
+      - "Deterioration factor requirements"
+    steps:
+      - "Select durability demonstration method: full aging or bench aging"
+      - "Execute standard road cycle or bench cycle aging"
+      - "Perform intermediate emission tests at specified intervals"
+      - "Monitor catalyst and sensor performance degradation"
+      - "Calculate deterioration factors from measured data"
+      - "Verify deteriorated emissions still within limits"
+      - "Apply deterioration factors to type approval results"
+      - "Document after-treatment component conditions"
+      - "Verify OBD monitors detect degraded components"
+      - "Generate durability demonstration report"
+    outputs:
+      - "Deterioration factor measurements"
+      - "Intermediate emission test results"
+      - "Durability demonstration report"
+    tools:
+      - "Durability test facility"
+      - "Emission test equipment"
+      - "Component analysis tools"
+    quality_gates:
+      - "Deterioration factors within expected range"
+      - "Deteriorated emissions within regulatory limits"
+      - "After-treatment degradation path acceptable"
+
+  - name: "Type Approval Submission"
+    description: "Execute official type approval tests and submit documentation to authority"
+    inputs:
+      - "Final emission calibration"
+      - "Durability demonstration results"
+      - "Type approval application documents"
+    steps:
+      - "Execute official type approval emission tests"
+      - "Apply deterioration factors to official results"
+      - "Verify all pollutant species within regulatory limits"
+      - "Execute evaporative emission test if applicable"
+      - "Compile type approval technical documentation"
+      - "Prepare emission data tables for approval authority"
+      - "Submit application to type approval authority"
+      - "Support authority during test witnessing if required"
+      - "Address any authority questions or retest requests"
+      - "Obtain emission type approval certificate"
+    outputs:
+      - "Official emission test results"
+      - "Type approval application package"
+      - "Emission type approval certificate"
+    tools:
+      - "Official test facility"
+      - "Type approval documentation system"
+      - "Regulatory submission portal"
+    quality_gates:
+      - "All official tests pass with margin"
+      - "Documentation complete per authority requirements"
+      - "Type approval certificate obtained"

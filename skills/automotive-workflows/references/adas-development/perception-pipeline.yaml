@@ -1,0 +1,344 @@
+name: adas-perception-pipeline
+version: 1.0.0
+description: |
+  End-to-end ADAS perception pipeline development workflow following ISO 21448 SOTIF.
+  Covers camera, radar, LiDAR processing, sensor fusion, and object tracking for L2+ systems.
+
+domain: adas
+safety_standard: ISO_21448
+estimated_duration: 16-24_weeks
+
+phases:
+  - phase: requirements
+    name: Perception Requirements Engineering
+    description: Define functional and performance requirements for perception system
+    duration: 2-3_weeks
+    inputs:
+      - system_ods (Operational Design Space)
+      - use_case_scenarios
+      - regulatory_requirements (UNECE R157, R155)
+      - sensor_specifications
+    outputs:
+      - perception_requirements_spec
+      - kpi_definitions (detection_rate, false_positive_rate, latency)
+      - sotif_triggering_conditions
+      - corner_case_catalog
+    tools:
+      - DOORS (requirements management)
+      - Enterprise Architect (use case modeling)
+      - SOTIF analysis tools (Medini Analyze)
+    skills_used:
+      - requirements-engineering
+      - system-architecture-design
+      - safety-analysis
+    agents_involved:
+      - system-architect
+      - safety-engineer
+      - adas-specialist
+    acceptance_criteria:
+      - All ODD scenarios covered with measurable KPIs
+      - Traceability matrix to system requirements established
+      - SOTIF known unsafe scenarios documented
+      - Sensor coverage analysis completed (field of view, range)
+    safety_considerations:
+      - Define perception failure modes (missed detection, false positive, misclassification)
+      - Identify environmental triggers (rain, fog, sun glare, tunnel transitions)
+      - Establish degradation strategies for sensor failures
+
+  - phase: sensor_selection
+    name: Sensor Suite Selection and Configuration
+    description: Select and configure camera, radar, LiDAR sensors for perception tasks
+    duration: 2-3_weeks
+    inputs:
+      - perception_requirements_spec
+      - vehicle_integration_constraints
+      - cost_targets
+      - supplier_ecosystem
+    outputs:
+      - sensor_configuration_spec
+      - sensor_placement_design (CAD models)
+      - calibration_requirements
+      - data_fusion_architecture
+    tools:
+      - PreScan (sensor simulation)
+      - ANSYS (EM interference analysis)
+      - IPG CarMaker (virtual sensor prototyping)
+    skills_used:
+      - system-integration
+      - sensor-fusion-architecture
+      - automotive-validation
+    agents_involved:
+      - system-architect
+      - hardware-integration-specialist
+      - adas-specialist
+    acceptance_criteria:
+      - Sensor coverage meets ODD requirements (360° coverage for highway pilot)
+      - Redundancy strategy defined (camera+radar for critical objects)
+      - Calibration procedure documented
+      - Environmental robustness validated (temperature, vibration)
+    safety_considerations:
+      - Sensor redundancy for ASIL-B/C functions
+      - Diagnostic coverage for sensor health monitoring
+      - Graceful degradation when sensors fail
+
+  - phase: algorithm_design
+    name: Perception Algorithm Design
+    description: Design deep learning and classical algorithms for perception tasks
+    duration: 4-6_weeks
+    inputs:
+      - sensor_configuration_spec
+      - annotated_datasets (nuScenes, Waymo Open, KITTI)
+      - compute_platform_specs (NVIDIA Orin, Mobileye EyeQ)
+    outputs:
+      - algorithm_architecture_spec (YOLO, PointPillars, CenterFusion)
+      - model_training_plan
+      - inference_optimization_strategy
+      - validation_dataset_plan
+    tools:
+      - PyTorch / TensorFlow (model training)
+      - ONNX (model interchange)
+      - TensorRT (inference optimization)
+      - MLflow (experiment tracking)
+    skills_used:
+      - deep-learning-architecture
+      - computer-vision
+      - sensor-fusion-algorithms
+      - model-optimization
+    agents_involved:
+      - ml-engineer
+      - perception-algorithm-engineer
+      - embedded-ai-specialist
+    acceptance_criteria:
+      - Object detection mAP > 0.85 on validation set
+      - Tracking MOTA > 0.75 for multi-object scenarios
+      - Inference latency < 50ms on target hardware
+      - False positive rate < 0.1 per km
+    safety_considerations:
+      - Out-of-distribution detection (unknown object types)
+      - Adversarial robustness testing
+      - Explainability for safety-critical decisions
+      - Dataset bias analysis (geographic, weather, demographics)
+
+  - phase: implementation
+    name: Perception Software Implementation
+    description: Implement perception pipeline in C++/CUDA with ROS2 integration
+    duration: 6-8_weeks
+    inputs:
+      - algorithm_architecture_spec
+      - trained_models (ONNX format)
+      - sw_architecture_design (AUTOSAR Adaptive or ROS2)
+    outputs:
+      - perception_source_code (C++17, CUDA)
+      - ros2_node_packages
+      - unit_test_suite (GoogleTest)
+      - tensorrt_engines (optimized models)
+    tools:
+      - ROS2 Humble (middleware)
+      - CUDA Toolkit 12.x (GPU acceleration)
+      - TensorRT 8.x (inference engine)
+      - OpenCV 4.x (classical CV)
+      - PCL 1.12 (LiDAR processing)
+      - CMake (build system)
+      - Git + GitLab CI (version control)
+    skills_used:
+      - cpp-embedded-development
+      - cuda-programming
+      - ros2-development
+      - performance-optimization
+    agents_involved:
+      - embedded-software-engineer
+      - cuda-specialist
+      - perception-algorithm-engineer
+    tasks:
+      camera_processing:
+        - Image preprocessing (debayering, ISP pipeline)
+        - Object detection inference (YOLOv8, EfficientDet)
+        - Lane detection (polyline fitting, Bezier curves)
+        - Semantic segmentation (free space, road surface)
+      radar_processing:
+        - Target list filtering (clutter removal)
+        - Doppler velocity processing
+        - Elevation angle estimation (imaging radar)
+        - Ghost target mitigation
+      lidar_processing:
+        - Point cloud preprocessing (voxelization, downsampling)
+        - Ground plane segmentation
+        - 3D object detection (PointPillars, CenterPoint)
+        - Point cloud clustering (DBSCAN, Euclidean)
+      sensor_fusion:
+        - Early fusion (feature-level fusion)
+        - Late fusion (track-level fusion with Kalman filter)
+        - Association logic (Hungarian algorithm, GNN)
+        - Temporal fusion (multi-frame aggregation)
+      object_tracking:
+        - Multi-object tracking (SORT, DeepSORT, AB3DMOT)
+        - Track state management (new, confirmed, lost, deleted)
+        - Track prediction (constant velocity, CTRV models)
+        - Track scoring and lifecycle management
+    acceptance_criteria:
+      - All unit tests pass with >90% code coverage
+      - Static analysis clean (Coverity, clang-tidy)
+      - MISRA C++ 2008 compliance for safety modules
+      - Memory safety verified (AddressSanitizer, Valgrind)
+      - Real-time performance: 20 FPS on target ECU
+    safety_considerations:
+      - Watchdog monitoring for perception threads
+      - Memory bounds checking on GPU buffers
+      - Fallback to redundant sensor on primary failure
+      - Plausibility checks on fusion output
+
+  - phase: integration
+    name: System Integration and HIL Testing
+    description: Integrate perception with planning/control, test on HIL benches
+    duration: 3-4_weeks
+    inputs:
+      - perception_source_code
+      - vehicle_simulator (IPG CarMaker, CARLA)
+      - hil_test_bench (dSPACE, NI PXI)
+    outputs:
+      - integrated_adas_system
+      - hil_test_results
+      - interface_documentation (sensor data formats, object lists)
+      - timing_analysis_report
+    tools:
+      - dSPACE SCALEXIO (HIL platform)
+      - CANoe (CAN/Ethernet simulation)
+      - IPG CarMaker (vehicle dynamics)
+      - CARLA (open-source simulator)
+      - Vector vTESTstudio (test automation)
+    skills_used:
+      - hil-testing
+      - automotive-integration
+      - timing-analysis
+    agents_involved:
+      - integration-engineer
+      - test-automation-engineer
+      - adas-specialist
+    acceptance_criteria:
+      - All sensor interfaces functional (MIPI CSI-2, CAN FD, Ethernet)
+      - Perception-to-planning interface validated
+      - End-to-end latency < 150ms (sensor to actuator)
+      - 1000+ HIL test scenarios passed
+    safety_considerations:
+      - Sensor fault injection testing
+      - Communication loss handling
+      - Degraded mode validation
+
+  - phase: validation
+    name: Field Validation and SOTIF Testing
+    description: Validate perception on test track and public roads per ISO 21448
+    duration: 6-8_weeks
+    inputs:
+      - integrated_adas_system
+      - test_scenario_catalog (SOTIF known/unknown scenarios)
+      - validation_kpis
+    outputs:
+      - field_test_results
+      - sotif_validation_report
+      - corner_case_database
+      - improvement_backlog
+    tools:
+      - Data logging systems (Vector, ETAS)
+      - Post-processing tools (MATLAB, Python)
+      - Scenario replay tools (AVL DRIVINGCUBE)
+      - Metrics analysis (precision, recall, F1)
+    skills_used:
+      - automotive-validation
+      - safety-analysis
+      - data-analytics
+    agents_involved:
+      - validation-engineer
+      - safety-engineer
+      - data-analyst
+    test_categories:
+      - Nominal scenarios (highway, urban, parking)
+      - Edge cases (cut-in, jaywalking, debris)
+      - Environmental triggers (rain, fog, snow, night)
+      - SOTIF unknown scenarios (simulation-based discovery)
+    acceptance_criteria:
+      - 10,000+ km of real-world testing
+      - Detection rate > 99% for critical objects (NCAP scenarios)
+      - False positive rate < 0.05 per km
+      - SOTIF residual risk acceptable per ISO 21448
+    safety_considerations:
+      - Safety driver monitoring during validation
+      - Incident logging and root cause analysis
+      - Continuous improvement loop for corner cases
+
+  - phase: deployment
+    name: Production Release and OTA Updates
+    description: Prepare perception system for production deployment
+    duration: 2-3_weeks
+    inputs:
+      - validated_perception_system
+      - production_ecu_hardware
+      - cybersecurity_requirements (ISO 21434)
+    outputs:
+      - production_software_build
+      - ota_update_package
+      - deployment_documentation
+      - monitoring_dashboard
+    tools:
+      - Vector vFlash (ECU flashing)
+      - Elektrobit EB corbos (AUTOSAR stack)
+      - Azure IoT Hub (OTA backend)
+      - Prometheus + Grafana (fleet monitoring)
+    skills_used:
+      - production-deployment
+      - ota-update-management
+      - fleet-monitoring
+    agents_involved:
+      - devops-engineer
+      - cybersecurity-engineer
+      - fleet-operations
+    acceptance_criteria:
+      - Software signed and encrypted per ISO 21434
+      - OTA update validated on pre-production fleet
+      - Rollback mechanism tested
+      - Fleet monitoring dashboard operational
+    safety_considerations:
+      - Secure boot chain validated
+      - OTA update fail-safe mechanism
+      - Fleet-wide anomaly detection
+
+quality_gates:
+  - gate: requirements_review
+    phase: requirements
+    criteria:
+      - SOTIF analysis complete
+      - Stakeholder sign-off
+  - gate: algorithm_validation
+    phase: algorithm_design
+    criteria:
+      - Offline metrics meet targets
+      - Safety review approved
+  - gate: code_review
+    phase: implementation
+    criteria:
+      - MISRA compliance
+      - Unit test coverage >90%
+  - gate: hil_release
+    phase: integration
+    criteria:
+      - All critical scenarios passed
+      - Timing requirements met
+  - gate: production_readiness
+    phase: validation
+    criteria:
+      - Field validation complete
+      - SOTIF report approved
+      - Cybersecurity audit passed
+
+metrics:
+  - Object detection mAP
+  - Tracking MOTA/MOTP
+  - False positive rate per km
+  - Latency (sensor to object list)
+  - CPU/GPU utilization
+  - Memory footprint
+
+references:
+  - ISO 21448 (SOTIF)
+  - ISO 26262 (Functional Safety)
+  - UNECE R157 (ALKS)
+  - SAE J3016 (Automation Levels)

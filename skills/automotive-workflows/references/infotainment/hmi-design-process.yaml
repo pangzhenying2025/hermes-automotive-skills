@@ -1,0 +1,164 @@
+name: hmi-design-process
+version: 1.0.0
+description: "Human-Machine Interface design workflow for automotive infotainment and instrument cluster displays"
+trigger: "During new vehicle UI development, major HMI redesigns, or adding new display features"
+domain: "Infotainment"
+safety_level: "ASIL-B for cluster, QM for infotainment"
+
+prerequisites:
+  - "HMI design brief from brand and vehicle program"
+  - "Display hardware specifications and capabilities"
+  - "User research data from target market"
+  - "Brand design language guidelines"
+  - "HMI design tools and prototyping platform"
+
+phases:
+  - name: "User Research and Requirements"
+    description: "Gather user needs and define HMI requirements through research"
+    inputs:
+      - "Target market demographics"
+      - "Competitive benchmark analysis"
+      - "User pain points from previous models"
+    steps:
+      - "Conduct user interviews with target demographic groups"
+      - "Analyze usage data from connected vehicle fleet"
+      - "Identify most-used and least-used features"
+      - "Map user journeys for primary driving tasks"
+      - "Map user journeys for secondary tasks: navigation, media, phone"
+      - "Identify distraction risk scenarios per NHTSA guidelines"
+      - "Define information hierarchy for instrument cluster"
+      - "Define information hierarchy for center display"
+      - "Specify accessibility requirements"
+      - "Create HMI requirements specification"
+    outputs:
+      - "User research findings report"
+      - "HMI requirements specification"
+      - "User journey maps"
+    tools:
+      - "User research platform"
+      - "Analytics dashboard"
+      - "Journey mapping tool"
+    quality_gates:
+      - "Minimum 30 user interviews conducted"
+      - "Requirements cover all identified user journeys"
+      - "Distraction guidelines addressed in requirements"
+
+  - name: "Interaction Design"
+    description: "Design the interaction model including navigation, controls, and feedback"
+    inputs:
+      - "HMI requirements"
+      - "Display and input hardware specifications"
+      - "Brand interaction guidelines"
+    steps:
+      - "Design information architecture and menu structure"
+      - "Define home screen layout and widget system"
+      - "Design navigation flow between screens"
+      - "Define touch gesture vocabulary: tap, swipe, pinch"
+      - "Design physical control integration: rotary, buttons, steering"
+      - "Define voice command interaction model"
+      - "Design notification system and priority rules"
+      - "Define transition animations between screens"
+      - "Design split-screen and multi-window behaviors"
+      - "Create interaction specification document"
+    outputs:
+      - "Information architecture diagram"
+      - "Interaction specification"
+      - "Navigation flow diagrams"
+    tools:
+      - "UX design tool"
+      - "Wireframing tool"
+      - "Interaction prototyping platform"
+    quality_gates:
+      - "Navigation depth maximum 3 levels for primary tasks"
+      - "Interaction model consistent across all features"
+      - "Voice commands cover primary driving tasks"
+
+  - name: "Visual Design and Prototyping"
+    description: "Create visual designs and interactive prototypes for validation"
+    inputs:
+      - "Interaction specification"
+      - "Brand visual design language"
+      - "Display specifications: resolution, color gamut"
+    steps:
+      - "Design visual theme: colors, typography, iconography"
+      - "Create high-fidelity mockups for all primary screens"
+      - "Design day and night mode color schemes"
+      - "Design instrument cluster gauge and warning displays"
+      - "Create animated transitions and micro-interactions"
+      - "Build interactive prototype for usability testing"
+      - "Design responsive layouts for different display sizes"
+      - "Create design component library for development"
+      - "Specify all spacing, sizing, and animation timing"
+      - "Review designs with brand team for approval"
+    outputs:
+      - "Visual design specifications"
+      - "Interactive prototype"
+      - "Design component library"
+    tools:
+      - "Visual design tool"
+      - "Prototyping platform"
+      - "Animation tool"
+    quality_gates:
+      - "Visual design approved by brand team"
+      - "Contrast ratios meet accessibility standards"
+      - "Night mode does not cause driver distraction"
+
+  - name: "Usability Testing"
+    description: "Validate HMI design through structured usability testing with real users"
+    inputs:
+      - "Interactive prototype"
+      - "Usability test plan"
+      - "Representative user participants"
+    steps:
+      - "Recruit test participants matching target demographics"
+      - "Set up driving simulator with HMI prototype"
+      - "Define primary task scenarios for testing"
+      - "Conduct moderated usability test sessions"
+      - "Measure task completion time for primary tasks"
+      - "Measure task completion time while driving in simulator"
+      - "Record eye tracking data during task execution"
+      - "Calculate total eyes-off-road time per task"
+      - "Gather subjective satisfaction ratings"
+      - "Identify usability issues and prioritize by severity"
+    outputs:
+      - "Usability test results"
+      - "Eye tracking analysis"
+      - "Prioritized improvement list"
+    tools:
+      - "Driving simulator"
+      - "Eye tracking system"
+      - "Usability test recording software"
+    quality_gates:
+      - "Primary tasks completable within NHTSA glance time limits"
+      - "Task success rate above 90% for primary functions"
+      - "No critical usability issues remaining"
+
+  - name: "Design Handoff and Implementation Support"
+    description: "Hand off final designs to development and support implementation"
+    inputs:
+      - "Validated and refined HMI design"
+      - "Design component library"
+      - "Development team"
+    steps:
+      - "Create detailed design specification for developers"
+      - "Export all design assets: icons, images, animations"
+      - "Define CSS/styling tokens for design system implementation"
+      - "Conduct design walkthrough with development team"
+      - "Support developers during implementation questions"
+      - "Review implementation against design specifications"
+      - "Identify and document any implementation compromises"
+      - "Validate final implementation on target hardware"
+      - "Verify display rendering quality on actual screens"
+      - "Sign off on implementation fidelity"
+    outputs:
+      - "Design specification package"
+      - "Exported design assets"
+      - "Implementation review results"
+    tools:
+      - "Design handoff tool"
+      - "Asset export pipeline"
+      - "Target display hardware"
+    quality_gates:
+      - "Implementation matches design within acceptable tolerance"
+      - "All animations render smoothly at target frame rate"
+      - "Design team signs off on implementation"

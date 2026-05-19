@@ -1,0 +1,45 @@
+name: ota-deployment
+version: 1.0.0
+description: |
+  Over-the-Air software update deployment workflow with canary rollout and monitoring.
+
+domain: cloud_operations
+safety_standard: ISO_21434
+estimated_duration: 2-4_weeks
+
+phases:
+  - phase: package_preparation
+    name: OTA Package Creation and Signing
+    duration: 2-3_days
+    outputs:
+      - signed_ota_package
+      - delta_update_file
+      - rollback_image
+  - phase: staging
+    name: Staging Environment Validation
+    duration: 3-5_days
+    outputs:
+      - staging_test_results
+      - deployment_approval
+  - phase: canary_deployment
+    name: Canary Deployment to Test Fleet
+    duration: 1_week
+    outputs:
+      - canary_metrics
+      - incident_reports
+  - phase: gradual_rollout
+    name: Phased Production Rollout
+    duration: 2-4_weeks
+    outputs:
+      - rollout_progress_dashboard
+      - fleet_health_metrics
+  - phase: monitoring
+    name: Post-Deployment Monitoring and Rollback
+    duration: ongoing
+    outputs:
+      - anomaly_alerts
+      - rollback_decisions
+
+references:
+  - ISO 21434 (Software updates)
+  - UNECE R156 (Software update management)

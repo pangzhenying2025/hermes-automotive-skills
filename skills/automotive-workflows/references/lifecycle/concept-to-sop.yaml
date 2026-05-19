@@ -1,0 +1,48 @@
+name: concept-to-sop
+version: 1.0.0
+description: |
+  Full vehicle program lifecycle from concept to Start of Production.
+
+domain: program_management
+safety_standard: ISO_26262_ASPICE
+estimated_duration: 36-60_months
+
+phases:
+  - phase: concept
+    name: Concept Phase and Feasibility Study
+    duration: 6-12_months
+    outputs:
+      - business_case
+      - technical_feasibility_study
+      - program_charter
+  - phase: development
+    name: Development Phase (Design, Integration, Validation)
+    duration: 18-36_months
+    outputs:
+      - system_architecture
+      - validated_subsystems
+      - prototype_vehicles
+  - phase: validation
+    name: Validation Phase (Testing, Certification, Homologation)
+    duration: 12-18_months
+    outputs:
+      - validation_test_results
+      - type_approval_certificates
+  - phase: industrialization
+    name: Industrialization and Launch Preparation
+    duration: 6-12_months
+    outputs:
+      - production_line_setup
+      - ppap_approval
+      - supply_chain_readiness
+  - phase: sop
+    name: Start of Production and Ramp-Up
+    duration: 3-6_months
+    outputs:
+      - sop_declaration
+      - volume_ramp_metrics
+
+references:
+  - APQP (Advanced Product Quality Planning)
+  - ISO 26262 (Safety lifecycle)
+  - ASPICE (Software process lifecycle)

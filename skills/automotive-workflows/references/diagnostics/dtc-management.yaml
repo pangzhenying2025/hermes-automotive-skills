@@ -1,0 +1,166 @@
+name: dtc-management
+version: 1.0.0
+description: "Diagnostic Trouble Code management workflow for defining, implementing, and validating fault detection in automotive ECUs"
+trigger: "When new faults need monitoring, fault detection logic changes, or DTC calibration updates are required"
+domain: "Diagnostics"
+standard: "ISO 14229, ISO 15031 (OBD)"
+
+prerequisites:
+  - "FMEA or fault analysis identifying required DTCs"
+  - "DEM module configured in AUTOSAR or equivalent fault manager"
+  - "Debounce parameters from system engineering"
+  - "Freeze frame and extended data requirements defined"
+  - "OBD-II requirements if emission-relevant"
+
+phases:
+  - name: "DTC Definition"
+    description: "Define diagnostic trouble codes based on fault analysis and regulatory requirements"
+    inputs:
+      - "FMEA fault list"
+      - "OEM DTC numbering convention"
+      - "OBD-II regulatory requirements"
+    steps:
+      - "Map each FMEA fault to a DTC number per OEM convention"
+      - "Define DTC severity classification for each fault"
+      - "Assign fault detection condition descriptions"
+      - "Define malfunction indicator lamp behavior per DTC"
+      - "Classify DTCs as emission-relevant or non-emission"
+      - "Define DTC dependencies and enabling conditions"
+      - "Specify freeze frame data to capture per DTC"
+      - "Specify extended data records per DTC"
+      - "Define DTC aging and self-healing criteria"
+      - "Create DTC specification document"
+    outputs:
+      - "DTC specification with all definitions"
+      - "DTC-to-fault mapping table"
+      - "Freeze frame and extended data definitions"
+    tools:
+      - "DTC management database"
+      - "FMEA tool"
+      - "Diagnostic specification editor"
+    quality_gates:
+      - "All FMEA faults mapped to DTCs"
+      - "DTC numbering follows OEM convention"
+      - "Emission-relevant DTCs meet regulatory requirements"
+
+  - name: "Fault Detection Implementation"
+    description: "Implement fault detection algorithms and DEM event reporting"
+    inputs:
+      - "DTC specification"
+      - "DEM configuration"
+      - "Signal access interfaces for monitored parameters"
+    steps:
+      - "Implement fault detection conditions for each DTC"
+      - "Configure debounce algorithm per DTC: counter or time based"
+      - "Set debounce thresholds for fault qualification"
+      - "Set debounce thresholds for fault healing"
+      - "Implement enabling conditions for each fault monitor"
+      - "Configure DTC dependencies for cascading fault prevention"
+      - "Implement freeze frame data capture at fault confirmation"
+      - "Configure extended data recording parameters"
+      - "Implement DTC status bit management per ISO 14229"
+      - "Configure DTC memory management: priority and overflow"
+    outputs:
+      - "Fault detection algorithm implementations"
+      - "DEM configuration with all DTCs"
+      - "Debounce parameter calibration"
+    tools:
+      - "AUTOSAR authoring tool"
+      - "Development IDE"
+      - "Calibration tool"
+    quality_gates:
+      - "All DTCs implemented with detection logic"
+      - "Debounce parameters match system requirements"
+      - "DTC dependencies prevent false cascading"
+
+  - name: "Fault Injection Testing"
+    description: "Validate DTC behavior through systematic fault injection"
+    inputs:
+      - "Implemented fault detection"
+      - "Fault injection test procedures"
+      - "Test bench with stimulus generation"
+    steps:
+      - "Inject each fault condition and verify DTC sets"
+      - "Verify debounce counter increments correctly"
+      - "Verify DTC confirms after debounce threshold"
+      - "Verify freeze frame data captured correctly"
+      - "Remove fault condition and verify healing behavior"
+      - "Verify DTC ages out after configured drive cycles"
+      - "Test DTC clear via diagnostic service and verify reset"
+      - "Verify enabling conditions prevent false detection"
+      - "Test cascading fault scenarios with dependencies"
+      - "Verify DTC memory overflow handling"
+      - "Test DTC behavior during power cycling"
+    outputs:
+      - "Fault injection test results per DTC"
+      - "Debounce timing measurements"
+      - "Freeze frame data verification results"
+    tools:
+      - "HIL test bench"
+      - "Fault injection system"
+      - "Diagnostic tester"
+    quality_gates:
+      - "All DTCs trigger correctly on fault injection"
+      - "All DTCs heal correctly on fault removal"
+      - "Freeze frame data accurate at time of capture"
+
+  - name: "OBD Compliance Verification"
+    description: "Verify emission-relevant DTCs meet OBD regulatory requirements"
+    inputs:
+      - "Emission-relevant DTC list"
+      - "OBD compliance requirements per regulation"
+      - "OBD monitor test procedures"
+    steps:
+      - "Verify MIL illumination behavior for emission DTCs"
+      - "Verify DTC readiness flag management"
+      - "Test monitor completion during standard drive cycle"
+      - "Verify Mode 01 PID support for required parameters"
+      - "Verify Mode 02 freeze frame data per regulation"
+      - "Verify Mode 03 confirmed DTC reporting"
+      - "Verify Mode 07 pending DTC reporting"
+      - "Verify Mode 0A permanent DTC handling"
+      - "Test DTC clear and readiness reset behavior"
+      - "Execute complete OBD verification drive cycle"
+    outputs:
+      - "OBD compliance test results"
+      - "Monitor completion status"
+      - "Readiness flag behavior verification"
+    tools:
+      - "OBD scan tool"
+      - "OBD compliance test suite"
+      - "Emission test dynamometer"
+    quality_gates:
+      - "All emission monitors complete in specified drive cycle"
+      - "MIL behavior meets regulatory requirements"
+      - "All required OBD modes respond correctly"
+
+  - name: "Calibration and Release"
+    description: "Finalize DTC calibration parameters and release for production"
+    inputs:
+      - "Validated DTC implementation"
+      - "Field experience data if available"
+      - "Calibration adjustment requests"
+    steps:
+      - "Review debounce parameters against field data or simulation"
+      - "Adjust thresholds to minimize false positives"
+      - "Verify adjusted parameters do not miss real faults"
+      - "Conduct sensitivity analysis on critical thresholds"
+      - "Freeze calibration values for release"
+      - "Document all DTC calibration values with rationale"
+      - "Generate DTC documentation for service manual"
+      - "Update ODX file with final DTC definitions"
+      - "Obtain DTC specification sign-off"
+      - "Release DTC configuration as part of firmware"
+    outputs:
+      - "Finalized DTC calibration parameters"
+      - "DTC service documentation"
+      - "Updated ODX file"
+      - "DTC specification sign-off"
+    tools:
+      - "Calibration management tool"
+      - "Documentation system"
+      - "ODX editor"
+    quality_gates:
+      - "All DTC thresholds justified with analysis"
+      - "False positive rate below acceptance criteria"
+      - "ODX file matches final implementation"

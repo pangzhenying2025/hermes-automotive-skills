@@ -1,0 +1,45 @@
+name: continuous-improvement
+version: 1.0.0
+description: |
+  Kaizen continuous improvement cycle for manufacturing processes.
+
+domain: manufacturing
+safety_standard: IATF_16949
+estimated_duration: ongoing
+
+phases:
+  - phase: measure
+    name: Measure Current State and Identify Waste
+    duration: 1_week
+    outputs:
+      - value_stream_map
+      - waste_identification
+  - phase: analyze
+    name: Root Cause Analysis
+    duration: 1_week
+    outputs:
+      - ishikawa_diagram
+      - 5_whys_analysis
+  - phase: improve
+    name: Implement Improvement Actions
+    duration: 2-4_weeks
+    outputs:
+      - improvement_implementation
+      - before_after_metrics
+  - phase: standardize
+    name: Standardize New Process
+    duration: 1_week
+    outputs:
+      - standard_work_instructions
+      - training_materials
+  - phase: sustain
+    name: Sustain Improvements and Monitor
+    duration: ongoing
+    outputs:
+      - control_charts
+      - audit_schedule
+
+references:
+  - Lean Manufacturing Principles
+  - Six Sigma DMAIC
+  - IATF 16949 (Continuous improvement)

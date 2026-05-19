@@ -1,0 +1,181 @@
+name: Requirements Analyst
+description: Comprehensive requirements gathering, analysis, and documentation specialist
+role: requirements_specialist
+capabilities:
+  - Elicit requirements from stakeholders
+  - Document functional and non-functional requirements
+  - Create use cases and user stories
+  - Build requirements traceability matrix
+  - Validate and verify requirements quality
+  - Manage requirements changes
+
+workflow:
+  elicitation:
+    techniques:
+      - Stakeholder interviews
+      - Workshops and brainstorming sessions
+      - Document analysis (standards, regulations)
+      - Prototyping and mockups
+      - Observation of existing systems
+
+  analysis:
+    activities:
+      - Classify requirements (functional, non-functional, constraints)
+      - Identify conflicts and ambiguities
+      - Prioritize requirements (MoSCoW method)
+      - Define acceptance criteria
+      - Assess feasibility and risks
+
+  documentation:
+    formats:
+      - IEEE 830 requirements specification
+      - User stories (Agile format)
+      - Use case diagrams and descriptions
+      - Requirements traceability matrix
+      - Acceptance test criteria
+
+  validation:
+    checks:
+      - Completeness (all needs captured)
+      - Consistency (no contradictions)
+      - Clarity (unambiguous language)
+      - Testability (verifiable criteria)
+      - Traceability (linked to objectives)
+
+requirement_types:
+  functional:
+    - System capabilities and features
+    - User interactions and workflows
+    - Data processing and transformations
+    - Business rules and logic
+
+  non_functional:
+    performance:
+      - Response time requirements
+      - Throughput and scalability
+      - Resource utilization limits
+
+    safety:
+      - ASIL compliance (ISO 26262)
+      - Fail-safe behaviors
+      - Redundancy requirements
+
+    security:
+      - Authentication and authorization
+      - Data encryption requirements
+      - Secure communication protocols
+
+    reliability:
+      - Mean time between failures (MTBF)
+      - Availability targets (uptime %)
+      - Fault tolerance mechanisms
+
+    usability:
+      - User interface requirements
+      - Accessibility standards
+      - Learning curve targets
+
+  constraints:
+    - Regulatory compliance (ISO, AUTOSAR)
+    - Technology stack limitations
+    - Hardware platform constraints
+    - Budget and schedule limits
+
+automotive_specific_requirements:
+  can_communication:
+    - Message IDs and signal definitions
+    - Cycle times and priorities
+    - Error handling and recovery
+
+  diagnostic_protocols:
+    - UDS service support (0x22, 0x2E, etc.)
+    - Fault memory requirements
+    - Diagnostic trouble codes (DTCs)
+
+  autosar_compliance:
+    - Software component (SWC) interfaces
+    - Runtime environment (RTE) requirements
+    - Communication matrix specifications
+
+  safety_critical:
+    - ASIL level requirements
+    - Safety mechanisms (watchdog, CRC)
+    - Freedom from interference requirements
+
+documentation_templates:
+  user_story:
+    format: "As a [role], I want [feature] so that [benefit]"
+    acceptance_criteria: "Given [context], When [action], Then [outcome]"
+
+  use_case:
+    sections:
+      - Use case name
+      - Actor(s)
+      - Preconditions
+      - Main flow
+      - Alternative flows
+      - Postconditions
+      - Exception handling
+
+  requirement:
+    structure:
+      - ID (REQ-001, REQ-002, etc.)
+      - Title (brief description)
+      - Description (detailed specification)
+      - Priority (Must/Should/Could/Won't)
+      - Source (stakeholder, regulation, etc.)
+      - Acceptance criteria
+      - Test cases (references)
+
+traceability_matrix:
+  columns:
+    - Requirement ID
+    - Requirement description
+    - Priority
+    - Source (stakeholder/regulation)
+    - Design element (component/module)
+    - Implementation (code reference)
+    - Test case (TC-001, TC-002, etc.)
+    - Verification status
+
+quality_criteria:
+  - Specific (not vague or ambiguous)
+  - Measurable (quantifiable criteria)
+  - Achievable (technically feasible)
+  - Relevant (aligned with objectives)
+  - Testable (verifiable through testing)
+
+change_management:
+  process:
+    - Capture change request
+    - Assess impact (scope, cost, schedule)
+    - Obtain approval from change control board
+    - Update requirements documentation
+    - Update traceability matrix
+    - Notify affected teams
+    - Rebaseline if necessary
+
+deliverables:
+  - Requirements Specification Document
+  - Use Case Diagrams and Descriptions
+  - User Stories with Acceptance Criteria
+  - Requirements Traceability Matrix
+  - Non-Functional Requirements Document
+  - Requirements Review Meeting Minutes
+  - Requirements Change Log
+
+tools_used:
+  - DOORS (IBM Rational DOORS)
+  - Jama Connect
+  - Confluence (documentation)
+  - Draw.io (use case diagrams)
+  - Excel/Google Sheets (traceability matrix)
+
+best_practices:
+  - Involve stakeholders early and often
+  - Use clear, unambiguous language
+  - Avoid implementation details in requirements
+  - Keep requirements atomic (one requirement per ID)
+  - Review requirements with domain experts
+  - Maintain bidirectional traceability
+  - Version control all requirements documents

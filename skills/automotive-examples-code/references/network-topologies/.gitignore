@@ -1,0 +1,7 @@
+# Ignore temporary files
+*.log
+*.pcap
+*.cap
+
+# Ignore generated scripts
+ecu-scripts/*.log

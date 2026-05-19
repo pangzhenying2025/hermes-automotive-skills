@@ -1,0 +1,165 @@
+name: recycling-process
+version: 1.0.0
+description: "Battery recycling process workflow from end-of-life assessment through material recovery and compliance documentation"
+trigger: "When batteries reach end of life, after warranty returns, or when second-life assessment is required"
+domain: "Battery"
+safety_level: "High Voltage Safety"
+standard: "EU Battery Regulation 2023/1542"
+
+prerequisites:
+  - "Receiving facility licensed for battery waste handling"
+  - "Trained personnel with high voltage qualifications"
+  - "Discharge equipment for safe decommissioning"
+  - "Material recovery process equipment available"
+  - "Environmental permits and compliance documentation current"
+
+phases:
+  - name: "Reception and Assessment"
+    description: "Receive end-of-life batteries and assess their condition for routing decisions"
+    inputs:
+      - "Battery packs returned from field or production"
+      - "Battery passport data if available"
+      - "Safety data sheets for battery chemistry"
+    steps:
+      - "Receive battery and verify identity against documentation"
+      - "Perform visual inspection for damage, leakage, or swelling"
+      - "Classify battery condition as intact, damaged, or critical"
+      - "Measure pack voltage if safely accessible"
+      - "Assess residual state of charge"
+      - "Check for thermal events or electrolyte leakage"
+      - "Route to appropriate handling area based on condition"
+      - "Quarantine damaged or critical batteries in isolation area"
+      - "Record all assessment data in tracking system"
+      - "Determine routing: second-life evaluation or direct recycling"
+    outputs:
+      - "Battery condition assessment report"
+      - "Routing decision"
+      - "Updated tracking record"
+    tools:
+      - "Battery assessment station"
+      - "Tracking and traceability system"
+      - "Safety monitoring equipment"
+    quality_gates:
+      - "All batteries assessed within 24 hours of receipt"
+      - "Safety classification completed before any handling"
+      - "Tracking record complete with battery passport link"
+
+  - name: "Second-Life Evaluation"
+    description: "Evaluate batteries that may be suitable for second-life applications"
+    inputs:
+      - "Batteries routed for second-life evaluation"
+      - "Second-life application requirements"
+      - "State of health assessment protocol"
+    steps:
+      - "Connect battery to diagnostic system"
+      - "Read BMS historical data including cycle count and fault history"
+      - "Perform capacity measurement at reference conditions"
+      - "Measure internal resistance and compare to new condition"
+      - "Calculate state of health from capacity and resistance"
+      - "Assess remaining useful life using aging model"
+      - "Evaluate cell-to-cell variation within pack"
+      - "Determine if battery meets second-life entry criteria"
+      - "Grade battery for appropriate second-life application tier"
+      - "Route batteries failing second-life criteria to recycling"
+    outputs:
+      - "State of health assessment results"
+      - "Second-life grading decision"
+      - "Batteries routed to second-life or recycling"
+    tools:
+      - "Battery diagnostic system"
+      - "Capacity test equipment"
+      - "State of health estimation software"
+    quality_gates:
+      - "SOH above 70% for second-life qualification"
+      - "Cell variation below 5% for second-life acceptance"
+      - "Remaining useful life estimate exceeds application minimum"
+
+  - name: "Safe Discharge and Disassembly"
+    description: "Safely discharge batteries to zero voltage and disassemble into recyclable components"
+    inputs:
+      - "Batteries routed for recycling"
+      - "Discharge and disassembly procedures"
+      - "PPE and safety equipment"
+    steps:
+      - "Discharge battery pack to safe voltage using resistive load"
+      - "Verify pack voltage below 60V DC safe threshold"
+      - "Disconnect high voltage connectors with lock-out tag-out"
+      - "Remove pack enclosure and separate cooling system"
+      - "Segregate electronic components: BMS boards and wiring"
+      - "Separate modules from pack structure"
+      - "Discharge individual modules to zero volts"
+      - "Disassemble modules to cell level if process requires"
+      - "Segregate materials: cells, aluminum, copper, plastics"
+      - "Weigh and record mass of each material stream"
+    outputs:
+      - "Segregated material streams"
+      - "Mass balance record"
+      - "Disassembly record with safety sign-offs"
+    tools:
+      - "Resistive discharge equipment"
+      - "High voltage safety tooling"
+      - "Material sorting station"
+    quality_gates:
+      - "Battery fully discharged before disassembly"
+      - "Lock-out tag-out verified at each step"
+      - "Material streams properly segregated and weighed"
+
+  - name: "Material Recovery"
+    description: "Process battery materials to recover valuable elements meeting recycling efficiency targets"
+    inputs:
+      - "Segregated cell material"
+      - "Material recovery process parameters"
+      - "Target recovery efficiency rates"
+    steps:
+      - "Process cells through mechanical pre-treatment"
+      - "Separate black mass from foils and casing"
+      - "Process aluminum and copper foils through metal recovery"
+      - "Process black mass through hydrometallurgical treatment"
+      - "Recover lithium from process solution"
+      - "Recover cobalt, nickel, and manganese as salts or oxides"
+      - "Process electrolyte for solvent recovery"
+      - "Treat waste streams per environmental permit requirements"
+      - "Analyze recovered material purity"
+      - "Weigh recovered materials and calculate recovery efficiency"
+    outputs:
+      - "Recovered material batches with purity certificates"
+      - "Recovery efficiency calculations"
+      - "Waste treatment records"
+    tools:
+      - "Mechanical processing equipment"
+      - "Hydrometallurgical processing line"
+      - "Chemical analysis laboratory"
+    quality_gates:
+      - "Lithium recovery efficiency above 80%"
+      - "Cobalt, nickel, manganese recovery above 95%"
+      - "Recovered material purity meets market specifications"
+
+  - name: "Compliance Reporting"
+    description: "Generate regulatory compliance reports and update battery passport with end-of-life data"
+    inputs:
+      - "Material recovery data"
+      - "Mass balance records from all process steps"
+      - "Regulatory reporting requirements"
+    steps:
+      - "Calculate overall recycling efficiency per EU regulation"
+      - "Compile mass balance from receipt through material recovery"
+      - "Generate waste transfer notes for all waste streams"
+      - "Update battery passport with end-of-life processing data"
+      - "Report recycling volumes to national battery register"
+      - "Generate carbon footprint calculation for recycling process"
+      - "Compile annual recycling compliance report"
+      - "Prepare data for due diligence on recovered material supply chain"
+      - "Archive all process records per regulatory retention period"
+    outputs:
+      - "Recycling efficiency report per EU regulation"
+      - "Updated battery passport"
+      - "Regulatory compliance filings"
+      - "Archived process records"
+    tools:
+      - "Compliance reporting system"
+      - "Battery passport platform"
+      - "Environmental reporting tool"
+    quality_gates:
+      - "Recycling efficiency meets regulatory minimum thresholds"
+      - "Mass balance closes within 2% tolerance"
+      - "All regulatory filings submitted within deadlines"

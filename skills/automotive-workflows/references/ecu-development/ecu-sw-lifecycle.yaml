@@ -1,0 +1,527 @@
+name: ecu-software-lifecycle
+version: 1.0.0
+description: |
+  Complete ECU software development lifecycle following V-Model and ASPICE processes.
+  Covers AUTOSAR Classic/Adaptive development from requirements to production release.
+
+domain: ecu_software
+process_model: V-Model
+aspice_level: Level_3_Target
+estimated_duration: 24-36_weeks
+
+phases:
+  - phase: requirements
+    name: Software Requirements Engineering
+    description: Capture and analyze software requirements from system specifications
+    duration: 3-4_weeks
+    aspice_process: SWE.1
+    inputs:
+      - system_requirements_spec
+      - vehicle_feature_descriptions
+      - safety_requirements (ISO 26262)
+      - regulatory_requirements
+    outputs:
+      - software_requirements_spec (SRS)
+      - requirements_traceability_matrix
+      - interface_requirements (CAN, LIN, Ethernet)
+      - non_functional_requirements (timing, memory, safety)
+    tools:
+      - IBM DOORS Next (requirements management)
+      - Polarion Requirements (ALM)
+      - Enterprise Architect (modeling)
+      - Jama Connect (traceability)
+    skills_used:
+      - requirements-engineering
+      - automotive-standards
+      - traceability-management
+    agents_involved:
+      - requirements-engineer
+      - system-architect
+      - safety-engineer
+    requirements_categories:
+      functional:
+        - Feature behavior (state machines, algorithms)
+        - Communication protocols (CAN messages, diagnostic services)
+        - Sensor/actuator control logic
+        - Error handling and fault reactions
+      non_functional:
+        - Timing requirements (WCET, response times)
+        - Memory constraints (ROM <512KB, RAM <64KB)
+        - Safety requirements (ASIL decomposition)
+        - Availability requirements (boot time, diagnostic coverage)
+        - Security requirements (secure boot, authenticated updates)
+    acceptance_criteria:
+      - All system requirements traced to software requirements
+      - Requirements uniquely identified and versioned
+      - Ambiguity and inconsistencies resolved
+      - Stakeholder review and approval completed
+      - ASIL classification per requirement
+    aspice_work_products:
+      - Software Requirements Specification (13-04)
+      - Traceability Record (13-19)
+
+  - phase: system_design
+    name: Software System Design
+    description: Define high-level software architecture and component decomposition
+    duration: 3-4_weeks
+    aspice_process: SWE.2
+    inputs:
+      - software_requirements_spec
+      - target_ecu_hardware (processor, memory, peripherals)
+      - autosar_methodology
+    outputs:
+      - software_architecture_design (SAD)
+      - autosar_swc_definitions (Software Components)
+      - component_interface_specifications
+      - resource_allocation (CPU, memory, bus bandwidth)
+    tools:
+      - PREEvision (E/E architecture)
+      - Artop (AUTOSAR authoring)
+      - Vector DaVinci Architect (AUTOSAR design)
+      - Enterprise Architect (UML modeling)
+    skills_used:
+      - software-architecture
+      - autosar-methodology
+      - component-based-design
+    agents_involved:
+      - software-architect
+      - autosar-specialist
+      - safety-engineer
+    architecture_elements:
+      autosar_swc:
+        - Application SWCs (sensor processing, control logic, feature management)
+        - Sensor-Actuator SWCs (abstraction layer for I/O)
+        - Service SWCs (diagnostics, communication, state management)
+      autosar_bsw:
+        - Microcontroller abstraction (MCAL drivers)
+        - ECU abstraction layer (onboard devices)
+        - Service layer (communication, diagnostics, memory)
+        - Complex drivers (custom peripherals)
+      rte:
+        - Runtime environment (RTE) configuration
+        - Inter-component communication routing
+        - Client-server interfaces
+        - Sender-receiver interfaces
+    acceptance_criteria:
+      - All software requirements allocated to components
+      - Component interfaces formally specified
+      - Resource budget allocated (timing, memory)
+      - Safety architecture compliant with ISO 26262
+      - Architecture review passed
+    aspice_work_products:
+      - Software Architectural Design (13-01)
+      - Component Specification (13-03)
+
+  - phase: sw_architecture
+    name: Software Architecture Refinement
+    description: Refine architecture with detailed AUTOSAR configuration
+    duration: 4-5_weeks
+    aspice_process: SWE.2 (continued)
+    inputs:
+      - software_architecture_design
+      - autosar_standard (Classic 4.x or Adaptive R21-11)
+      - ecu_extract (hardware topology)
+    outputs:
+      - autosar_ecu_configuration (ECU extract, system description)
+      - bsw_module_configuration (COM, DCM, DEM, NvM)
+      - rte_generation_config
+      - memory_mapping_specification
+    tools:
+      - Vector DaVinci Configurator Pro (BSW configuration)
+      - EB tresos Studio (AUTOSAR configuration)
+      - Elektrobit EB corbos (Adaptive AUTOSAR)
+      - AUTOSAR Builder (Dassault)
+    skills_used:
+      - autosar-classic-bsw
+      - autosar-adaptive
+      - ecu-configuration
+    agents_involved:
+      - autosar-specialist
+      - bsw-integration-engineer
+    bsw_configuration_modules:
+      communication:
+        - CanIf, CanTp, PduR, Com (CAN stack)
+        - LinIf, LinTp (LIN stack)
+        - SoAd, DoIP (Ethernet stack)
+        - J1939Tp, J1939Nm (heavy-duty vehicles)
+      diagnostic:
+        - Dcm (Diagnostic Communication Manager)
+        - Dem (Diagnostic Event Manager)
+        - Fim (Function Inhibition Manager)
+      memory:
+        - NvM (Non-volatile memory manager)
+        - Fee (Flash EEPROM emulation)
+        - MemIf (Memory abstraction)
+      system:
+        - EcuM (ECU state manager)
+        - BswM (BSW mode manager)
+        - ComM (Communication manager)
+        - WdgM (Watchdog manager)
+      security:
+        - Crypto Service Manager (CSM)
+        - Secure Onboard Communication (SecOC)
+    acceptance_criteria:
+      - AUTOSAR configuration consistency validated
+      - BSW module dependencies resolved
+      - RTE generation successful without errors
+      - Memory map fits within hardware constraints
+    aspice_work_products:
+      - Software Architectural Design (13-01 updated)
+
+  - phase: detailed_design
+    name: Software Detailed Design
+    description: Design internal component behavior and data structures
+    duration: 4-6_weeks
+    aspice_process: SWE.3
+    inputs:
+      - component_specifications
+      - coding_guidelines (MISRA C 2012)
+      - safety_requirements_allocation
+    outputs:
+      - detailed_design_specifications (algorithms, state machines)
+      - interface_control_documents (ICD)
+      - data_dictionary (global variables, types)
+      - unit_design_specifications
+    tools:
+      - Enterprise Architect (UML/SysML)
+      - Rhapsody (model-based design)
+      - MATLAB Simulink (algorithm design)
+      - Embedded Coder (code generation)
+    skills_used:
+      - detailed-design
+      - uml-modeling
+      - model-based-development
+    agents_involved:
+      - software-designer
+      - algorithm-engineer
+      - safety-engineer
+    design_artifacts:
+      - State machine diagrams (vehicle modes, diagnostic states)
+      - Sequence diagrams (startup, shutdown, message handling)
+      - Algorithm pseudocode (sensor fusion, control logic)
+      - Data structure definitions (structs, enums, typedefs)
+      - Safety mechanisms design (redundancy, plausibility checks)
+    acceptance_criteria:
+      - All components have detailed design
+      - Design traceable to requirements
+      - Complexity metrics acceptable (cyclomatic <15)
+      - Safety mechanisms designed per ASIL
+      - Peer review completed
+    aspice_work_products:
+      - Software Detailed Design (13-05)
+      - Software Unit Design (13-06)
+
+  - phase: implementation
+    name: Software Implementation
+    description: Implement software in C according to MISRA guidelines
+    duration: 8-12_weeks
+    aspice_process: SWE.4
+    inputs:
+      - detailed_design_specifications
+      - autosar_rte_generated_code
+      - coding_guidelines (MISRA C 2012, HIS metrics)
+    outputs:
+      - source_code (C files)
+      - header_files (API definitions)
+      - build_scripts (makefiles, CMake)
+      - static_analysis_reports
+    tools:
+      - Vector DaVinci Developer (SWC implementation)
+      - IAR Embedded Workbench (IDE/compiler)
+      - Green Hills MULTI (compiler/debugger)
+      - GCC ARM Embedded (open-source toolchain)
+      - Polyspace Bug Finder (static analysis)
+      - LDRA Testbed (MISRA checking)
+      - SonarQube (code quality)
+      - Git + Gerrit (version control + code review)
+    skills_used:
+      - embedded-c-programming
+      - misra-c-compliance
+      - code-review
+      - version-control
+    agents_involved:
+      - embedded-software-engineer
+      - code-reviewer
+    implementation_guidelines:
+      coding_standards:
+        - MISRA C 2012 (mandatory rules 100%, required rules 98%+)
+        - HIS metrics (cyclomatic complexity <10, nesting depth <4)
+        - Naming conventions (prefix for scope: g_ global, l_ local)
+        - Comment density >20% for complex logic
+      safety_coding:
+        - Defensive programming (null pointer checks, range validation)
+        - No dynamic memory allocation (malloc forbidden)
+        - Limited recursion (max depth 2, justified)
+        - Explicit error handling (return codes, error flags)
+      autosar_compliance:
+        - Use RTE APIs for inter-component communication
+        - No direct BSW access from SWCs
+        - Memory mapping per AUTOSAR specification
+        - Runnables with defined execution contexts
+    acceptance_criteria:
+      - MISRA C compliance achieved (deviations documented)
+      - Static analysis warnings resolved
+      - Code review approval (2 reviewers)
+      - Build successful without errors
+      - Code metrics within thresholds
+    aspice_work_products:
+      - Software Unit (13-22)
+      - Source Code (13-50)
+
+  - phase: unit_test
+    name: Software Unit Testing
+    description: Test individual software units in isolation
+    duration: 4-6_weeks
+    aspice_process: SWE.4 (verification)
+    inputs:
+      - source_code
+      - unit_design_specifications
+      - unit_test_plan
+    outputs:
+      - unit_test_code (test harnesses)
+      - unit_test_results (pass/fail, coverage)
+      - coverage_report (statement, branch, MC/DC)
+      - test_traceability_matrix
+    tools:
+      - VectorCAST (unit testing, coverage)
+      - Tessy (automated unit testing)
+      - GoogleTest (C++ unit testing)
+      - Bullseye Coverage (code coverage)
+      - Cantata (unit and integration testing)
+    skills_used:
+      - unit-testing
+      - test-automation
+      - coverage-analysis
+    agents_involved:
+      - test-engineer
+      - embedded-software-engineer
+    test_strategy:
+      coverage_targets:
+        - Statement coverage: 100%
+        - Branch coverage: 100%
+        - MC/DC coverage: 100% for ASIL-C/D functions
+      test_techniques:
+        - Equivalence partitioning (input domains)
+        - Boundary value analysis (min, max, off-by-one)
+        - Error guessing (null pointers, overflows)
+        - Control flow testing (all paths exercised)
+    acceptance_criteria:
+      - All units have test cases
+      - Coverage targets achieved per ASIL
+      - All tests passing
+      - Defects tracked and resolved
+      - Test results reviewed and approved
+    aspice_work_products:
+      - Software Unit Verification Report (13-09)
+      - Software Unit Test Specification (13-10)
+
+  - phase: integration_test
+    name: Software Integration Testing
+    description: Test integration of software components and BSW modules
+    duration: 4-6_weeks
+    aspice_process: SWE.5
+    inputs:
+      - integrated_software_build
+      - component_interface_specifications
+      - integration_test_plan
+    outputs:
+      - integration_test_results
+      - interface_test_reports
+      - timing_analysis_results
+      - integration_issues_log
+    tools:
+      - CANoe (communication testing)
+      - Vector vTESTstudio (test automation)
+      - ETAS INCA (calibration and measurement)
+      - Lauterbach TRACE32 (debugger, trace analysis)
+      - SymTA/S (timing analysis)
+    skills_used:
+      - integration-testing
+      - interface-testing
+      - timing-verification
+    agents_involved:
+      - integration-engineer
+      - test-engineer
+    integration_levels:
+      swc_integration:
+        - Test inter-SWC communication via RTE
+        - Verify sender-receiver data consistency
+        - Test client-server synchronous calls
+        - Validate mode-dependent behavior
+      bsw_integration:
+        - Test BSW module interaction (COM->PduR->CanIf)
+        - Verify diagnostic services (UDS ISO 14229)
+        - Test NvM read/write cycles
+        - Validate ECU state transitions (startup, shutdown)
+      swc_bsw_integration:
+        - Test sensor input processing (ADC->IoHwAb->SWC)
+        - Test actuator output control (SWC->IoHwAb->PWM)
+        - Verify CAN message transmission/reception
+        - Test diagnostic event handling (SWC->Dem)
+    acceptance_criteria:
+      - All integration test cases executed
+      - Interface specifications validated
+      - Timing requirements verified (WCET, response times)
+      - Communication protocols functional
+      - Integration defects resolved
+    aspice_work_products:
+      - Software Integration Test Specification (13-07)
+      - Software Integration Test Report (13-08)
+
+  - phase: system_test
+    name: Software System Testing
+    description: Validate complete software against requirements on target ECU
+    duration: 4-6_weeks
+    aspice_process: SWE.6
+    inputs:
+      - integrated_software_system
+      - software_requirements_spec
+      - system_test_plan
+      - target_ecu_hardware
+    outputs:
+      - system_test_results
+      - requirements_coverage_matrix
+      - defect_reports
+      - safety_validation_report
+    tools:
+      - dSPACE SCALEXIO (HIL testing)
+      - Vector CANoe (system simulation)
+      - ETAS LABCAR (HIL platform)
+      - National Instruments VeriStand (real-time testing)
+    skills_used:
+      - system-testing
+      - hil-testing
+      - requirements-validation
+    agents_involved:
+      - validation-engineer
+      - test-manager
+      - safety-engineer
+    test_categories:
+      functional_tests:
+        - Feature validation (all vehicle modes)
+        - Communication tests (CAN, LIN, Ethernet)
+        - Diagnostic tests (UDS services, DTCs)
+        - State machine validation (startup, normal, error, shutdown)
+      non_functional_tests:
+        - Timing tests (response times, execution times)
+        - Resource usage (CPU load, stack usage, memory)
+        - Performance tests (throughput, latency)
+        - Robustness tests (overload, boundary conditions)
+      safety_tests:
+        - Fault injection (sensor failures, communication loss)
+        - Safety mechanism validation (watchdog, CRC, redundancy)
+        - Safe state verification (limp-home, shutdown)
+    acceptance_criteria:
+      - 100% requirements coverage achieved
+      - All critical and high-priority tests passed
+      - Safety requirements validated
+      - System performance within specifications
+      - Acceptance test approval
+    aspice_work_products:
+      - Software Qualification Test Specification (13-11)
+      - Software Qualification Test Report (13-12)
+
+  - phase: acceptance_test
+    name: Software Acceptance Testing
+    description: Customer and regulatory acceptance testing
+    duration: 2-3_weeks
+    aspice_process: SWE.6 (continued)
+    inputs:
+      - qualified_software_system
+      - acceptance_test_criteria
+      - vehicle_prototype (if available)
+    outputs:
+      - acceptance_test_report
+      - customer_sign_off
+      - production_release_approval
+    tools:
+      - Customer-specific test environments
+      - Regulatory test facilities (TÜV, DEKRA)
+    skills_used:
+      - acceptance-testing
+      - customer-validation
+    agents_involved:
+      - validation-engineer
+      - project-manager
+      - customer-representative
+    acceptance_criteria:
+      - All customer-defined test cases passed
+      - Regulatory compliance demonstrated (UNECE, EPA)
+      - Field trial results acceptable
+      - Production readiness confirmed
+    aspice_work_products:
+      - Software Acceptance Test Report (customer-specific)
+
+quality_gates:
+  - gate: requirements_baseline
+    phase: requirements
+    criteria:
+      - Requirements reviewed and approved
+      - Traceability established
+      - ASIL classified
+  - gate: architecture_review
+    phase: system_design
+    criteria:
+      - Architecture consistent and complete
+      - Safety architecture approved
+      - Resource budget validated
+  - gate: design_review
+    phase: detailed_design
+    criteria:
+      - Detailed design complete
+      - Complexity metrics acceptable
+      - Safety mechanisms designed
+  - gate: code_complete
+    phase: implementation
+    criteria:
+      - MISRA compliance achieved
+      - Code review approved
+      - Static analysis clean
+  - gate: unit_test_complete
+    phase: unit_test
+    criteria:
+      - Coverage targets met
+      - All unit tests passing
+  - gate: integration_complete
+    phase: integration_test
+    criteria:
+      - Integration tests passed
+      - Timing verified
+      - Interfaces validated
+  - gate: system_qualification
+    phase: system_test
+    criteria:
+      - Requirements coverage 100%
+      - Safety validated
+      - Performance acceptable
+  - gate: production_release
+    phase: acceptance_test
+    criteria:
+      - Customer acceptance
+      - Regulatory approval
+      - ISO 26262 assessment passed
+
+aspice_processes:
+  - SWE.1: Software Requirements Analysis (Level 3 target)
+  - SWE.2: Software Architectural Design (Level 3 target)
+  - SWE.3: Software Detailed Design (Level 3 target)
+  - SWE.4: Software Unit Construction and Testing (Level 3 target)
+  - SWE.5: Software Integration and Testing (Level 3 target)
+  - SWE.6: Software Qualification Testing (Level 3 target)
+
+metrics:
+  - Requirements coverage (%)
+  - Code coverage (statement, branch, MC/DC)
+  - MISRA compliance rate (%)
+  - Defect density (defects per KLOC)
+  - Test pass rate (%)
+  - Cyclomatic complexity (average, max)
+  - CPU load (%), Stack usage (bytes)
+  - ROM usage (KB), RAM usage (KB)
+
+references:
+  - Automotive SPICE PAM 3.1
+  - ISO 26262-6 (Product development at software level)
+  - AUTOSAR Classic 4.4 / Adaptive R21-11
+  - MISRA C 2012
+  - HIS Source Code Metrics

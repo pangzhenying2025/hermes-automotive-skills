@@ -1,0 +1,430 @@
+name: bms-software-development
+version: 1.0.0
+description: |
+  Battery Management System (BMS) software development workflow for automotive applications.
+  Covers SOC/SOH estimation, thermal management, cell balancing, and safety monitoring per ISO 26262 ASIL-D.
+
+domain: battery_systems
+safety_standard: ISO_26262
+asil_level: ASIL-D
+estimated_duration: 20-28_weeks
+
+phases:
+  - phase: cell_characterization
+    name: Battery Cell Characterization and Modeling
+    description: Characterize battery cells and develop electrochemical models
+    duration: 4-6_weeks
+    inputs:
+      - cell_datasheets (capacity, voltage, chemistry)
+      - test_equipment (Arbin, Biologic, Digatron)
+      - environmental_test_chambers
+    outputs:
+      - cell_characterization_data (capacity vs temp, SOC-OCV curves)
+      - equivalent_circuit_model (ECM parameters)
+      - aging_model (calendar and cycle aging)
+      - thermal_model (heat generation, thermal resistance)
+    tools:
+      - PyBaMM (Physics-based Battery Models)
+      - MATLAB Battery Toolbox
+      - Python (data analysis, curve fitting)
+      - COMSOL (3D thermal simulation)
+    skills_used:
+      - battery-modeling
+      - electrochemistry
+      - data-analysis
+      - parameter-identification
+    agents_involved:
+      - battery-engineer
+      - test-engineer
+      - data-scientist
+    test_procedures:
+      - Capacity test (C/3 charge/discharge)
+      - HPPC test (Hybrid Pulse Power Characterization)
+      - OCV-SOC relationship mapping
+      - Temperature dependency characterization (-20°C to 60°C)
+      - Cycle aging test (1000+ cycles)
+      - Calendar aging test (storage at various SOC)
+    acceptance_criteria:
+      - ECM model accuracy <5% voltage error
+      - Thermal model validated against calorimeter data
+      - Aging model calibrated with accelerated testing
+      - Dataset covers full operating range per ISO 12405-4
+    safety_considerations:
+      - Safe test limits (voltage, current, temperature)
+      - Thermal runaway detection protocols
+      - Emergency shutdown procedures
+
+  - phase: algorithm_design
+    name: BMS Algorithm Design and Simulation
+    description: Design SOC/SOH estimation, balancing, thermal management algorithms
+    duration: 6-8_weeks
+    inputs:
+      - cell_characterization_data
+      - vehicle_use_cases (drive cycles, charging profiles)
+      - safety_requirements (ASIL-D decomposition)
+    outputs:
+      - soc_estimation_algorithm (Extended Kalman Filter, Coulomb Counting)
+      - soh_estimation_algorithm (capacity fade, resistance growth)
+      - thermal_management_strategy (cooling control, preconditioning)
+      - cell_balancing_strategy (passive vs active, balancing threshold)
+      - safety_monitoring_logic (voltage, current, temperature limits)
+    tools:
+      - MATLAB/Simulink (algorithm prototyping)
+      - Python (data-driven algorithms, ML)
+      - Simscape Battery (system-level simulation)
+      - PLECS (power electronics simulation)
+    skills_used:
+      - state-estimation-algorithms
+      - control-systems
+      - battery-management
+      - safety-analysis
+    agents_involved:
+      - controls-engineer
+      - battery-algorithm-specialist
+      - safety-engineer
+    algorithm_details:
+      soc_estimation:
+        - Coulomb counting with initial SOC calibration
+        - Extended Kalman Filter (EKF) for voltage-based correction
+        - OCV-SOC lookup table interpolation
+        - Temperature compensation
+        - Accuracy target: ±3% over 10-90% SOC
+      soh_estimation:
+        - Capacity estimation from full charge cycles
+        - Internal resistance tracking (DCIR)
+        - Incremental capacity analysis (ICA)
+        - Differential voltage analysis (DVA)
+        - Update frequency: every 10 full cycles or monthly
+      thermal_management:
+        - Active cooling control (pump, fans)
+        - Battery preconditioning (heating for cold start)
+        - Derating strategy (power limit vs temperature)
+        - Thermal runaway prevention (early warning)
+      cell_balancing:
+        - Passive balancing during charge (>4.15V per cell)
+        - Balancing current: 50-200mA per cell
+        - SOC-based balancing (equalize within 2% SOC)
+        - Balancing time optimization
+      safety_monitoring:
+        - Overvoltage/undervoltage detection (per cell)
+        - Overcurrent detection (charge/discharge)
+        - Overtemperature/undertemperature detection
+        - Isolation fault detection (IMD)
+        - Contactor welding detection
+    acceptance_criteria:
+      - SOC estimation accuracy validated in SIL (±3%)
+      - SOH estimation error <5% after 1000 cycles
+      - Thermal management keeps pack within 25-40°C during WLTC
+      - Balancing achieves <50mV cell voltage spread
+      - All safety faults detected within 100ms
+    safety_considerations:
+      - FMEA for all algorithm failure modes
+      - Independent safety monitoring (watchdog)
+      - Fail-safe defaults (open contactors on fault)
+      - ASIL-D requirements for safety functions
+
+  - phase: bms_implementation
+    name: BMS Software Implementation
+    description: Implement BMS software on automotive-grade microcontroller per AUTOSAR
+    duration: 6-8_weeks
+    inputs:
+      - bms_algorithm_specifications
+      - target_ecu_hardware (Infineon TC3xx, NXP S32K, Renesas RH850)
+      - autosar_stack (Vector, EB tresos)
+    outputs:
+      - bms_source_code (C, MISRA-C compliant)
+      - autosar_swc_components (SWC for SOC, SOH, balancing)
+      - unit_test_suite (VectorCAST, Tessy)
+      - integration_test_cases
+    tools:
+      - Vector DaVinci Developer (AUTOSAR toolchain)
+      - EB tresos Studio (AUTOSAR configuration)
+      - IAR Embedded Workbench / Green Hills MULTI (compiler)
+      - VectorCAST (unit testing)
+      - Git + Gerrit (version control)
+    skills_used:
+      - embedded-c-programming
+      - autosar-development
+      - misra-c-compliance
+      - unit-testing
+    agents_involved:
+      - embedded-software-engineer
+      - autosar-specialist
+      - safety-engineer
+    implementation_modules:
+      cell_voltage_measurement:
+        - AFE driver (LTC6811, TI BQ79xxx)
+        - SPI communication with daisy-chained AFEs
+        - Voltage filtering and calibration
+        - Plausibility checks (cell voltage range)
+      current_measurement:
+        - Hall-effect sensor interface (LEM, Isabellenhütte)
+        - ADC sampling and filtering
+        - Coulomb counting integration
+        - Offset calibration
+      temperature_measurement:
+        - NTC thermistor linearization
+        - Multi-point temperature monitoring
+        - Thermal gradient analysis
+      contactor_control:
+        - Precharge sequence control
+        - Main contactor control (positive/negative)
+        - Contactor feedback monitoring
+        - Insulation monitoring
+      can_communication:
+        - CAN FD driver (500 kbps data, 2 Mbps FD)
+        - SOC/SOH broadcast (100ms cycle)
+        - Diagnostic messages (UDS ISO 14229)
+        - Battery voltage, current, temperature (50ms cycle)
+      diagnostics:
+        - DTC storage (ISO 14229 format)
+        - Freeze frame data
+        - Event memory management
+        - Diagnostic trouble code prioritization
+    acceptance_criteria:
+      - MISRA C 2012 compliance (mandatory rules 100%)
+      - Unit test coverage >95% (MC/DC for ASIL-D modules)
+      - Static analysis clean (Polyspace, CodeSonar)
+      - AUTOSAR SWC interface verified
+      - Real-time constraints met (10ms task execution)
+    safety_considerations:
+      - Dual-core lockstep for safety-critical functions
+      - ECC memory protection
+      - Watchdog and alive monitoring
+      - Safe state transitions (open contactors on fault)
+
+  - phase: hil_testing
+    name: Hardware-in-the-Loop Testing
+    description: Test BMS software on HIL bench with battery simulator
+    duration: 4-6_weeks
+    inputs:
+      - bms_software_build
+      - hil_testbench (dSPACE, NI PXI, ETAS LABCAR)
+      - battery_simulator (Regatron, EA Elektro-Automatik)
+    outputs:
+      - hil_test_results (pass/fail per test case)
+      - fault_injection_test_report
+      - timing_analysis_report
+      - test_coverage_matrix
+    tools:
+      - dSPACE SCALEXIO (HIL platform)
+      - CANoe (CAN/CAN-FD simulation)
+      - ControlDesk (test automation)
+      - Battery Desktop (cell emulation)
+      - vTESTstudio (test management)
+    skills_used:
+      - hil-testing
+      - test-automation
+      - fault-injection
+      - requirements-tracing
+    agents_involved:
+      - test-engineer
+      - validation-engineer
+      - safety-engineer
+    test_categories:
+      nominal_operation:
+        - Charge cycle (CC-CV, 0.5C to 1C)
+        - Discharge cycle (WLTC, NEDC drive profiles)
+        - SOC estimation accuracy over full range
+        - SOH estimation during aging simulation
+        - Thermal management response
+        - Cell balancing effectiveness
+      fault_injection:
+        - Single cell overvoltage (>4.25V)
+        - Pack overcurrent (>300A)
+        - Overtemperature (>60°C)
+        - AFE communication loss
+        - Current sensor failure
+        - Contactor welding
+        - Isolation fault (IMD alarm)
+      edge_cases:
+        - Cold start (-20°C)
+        - Hot climate operation (45°C ambient)
+        - Deep discharge recovery (SOC < 5%)
+        - Fast charging (150 kW DC)
+        - Regenerative braking pulses
+      diagnostic_tests:
+        - DTC generation and storage
+        - Freeze frame capture
+        - UDS services (read DTC, clear DTC)
+        - Calibration parameter updates (XCP/CCP)
+    acceptance_criteria:
+      - 500+ test cases executed, >98% pass rate
+      - All safety faults detected within specified time
+      - Fault injection tests confirm safe state transitions
+      - Requirements traceability 100% for ASIL-D functions
+    safety_considerations:
+      - HIL bench emergency stop functional
+      - Battery simulator limits enforced
+      - Test observer monitors for unsafe behavior
+
+  - phase: vehicle_integration
+    name: Vehicle Integration and System Testing
+    description: Integrate BMS with vehicle, test in real vehicle environment
+    duration: 4-6_weeks
+    inputs:
+      - validated_bms_software
+      - vehicle_prototype
+      - high_voltage_battery_pack
+    outputs:
+      - integrated_bms_system
+      - vehicle_test_results
+      - interface_documentation (CAN DBC, diagnostic specification)
+      - calibration_dataset
+    tools:
+      - CANoe (CAN monitoring and analysis)
+      - ETAS INCA (calibration and measurement)
+      - Vector CANape (XCP calibration)
+      - Oscilloscope (signal integrity)
+    skills_used:
+      - vehicle-integration
+      - calibration
+      - system-testing
+    agents_involved:
+      - integration-engineer
+      - vehicle-test-engineer
+      - calibration-engineer
+    integration_tasks:
+      - Mount BMS ECU in vehicle (EMC shielding, cooling)
+      - Connect AFE harness to battery pack
+      - Install current sensor in HV+ path
+      - Route CAN bus to vehicle network
+      - Commission insulation monitoring device (IMD)
+      - Install service disconnect and crash sensors
+    system_tests:
+      - Vehicle startup sequence (key-on, precharge)
+      - Propulsion mode (acceleration, regeneration)
+      - Charging mode (AC L2, DC fast charging)
+      - Thermal management in climate chamber
+      - Crash simulation (pyro fuse triggering)
+      - EMC testing (immunity and emissions)
+    acceptance_criteria:
+      - BMS communicates with VCU, charger, display
+      - All vehicle modes functional (drive, charge, park)
+      - EMC compliance per CISPR 25, ISO 11452
+      - Thermal management maintains pack temperature
+      - Safety functions validated in vehicle context
+    safety_considerations:
+      - High-voltage safety procedures (lockout/tagout)
+      - Insulation resistance >100 Ω/V
+      - Crash test contactor opening <10ms
+      - Service technician safety documentation
+
+  - phase: field_validation
+    name: Field Validation and Durability Testing
+    description: Validate BMS performance in real-world driving and environmental conditions
+    duration: 8-12_weeks
+    inputs:
+      - integrated_vehicle
+      - field_test_plan
+      - data_logging_systems
+    outputs:
+      - field_test_report (mileage, cycles, incidents)
+      - durability_validation_results
+      - soh_estimation_accuracy_report
+      - production_readiness_sign_off
+    tools:
+      - Data loggers (Vector VN series, ETAS devices)
+      - Cloud platforms (AWS IoT, Azure IoT)
+      - Post-processing (MATLAB, Python pandas)
+      - Fleet management dashboards
+    skills_used:
+      - field-testing
+      - data-analytics
+      - durability-engineering
+    agents_involved:
+      - validation-engineer
+      - data-scientist
+      - reliability-engineer
+    validation_scenarios:
+      - Daily commute (urban, highway, mixed)
+      - Long-distance travel (200+ miles per trip)
+      - Extreme temperatures (-20°C to 45°C)
+      - Fast charging stress (multiple DC sessions)
+      - Towing and high-load scenarios
+      - Vehicle-to-load (V2L) operation
+    metrics_tracked:
+      - Total energy throughput (kWh)
+      - Charge/discharge cycles
+      - SOC estimation error over time
+      - SOH estimation vs reference test
+      - Balancing effectiveness (cell voltage spread)
+      - Thermal management performance (max/min temps)
+      - Fault events and DTC occurrences
+    acceptance_criteria:
+      - 50,000 miles or 1,000 full cycles without critical fault
+      - SOC estimation drift <5% over test period
+      - SOH estimation within ±10% of capacity test
+      - No safety-critical incidents
+      - Customer acceptance testing passed
+    safety_considerations:
+      - Incident reporting protocol
+      - Remote diagnostics and monitoring
+      - Field safety recall readiness
+
+quality_gates:
+  - gate: cell_characterization_review
+    phase: cell_characterization
+    criteria:
+      - Models validated against test data
+      - Safety limits defined
+  - gate: algorithm_validation
+    phase: algorithm_design
+    criteria:
+      - SIL testing passed
+      - FMEA completed
+  - gate: code_review
+    phase: bms_implementation
+    criteria:
+      - MISRA compliance
+      - Unit test coverage >95%
+      - Safety review approved
+  - gate: hil_release
+    phase: hil_testing
+    criteria:
+      - All critical test cases passed
+      - Fault injection validated
+  - gate: vehicle_release
+    phase: vehicle_integration
+    criteria:
+      - System tests passed
+      - EMC compliance
+      - Calibration finalized
+  - gate: production_readiness
+    phase: field_validation
+    criteria:
+      - Durability requirements met
+      - Safety validation complete
+      - ISO 26262 assessment passed
+
+asil_decomposition:
+  safety_functions:
+    - function: overvoltage_protection
+      asil: ASIL-D
+      decomposition: ASIL-D(D) independent monitoring
+    - function: overcurrent_protection
+      asil: ASIL-D
+      decomposition: ASIL-C(D) + ASIL-A(D) dual-channel
+    - function: overtemperature_protection
+      asil: ASIL-C
+      decomposition: ASIL-B(C) + ASIL-A(C) dual-channel
+    - function: contactor_control
+      asil: ASIL-D
+      decomposition: ASIL-D(D) independent driver + feedback
+
+metrics:
+  - SOC estimation accuracy (%)
+  - SOH estimation error (%)
+  - Cell voltage spread (mV)
+  - Pack temperature uniformity (°C)
+  - Fault detection time (ms)
+  - Balancing current per cell (mA)
+  - Energy efficiency (%)
+  - Cycle life (cycles to 80% SOH)
+
+references:
+  - ISO 26262 (Functional Safety)
+  - ISO 12405-4 (Lithium-ion battery packs for traction)
+  - SAE J2464 (EV battery abuse testing)
+  - UL 2580 (Battery safety)
+  - IEC 62660 (Secondary lithium cells for propulsion)

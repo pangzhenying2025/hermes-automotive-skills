@@ -1,8 +1,8 @@
 # Hermes Automotive Skills
 
-**88 automotive domain skills for [Hermes Agent](https://hermes-agent.nousresearch.com)** — converted from [automotive-claude-code-agents](https://github.com/sydyg/automotive-claude-code-agents).
+**102 automotive domain skills for [Hermes Agent](https://hermes-agent.nousresearch.com)** — full conversion of [automotive-claude-code-agents](https://github.com/sydyg/automotive-claude-code-agents).
 
-This repository provides a comprehensive set of automotive software engineering skills covering ADAS, AUTOSAR, functional safety (ISO 26262 / GB 34590), SOTIF, cybersecurity (ISO 21434), diagnostics (UDS), V2X, powertrain, chassis, embedded, battery/BMS, and China-specific regulatory standards. Each skill is packaged as a Hermes Agent `SKILL.md` file.
+This repository provides a comprehensive set of automotive software engineering skills covering the **entire original repository**: domain knowledge (ADAS, AUTOSAR, BMS, safety, cybersecurity, diagnostics, V2X, etc.), **production code examples** (BMS ECU firmware in C, ADAS perception pipeline in Python, Terraform/K8s deployments), **knowledge base** (507 standards/process documents), **workflows** (86 development processes), **agent definitions** (39 specialized roles), **automation scripts** (192 commands), **coding rules** (MISRA/ISO 26262), and **China regulatory standards** (GB/T 34590, SOTIF, ADS safety). All packaged as Hermes Agent `SKILL.md` files.
 
 ---
 
@@ -19,7 +19,7 @@ This work is a **format migration** of the excellent [automotive-claude-code-age
 
 **What changed in this fork:**
 
-- **Format**: Converted 4,851 source files (YAML + Markdown) from Claude Code workspace format (`~/.claude/agents|skills|commands|rules`) into 88 Hermes Agent `SKILL.md` files with YAML frontmatter.
+- **Format**: Converted the entire [automotive-claude-code-agents](https://github.com/sydyg/automotive-claude-code-agents) repository — all 5,909 source files — into **102 Hermes Agent `SKILL.md` files** with YAML frontmatter. Every directory of the original repo is represented: skills, examples, knowledge-base, docs, rules, workflows, agents, commands, tools, scripts, terraform, helm, kubernetes, hooks, and monitoring.
 - **Merging**: Domain-level YAML skills (e.g., `adas/` with 376 individual YAML files → one `automotive-adas` Hermes skill) and `automotive-*` Markdown skills (e.g., `automotive-cybersecurity/` with 6 `.md` files → one `automotive-cybersecurity` Hermes skill) were merged per domain.
 - **No content was removed or modified** beyond structural reformatting.
 
@@ -31,7 +31,32 @@ The original repository remains the authoritative source for Claude Code users. 
 
 ### YAML Domain Skills (59)
 
-Each domain directory from the original repo's `skills/` directory is merged into one Hermes skill. These cover the broadest automotive engineering knowledge base.
+Each domain directory from the original repo's `skills/` directory is merged into one Hermes skill.
+
+### Automotive-\* Markdown Skills (21)
+
+These skills were originally written as standalone Markdown documents with richer prose, examples, and detailed walkthroughs.
+
+### China Regulatory Standards (10)
+
+### Additional Converted Content (12)
+
+Beyond the skills directory, the entire repository was converted:
+
+| Source | Hermes Skill | Contents |
+|--------|-------------|----------|
+| `examples/` | `automotive-examples-code` | 47 files — BMS ECU C firmware, ADAS perception Python, battery thermal, network topologies, Terraform/K8s deployment, protocol demos |
+| `knowledge-base/` | `automotive-knowledge` | 117 documents — standards, processes, CI/CD, code review, technologies |
+| `docs/` | `automotive-docs` | 71 documents — architecture guides, getting started |
+| `rules/` | `automotive-rules` | 32 files — MISRA C, ISO 26262, ASPICE, security, testing standards |
+| `workflows/` | `automotive-workflows` | 86 YAML workflow definitions — ADAS validation, AUTOSAR, safety, testing |
+| `agents/` | `automotive-agent-definitions` | 221 agent definition files — 39 specialized automotive roles |
+| `commands/` | `automotive-commands` | 192 automation scripts — 33 command categories |
+| `tools/` | `automotive-tools` | 81 Python files — tool router, LLM council, adapters, detectors |
+| `scripts/` | `automotive-scripts` | 14 setup and generation scripts |
+| `terraform/` / `helm/` / `kubernetes/` | `automotive-terraform`, `automotive-helm`, `automotive-kubernetes` | Cloud deployment infrastructure |
+| `hooks/` | `automotive-hooks` | 24 Git hooks — ASPICE compliance automation |
+| `monitoring/` | `automotive-monitoring` | Prometheus/Grafana configuration |
 
 | Source Domain | Hermes Skill | Source Files | Standards Covered |
 |---------------|-------------|-------------|-------------------|
@@ -86,7 +111,7 @@ Comprehensive coverage of China's automotive safety and regulatory landscape —
 ## Full Skill List
 
 <details>
-<summary><b>Click to expand</b> — all 88 skills</summary>
+<summary><b>Click to expand</b> — all 102 skills</summary>
 
 ### YAML Domain Skills (59)
 automotive-access-control, automotive-adas, automotive-aftermarket, automotive-audio, automotive-autosar, automotive-battery, automotive-battery-lifecycle, automotive-body, automotive-braking, automotive-calibration, automotive-charging, automotive-chassis, automotive-cloud, automotive-cockpit, automotive-comfort, automotive-crash-avoidance, automotive-diagnostics, automotive-driver-monitoring, automotive-dynamics, automotive-embedded, automotive-ev-tools, automotive-exhaust, automotive-fuel-system, automotive-hardware-safety, automotive-hil-sil, automotive-hmi, automotive-hvac, automotive-hydrogen-fuelcell, automotive-infotainment, automotive-lighting, automotive-logging, automotive-manufacturing, automotive-materials, automotive-mbd, automotive-middleware, automotive-navigation, automotive-network, automotive-occupant-safety, automotive-oem-decision, automotive-parking, automotive-powertrain, automotive-project-management, automotive-protocols, automotive-qnx, automotive-quantum, automotive-regulatory-compliance, automotive-safety, automotive-safety-analysis, automotive-satellite, automotive-security, automotive-security-systems, automotive-sotif, automotive-steering, automotive-suspension, automotive-telematics, automotive-testing, automotive-transmission, automotive-uam-evtol, automotive-v2x, automotive-workflow, automotive-zonal
@@ -96,6 +121,9 @@ automotive-adas, automotive-ai-ecu, automotive-china-l2-adas-compliance, automot
 
 ### China Standards (10)
 china-ads-safety, china-ai-safety, china-behavioral-safety, china-functional-safety, china-l2-adas-safety, china-l3-fusa-sotif, china-multi-pillar, china-odd, china-scenario-safety, china-sotif
+
+### Additional Converted Content (12)
+automotive-agent-definitions, automotive-commands, automotive-docs, automotive-examples-code, automotive-helm, automotive-hooks, automotive-knowledge, automotive-kubernetes, automotive-monitoring, automotive-rules, automotive-scripts, automotive-terraform, automotive-tools, automotive-workflows
 
 </details>
 

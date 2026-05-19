@@ -1,0 +1,163 @@
+name: flash-programming
+version: 1.0.0
+description: "ECU flash programming workflow for production end-of-line and field software updates via UDS"
+trigger: "When new software needs to be flashed to ECUs, at end-of-line production, or during service updates"
+domain: "Diagnostics"
+standard: "ISO 14229, ISO 15765"
+
+prerequisites:
+  - "Signed ECU software binary available"
+  - "Flash programming tool configured and tested"
+  - "Vehicle or ECU on programming bench"
+  - "Programming session security credentials available"
+  - "Flash programming sequence specification defined"
+
+phases:
+  - name: "Pre-Programming Checks"
+    description: "Verify conditions are met before starting the flash programming sequence"
+    inputs:
+      - "Target ECU identification requirements"
+      - "Software compatibility matrix"
+      - "Vehicle conditions checklist"
+    steps:
+      - "Establish diagnostic communication with target ECU"
+      - "Read ECU identification data: part number, hardware version"
+      - "Verify software compatibility with target hardware version"
+      - "Check ECU supply voltage is within programming range"
+      - "Read current software version for delta update if supported"
+      - "Verify sufficient battery voltage for programming duration"
+      - "Check no active DTCs that would prevent programming"
+      - "Verify vehicle is in safe state for programming"
+      - "Log pre-programming ECU state for traceability"
+      - "Confirm programming authorization with operator"
+    outputs:
+      - "Pre-programming check results"
+      - "ECU identification log"
+      - "Programming authorization confirmed"
+    tools:
+      - "Diagnostic tester"
+      - "Battery voltage monitor"
+      - "ECU identification reader"
+    quality_gates:
+      - "ECU hardware version compatible with target software"
+      - "Battery voltage above minimum threshold"
+      - "No blocking conditions present"
+
+  - name: "Session Setup and Security"
+    description: "Transition ECU to programming session and unlock security access"
+    inputs:
+      - "Pre-programming checks passed"
+      - "Security access credentials"
+      - "Programming session parameters"
+    steps:
+      - "Request diagnostic session transition to programming session"
+      - "Verify positive response for session transition"
+      - "Disable normal communication to prevent interference"
+      - "Request security access with seed-key challenge"
+      - "Calculate security key from received seed"
+      - "Send security key and verify unlock"
+      - "Disable DTC setting to prevent false faults during programming"
+      - "Configure transport protocol for maximum block size"
+      - "Set programming timing parameters"
+      - "Confirm ECU is ready for download"
+    outputs:
+      - "ECU in programming session with security unlocked"
+      - "Communication parameters configured"
+      - "Session setup confirmation log"
+    tools:
+      - "Diagnostic tester"
+      - "Security key calculator"
+      - "CAN bus analyzer"
+    quality_gates:
+      - "Programming session active"
+      - "Security access granted"
+      - "Communication stable at configured parameters"
+
+  - name: "Flash Erase and Download"
+    description: "Erase target flash memory and download new software data"
+    inputs:
+      - "ECU in programming session"
+      - "Signed software binary with address information"
+      - "Flash memory layout"
+    steps:
+      - "Send RoutineControl to erase target flash memory area"
+      - "Wait for erase completion and verify positive response"
+      - "Request download via RequestDownload service"
+      - "Transfer first data block via TransferData service"
+      - "Monitor transfer progress and handle flow control"
+      - "Continue block transfers until complete file transferred"
+      - "Send RequestTransferExit to finalize download"
+      - "Verify download completion checksum if supported"
+      - "Repeat for each memory area if multi-block download"
+      - "Log transfer speed and any retries"
+    outputs:
+      - "Flash memory programmed with new software"
+      - "Transfer log with timing and retry data"
+      - "Download verification results"
+    tools:
+      - "Flash programming tool"
+      - "CAN bus monitor"
+      - "Progress monitoring display"
+    quality_gates:
+      - "All data blocks transferred successfully"
+      - "No transfer errors or excessive retries"
+      - "Download checksum matches expected value"
+
+  - name: "Verification and Activation"
+    description: "Verify the programmed software integrity and activate it"
+    inputs:
+      - "Programmed ECU"
+      - "Expected software checksums"
+      - "Activation sequence"
+    steps:
+      - "Request routine to verify programmed software integrity"
+      - "Verify CRC or hash matches expected value"
+      - "Verify digital signature of programmed software"
+      - "Request software activation if separate from verification"
+      - "Update software version identifier in ECU memory"
+      - "Reset ECU to start new software"
+      - "Wait for ECU to boot with new software"
+      - "Re-establish diagnostic communication"
+      - "Read software version and confirm update"
+      - "Re-enable DTC setting and normal communication"
+    outputs:
+      - "Software integrity verification result"
+      - "Updated software version confirmation"
+      - "ECU operational with new software"
+    tools:
+      - "Diagnostic tester"
+      - "Verification checksum calculator"
+    quality_gates:
+      - "Integrity check passes"
+      - "Digital signature verified"
+      - "ECU boots successfully with new software"
+
+  - name: "Post-Programming Validation"
+    description: "Validate ECU operation after programming and restore normal state"
+    inputs:
+      - "ECU running new software"
+      - "Post-programming validation checklist"
+      - "Expected DTC state"
+    steps:
+      - "Verify ECU identification matches expected post-update values"
+      - "Clear any DTCs generated during programming"
+      - "Verify no unexpected DTCs after clearing"
+      - "Test basic ECU functionality through diagnostics"
+      - "Verify communication on all network interfaces"
+      - "Read and verify calibration data integrity"
+      - "Execute self-test routines if available"
+      - "Record post-programming ECU state"
+      - "Generate programming report with all details"
+      - "Return vehicle or ECU to operational state"
+    outputs:
+      - "Post-programming validation report"
+      - "Programming session complete report"
+      - "Updated ECU software records"
+    tools:
+      - "Diagnostic tester"
+      - "Network analyzer"
+      - "Programming report generator"
+    quality_gates:
+      - "ECU fully operational with new software"
+      - "No unexpected DTCs present"
+      - "All post-programming checks pass"

@@ -1,0 +1,167 @@
+name: bootloader-update
+version: 1.0.0
+description: "Secure bootloader update workflow for automotive ECUs supporting field firmware updates"
+trigger: "When bootloader bugs are found, security updates needed, or new flash programming features required"
+domain: "Embedded"
+safety_level: "ASIL-D"
+
+prerequisites:
+  - "Current bootloader source code and build environment"
+  - "Secure boot key infrastructure established"
+  - "Test ECUs with current production bootloader"
+  - "Bootloader update test procedures approved"
+  - "Rollback strategy defined and tested"
+
+phases:
+  - name: "Change Analysis and Safety Assessment"
+    description: "Analyze the proposed bootloader change and assess its safety impact"
+    inputs:
+      - "Bootloader change request with technical details"
+      - "Current bootloader design documentation"
+      - "Safety analysis for current bootloader"
+    steps:
+      - "Review the proposed change in detail"
+      - "Assess impact on secure boot chain"
+      - "Evaluate impact on flash programming functionality"
+      - "Assess impact on bootloader-to-application interface"
+      - "Determine if change affects any safety mechanisms"
+      - "Update FMEA for bootloader with proposed change"
+      - "Evaluate risk of bricking ECU during update process"
+      - "Define rollback strategy for the specific change"
+      - "Obtain safety assessment approval before proceeding"
+      - "Create detailed implementation plan"
+    outputs:
+      - "Safety impact assessment"
+      - "Updated bootloader FMEA"
+      - "Implementation plan with rollback strategy"
+    tools:
+      - "Safety analysis tool"
+      - "FMEA template"
+      - "Change management system"
+    quality_gates:
+      - "Safety assessment reviewed by functional safety engineer"
+      - "Rollback strategy validated as feasible"
+      - "Implementation plan approved"
+
+  - name: "Implementation and Code Review"
+    description: "Implement the bootloader change with rigorous code review"
+    inputs:
+      - "Approved implementation plan"
+      - "Bootloader source code"
+      - "Coding standards for safety-critical code"
+    steps:
+      - "Implement change following MISRA-C guidelines"
+      - "Ensure no dynamic memory allocation in bootloader code"
+      - "Verify stack usage remains within allocated bounds"
+      - "Maintain secure boot verification sequence"
+      - "Update flash programming algorithms if affected"
+      - "Run static analysis on modified code"
+      - "Run MISRA-C checker on all modified files"
+      - "Submit for peer code review with two reviewers"
+      - "Address all review comments"
+      - "Obtain code review sign-off from both reviewers"
+    outputs:
+      - "Modified bootloader source code"
+      - "Static analysis results"
+      - "Code review approval records"
+    tools:
+      - "Development IDE"
+      - "MISRA-C checker"
+      - "Static analysis tool"
+      - "Code review platform"
+    quality_gates:
+      - "Zero MISRA-C critical violations"
+      - "Static analysis shows no new findings"
+      - "Two independent reviewer approvals"
+
+  - name: "Verification Testing"
+    description: "Execute comprehensive bootloader verification tests including update scenarios"
+    inputs:
+      - "Modified bootloader binary"
+      - "Bootloader verification test suite"
+      - "Test ECUs with production bootloader"
+    steps:
+      - "Verify secure boot chain with updated bootloader"
+      - "Test application download via CAN using UDS protocol"
+      - "Test application download via Ethernet if supported"
+      - "Verify flash erase and write operations"
+      - "Test signature verification of application binary"
+      - "Verify rejection of unsigned or tampered binaries"
+      - "Test bootloader update mechanism itself"
+      - "Test power interruption during bootloader update"
+      - "Verify rollback mechanism after failed update"
+      - "Test all diagnostic services in bootloader mode"
+      - "Execute 1000-cycle flash programming stress test"
+    outputs:
+      - "Verification test results"
+      - "Power interruption test results"
+      - "Stress test results"
+    tools:
+      - "Flash programming tool"
+      - "Power supply with programmable interruption"
+      - "CAN bus interface"
+      - "Diagnostic tester"
+    quality_gates:
+      - "All verification tests pass"
+      - "ECU recovers from power interruption during update"
+      - "Zero failures in 1000-cycle stress test"
+
+  - name: "Production Signing and Packaging"
+    description: "Sign the bootloader binary with production keys and create update package"
+    inputs:
+      - "Verified bootloader binary"
+      - "Code signing infrastructure"
+      - "Update package format specification"
+    steps:
+      - "Calculate binary hash for integrity verification"
+      - "Sign bootloader binary with production code signing key"
+      - "Verify signature with public key on test ECU"
+      - "Create bootloader update package with metadata"
+      - "Include version information and compatibility checks"
+      - "Include rollback prevention version counter if applicable"
+      - "Generate update package checksum"
+      - "Test complete update package on reference ECU"
+      - "Verify updated ECU boots and functions correctly"
+      - "Archive signed binary with signing ceremony records"
+    outputs:
+      - "Signed bootloader update package"
+      - "Signing records"
+      - "Update verification results on reference ECU"
+    tools:
+      - "Code signing system"
+      - "Package builder"
+      - "Flash programming tool"
+    quality_gates:
+      - "Signature verification passes on target hardware"
+      - "Update package installs correctly on reference ECU"
+      - "Version information correct in updated bootloader"
+
+  - name: "Deployment and Monitoring"
+    description: "Deploy bootloader update to field vehicles and monitor for issues"
+    inputs:
+      - "Signed bootloader update package"
+      - "Deployment plan with phased rollout"
+      - "Monitoring and rollback procedures"
+    steps:
+      - "Deploy to limited pilot fleet first"
+      - "Monitor pilot fleet ECUs for boot issues or anomalies"
+      - "Collect diagnostic data from pilot fleet"
+      - "Analyze pilot results and confirm no regressions"
+      - "Expand deployment to larger fleet percentage"
+      - "Monitor error rates and update success rates"
+      - "Investigate any failed update attempts"
+      - "Complete full fleet deployment"
+      - "Generate deployment completion report"
+      - "Archive deployment records per traceability requirements"
+    outputs:
+      - "Deployment completion report"
+      - "Update success rate metrics"
+      - "Archived deployment records"
+    tools:
+      - "OTA deployment platform"
+      - "Fleet monitoring dashboard"
+      - "Diagnostic data collection system"
+    quality_gates:
+      - "Pilot fleet shows zero boot failures"
+      - "Update success rate above 99.9%"
+      - "No safety-relevant issues reported"

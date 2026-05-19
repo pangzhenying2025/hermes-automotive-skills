@@ -1,0 +1,166 @@
+name: key-management
+version: 1.0.0
+description: "Automotive cryptographic key management lifecycle workflow covering generation, distribution, rotation, and revocation"
+trigger: "When setting up new key infrastructure, during key rotation events, or when security incidents require key revocation"
+domain: "Cybersecurity"
+standard: "ISO/SAE 21434, ISO 11452"
+
+prerequisites:
+  - "Hardware security modules (HSM) provisioned and accessible"
+  - "Key management policy and procedures approved"
+  - "PKI infrastructure established or available"
+  - "Secure key ceremony room available for root key operations"
+  - "Key custodians identified and trained"
+
+phases:
+  - name: "Key Architecture Design"
+    description: "Design the cryptographic key hierarchy and lifecycle management architecture"
+    inputs:
+      - "Cybersecurity requirements specifying encryption needs"
+      - "System architecture with secure communication channels"
+      - "Regulatory requirements for key management"
+    steps:
+      - "Define key hierarchy from root keys to device-level keys"
+      - "Specify key types: symmetric, asymmetric, and certificates"
+      - "Define key strength requirements per use case"
+      - "Specify key derivation methods and algorithms"
+      - "Design key distribution mechanism for production provisioning"
+      - "Define key rotation policy with intervals per key type"
+      - "Design key revocation and recovery procedures"
+      - "Specify HSM usage requirements for key storage"
+      - "Define key backup and disaster recovery procedures"
+      - "Document key naming convention and identifier scheme"
+    outputs:
+      - "Key architecture document"
+      - "Key hierarchy diagram"
+      - "Key lifecycle policy"
+    tools:
+      - "Architecture design tool"
+      - "Cryptographic protocol analyzer"
+      - "Policy documentation system"
+    quality_gates:
+      - "Key architecture reviewed by cryptography expert"
+      - "All use cases covered by key hierarchy"
+      - "Key lifecycle policy approved by security management"
+
+  - name: "Root Key Ceremony"
+    description: "Generate root keys and trust anchors in a controlled ceremony environment"
+    inputs:
+      - "Key ceremony procedure document"
+      - "HSM devices initialized and verified"
+      - "Key custodian identification and authorization"
+    steps:
+      - "Verify ceremony room physical security controls"
+      - "Verify identity of all ceremony participants"
+      - "Initialize HSM in FIPS-validated mode"
+      - "Generate root CA key pair within HSM"
+      - "Generate root signing key for firmware updates"
+      - "Create split key shares for root key backup"
+      - "Distribute key shares to separate custodians"
+      - "Generate self-signed root certificate"
+      - "Verify root certificate against HSM-stored key"
+      - "Record ceremony proceedings with video and audit log"
+      - "Secure all ceremony materials per handling procedures"
+    outputs:
+      - "Root CA certificate"
+      - "Root signing key active in HSM"
+      - "Key share distribution records"
+      - "Ceremony audit log"
+    tools:
+      - "Hardware security module"
+      - "Key ceremony toolkit"
+      - "Audit recording system"
+    quality_gates:
+      - "All ceremony steps witnessed and recorded"
+      - "Key shares verified as reconstructable"
+      - "Root certificate verifiable against HSM key"
+
+  - name: "Intermediate and Device Key Provisioning"
+    description: "Generate intermediate CAs and provision device-level keys for production"
+    inputs:
+      - "Root CA certificate and signing capability"
+      - "Device key provisioning requirements"
+      - "Production line key injection system"
+    steps:
+      - "Generate intermediate CA key pairs in production HSM"
+      - "Sign intermediate CA certificates with root CA"
+      - "Configure certificate chain validation"
+      - "Set up device key generation service"
+      - "Configure production line key injection interface"
+      - "Generate test batch of device keys and certificates"
+      - "Verify device key injection and storage"
+      - "Validate device certificate chain back to root"
+      - "Configure certificate revocation list (CRL) distribution"
+      - "Test end-to-end secure communication with provisioned keys"
+    outputs:
+      - "Intermediate CA certificates"
+      - "Device key provisioning system operational"
+      - "Test validation results"
+    tools:
+      - "PKI management platform"
+      - "Key injection system"
+      - "Certificate validation tool"
+    quality_gates:
+      - "Certificate chain validates from device to root"
+      - "Key injection process validated on test devices"
+      - "CRL distribution verified functional"
+
+  - name: "Key Rotation Execution"
+    description: "Execute scheduled key rotation following approved procedures"
+    inputs:
+      - "Key rotation schedule"
+      - "Current key inventory"
+      - "Rotation procedure per key type"
+    steps:
+      - "Identify keys due for rotation based on schedule"
+      - "Generate replacement keys following approved procedures"
+      - "Distribute new keys through secure provisioning channels"
+      - "Verify new keys are functional on target systems"
+      - "Begin transition period with both old and new keys active"
+      - "Monitor for systems that have not transitioned to new keys"
+      - "Retire old keys after transition period expires"
+      - "Update key inventory records"
+      - "Verify no systems still using retired keys"
+      - "Generate key rotation completion report"
+    outputs:
+      - "Updated key inventory"
+      - "Key rotation completion report"
+      - "Retired key records"
+    tools:
+      - "Key management platform"
+      - "Key distribution service"
+      - "Inventory tracking system"
+    quality_gates:
+      - "All target systems transitioned to new keys"
+      - "Retired keys confirmed inactive"
+      - "Key inventory accurate and up to date"
+
+  - name: "Emergency Key Revocation"
+    description: "Execute emergency key revocation in response to suspected key compromise"
+    inputs:
+      - "Compromise notification or detection alert"
+      - "Affected key identification"
+      - "Revocation procedures"
+    steps:
+      - "Identify all keys potentially affected by compromise"
+      - "Assess impact scope including number of affected vehicles"
+      - "Generate and publish updated certificate revocation list"
+      - "Distribute revocation information to all relying parties"
+      - "Disable compromised keys in backend authentication systems"
+      - "Generate emergency replacement keys"
+      - "Initiate emergency key reprovisioning for affected devices"
+      - "Monitor for continued use of revoked keys"
+      - "Conduct root cause analysis of key compromise"
+      - "Update key management procedures based on lessons learned"
+    outputs:
+      - "Updated CRL published"
+      - "Emergency replacement keys distributed"
+      - "Compromise root cause report"
+    tools:
+      - "CRL generation and distribution system"
+      - "Emergency key provisioning service"
+      - "Monitoring and alerting system"
+    quality_gates:
+      - "Revocation published within defined SLA"
+      - "All affected devices scheduled for reprovisioning"
+      - "Root cause identified and mitigation implemented"

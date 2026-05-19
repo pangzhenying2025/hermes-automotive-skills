@@ -1,0 +1,166 @@
+name: uds-service-implementation
+version: 1.0.0
+description: "UDS diagnostic service implementation workflow for automotive ECUs per ISO 14229"
+trigger: "When new diagnostic services are required, updating existing services, or porting to new ECU"
+domain: "Diagnostics"
+standard: "ISO 14229 (UDS), ISO 15765 (CAN transport)"
+
+prerequisites:
+  - "ECU diagnostic specification (ODX/PDX) available"
+  - "AUTOSAR DCM module configured or custom diagnostic stack"
+  - "UDS service requirements from vehicle diagnostic concept"
+  - "Test tools including diagnostic tester and CAN analyzer"
+  - "Diagnostic session and security access concept defined"
+
+phases:
+  - name: "Service Requirements Analysis"
+    description: "Analyze diagnostic service requirements from vehicle-level specification"
+    inputs:
+      - "Vehicle diagnostic specification"
+      - "ODX file with service definitions"
+      - "ECU-specific diagnostic requirements"
+    steps:
+      - "Extract ECU-relevant services from vehicle diagnostic specification"
+      - "Identify required UDS services: read, write, routine control, etc."
+      - "Define supported diagnostic sessions and transitions"
+      - "Define security access levels and their protection scope"
+      - "Map DIDs to internal data sources and parameters"
+      - "Define routine control identifiers and their behaviors"
+      - "Specify DTC-related service parameters"
+      - "Define session timing parameters: P2 and P2* values"
+      - "Identify service suppression and conditional requirements"
+      - "Create service implementation checklist"
+    outputs:
+      - "Service implementation specification per UDS SID"
+      - "DID mapping table"
+      - "Service implementation checklist"
+    tools:
+      - "ODX editor and viewer"
+      - "Requirements management tool"
+      - "Diagnostic specification tool"
+    quality_gates:
+      - "All required services identified and specified"
+      - "DID mapping covers all diagnostic data"
+      - "Session and security concept complete"
+
+  - name: "Service Implementation"
+    description: "Implement UDS diagnostic services in the ECU software"
+    inputs:
+      - "Service implementation specification"
+      - "DCM configuration or diagnostic stack API"
+      - "Application data access interfaces"
+    steps:
+      - "Configure diagnostic session management with timing"
+      - "Implement security access algorithm per specification"
+      - "Implement ReadDataByIdentifier service handlers per DID"
+      - "Implement WriteDataByIdentifier with validation and NVM storage"
+      - "Implement RoutineControl handlers for each routine ID"
+      - "Implement InputOutputControlByIdentifier for actuator tests"
+      - "Implement ECUReset service with mode support"
+      - "Implement CommunicationControl for bus silence"
+      - "Implement ControlDTCSetting for DTC suppression"
+      - "Implement ResponseOnEvent if required"
+      - "Add negative response handling for all error conditions"
+    outputs:
+      - "Implemented diagnostic service handlers"
+      - "DCM configuration updated"
+      - "Service handler source code"
+    tools:
+      - "AUTOSAR authoring tool"
+      - "Development IDE"
+      - "Code review platform"
+    quality_gates:
+      - "All required services implemented"
+      - "Negative response codes correct per ISO 14229"
+      - "Code review completed"
+
+  - name: "Unit Testing"
+    description: "Unit test each diagnostic service handler in isolation"
+    inputs:
+      - "Implemented service handlers"
+      - "Service specification for expected behavior"
+      - "Unit test framework"
+    steps:
+      - "Write tests for session transition valid and invalid cases"
+      - "Write tests for security access challenge-response flow"
+      - "Write tests for each DID read with expected response format"
+      - "Write tests for DID write with valid and invalid data"
+      - "Write tests for routine control start, stop, and results"
+      - "Write tests for negative response conditions per service"
+      - "Write tests for service availability per session state"
+      - "Write tests for timing requirements: P2 and P2*"
+      - "Execute all unit tests and verify pass rate"
+      - "Measure code coverage of service handlers"
+    outputs:
+      - "Unit test suite for diagnostic services"
+      - "Unit test results"
+      - "Code coverage report"
+    tools:
+      - "GoogleTest or equivalent"
+      - "Mock framework for application interfaces"
+      - "Code coverage tool"
+    quality_gates:
+      - "All unit tests pass"
+      - "Code coverage above 85% for service handlers"
+      - "All negative response paths tested"
+
+  - name: "Integration Testing with Diagnostic Tester"
+    description: "Test diagnostic services end-to-end using a real diagnostic tester"
+    inputs:
+      - "ECU with implemented diagnostic services"
+      - "Diagnostic tester configured with ODX"
+      - "CAN interface and network setup"
+    steps:
+      - "Verify diagnostic communication establishment"
+      - "Test session transitions: default, extended, programming"
+      - "Test security access unlock flow"
+      - "Read all DIDs and verify response data format"
+      - "Write configurable DIDs and verify persistence"
+      - "Execute all routine controls and verify behavior"
+      - "Test DTC read, clear, and status reporting"
+      - "Test communication control and DTC setting control"
+      - "Verify multi-frame transport protocol handling"
+      - "Test concurrent diagnostic requests handling"
+      - "Verify session timeout and return to default"
+    outputs:
+      - "Integration test results per service"
+      - "Communication log captures"
+      - "Defect reports for any failures"
+    tools:
+      - "Diagnostic tester application"
+      - "CAN bus analyzer"
+      - "ODX/PDX files"
+    quality_gates:
+      - "All services respond correctly per specification"
+      - "No unexpected negative responses"
+      - "Transport protocol handles all message sizes"
+
+  - name: "Conformance Validation and Release"
+    description: "Validate diagnostic implementation against OEM conformance requirements"
+    inputs:
+      - "Integration-tested diagnostic implementation"
+      - "OEM diagnostic conformance test specification"
+      - "Vehicle-level diagnostic test suite"
+    steps:
+      - "Execute OEM diagnostic conformance test suite"
+      - "Verify timing compliance for all services"
+      - "Test diagnostic services during vehicle network simulation"
+      - "Verify diagnostic behavior during ECU state transitions"
+      - "Test diagnostic access during application operation"
+      - "Validate ODX file matches actual ECU behavior"
+      - "Document any deviations with justification"
+      - "Obtain diagnostic conformance approval"
+      - "Tag diagnostic software release"
+      - "Deliver ODX file to vehicle integration team"
+    outputs:
+      - "Conformance test results"
+      - "Validated ODX file"
+      - "Diagnostic conformance approval"
+    tools:
+      - "OEM conformance test tool"
+      - "Vehicle network simulator"
+      - "ODX validation tool"
+    quality_gates:
+      - "All conformance tests pass"
+      - "ODX file validates against ECU responses"
+      - "Diagnostic conformance approval obtained"

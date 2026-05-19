@@ -1,0 +1,165 @@
+name: esc-development
+version: 1.0.0
+description: "Electronic Stability Control system development and calibration workflow for vehicle dynamics safety"
+trigger: "During new vehicle platform development, ESC algorithm updates, or regulatory compliance testing"
+domain: "Chassis"
+safety_level: "ASIL-D"
+standard: "ECE R13H, FMVSS 126"
+
+prerequisites:
+  - "Vehicle dynamics simulation model validated"
+  - "ESC hydraulic unit and sensor set installed on vehicle"
+  - "Vehicle handling test facility available"
+  - "Data acquisition system with inertial measurement unit"
+  - "ESC algorithm baseline from simulation"
+
+phases:
+  - name: "Vehicle Model Parameterization"
+    description: "Characterize vehicle dynamics parameters for ESC algorithm calibration"
+    inputs:
+      - "Vehicle specifications: mass, CG height, track width, wheelbase"
+      - "Tire force-slip characteristics"
+      - "Suspension kinematics and compliance data"
+    steps:
+      - "Measure vehicle mass and center of gravity location"
+      - "Characterize tire lateral force vs slip angle at multiple loads"
+      - "Measure understeer gradient through steady-state cornering"
+      - "Characterize yaw moment of inertia through oscillation test"
+      - "Measure steering ratio and steering system compliance"
+      - "Record suspension travel and roll characteristics"
+      - "Determine brake force distribution front to rear"
+      - "Validate vehicle model against measured step steer response"
+      - "Update ESC reference model with measured parameters"
+      - "Document all vehicle parameters with measurement conditions"
+    outputs:
+      - "Vehicle dynamics parameter set"
+      - "Validated vehicle reference model"
+      - "Tire characteristic data"
+    tools:
+      - "Inertial measurement unit"
+      - "GPS positioning system"
+      - "Steering robot"
+    quality_gates:
+      - "Model matches measured response within 5% for yaw rate"
+      - "Understeer gradient accurately captured"
+      - "All parameters documented with measurement uncertainty"
+
+  - name: "Stability Algorithm Calibration"
+    description: "Calibrate ESC intervention thresholds and control gains"
+    inputs:
+      - "Vehicle reference model parameters"
+      - "ESC algorithm with adjustable parameters"
+      - "Target intervention behavior"
+    steps:
+      - "Calibrate yaw rate reference model in ESC controller"
+      - "Set sideslip angle estimation algorithm parameters"
+      - "Calibrate understeer intervention threshold and gain"
+      - "Calibrate oversteer intervention threshold and gain"
+      - "Set individual wheel brake pressure control gains"
+      - "Calibrate engine torque reduction request magnitude"
+      - "Set intervention hysteresis to prevent oscillation"
+      - "Calibrate split-mu surface detection and response"
+      - "Set speed-dependent threshold scaling"
+      - "Configure diagnostic monitoring for ESC function"
+    outputs:
+      - "Calibrated ESC parameters"
+      - "Intervention threshold documentation"
+      - "Control gain settings"
+    tools:
+      - "Calibration tool"
+      - "Vehicle dynamics data logger"
+      - "ESC diagnostic tool"
+    quality_gates:
+      - "Intervention thresholds provide timely response"
+      - "No false interventions during normal driving"
+      - "Stable control without oscillation"
+
+  - name: "Dynamic Testing and Tuning"
+    description: "Validate and fine-tune ESC performance through dynamic vehicle tests"
+    inputs:
+      - "Calibrated ESC on test vehicle"
+      - "Test track with low and high friction surfaces"
+      - "Professional test driver"
+    steps:
+      - "Execute sine with dwell maneuver per FMVSS 126"
+      - "Execute J-turn maneuver at increasing speeds"
+      - "Execute fishhook maneuver for rollover propensity"
+      - "Test ESC response on split-mu braking surface"
+      - "Test ESC during high-speed lane change"
+      - "Evaluate ESC intervention during trail braking in corner"
+      - "Test ESC on ice and snow surfaces"
+      - "Evaluate ESC behavior during driver overcorrection"
+      - "Fine-tune intervention feel based on driver feedback"
+      - "Measure ESC-off versus ESC-on stability improvement"
+    outputs:
+      - "Dynamic test results per maneuver"
+      - "ESC performance improvement measurements"
+      - "Driver subjective evaluation"
+    tools:
+      - "Vehicle dynamics measurement system"
+      - "High-speed cameras"
+      - "Outrigger safety equipment"
+    quality_gates:
+      - "FMVSS 126 sine with dwell criteria met"
+      - "Vehicle remains stable in all test maneuvers"
+      - "Driver feedback positive on intervention character"
+
+  - name: "Regulatory Compliance Testing"
+    description: "Execute official regulatory compliance tests for ESC type approval"
+    inputs:
+      - "Fine-tuned ESC calibration"
+      - "Regulatory test procedures"
+      - "Compliance test track"
+    steps:
+      - "Execute ECE R13H compliance test program"
+      - "Execute FMVSS 126 compliance test program"
+      - "Perform slowly increasing steer maneuver for characterization"
+      - "Execute sine with dwell at 0.7Hz increasing amplitude"
+      - "Verify lateral displacement criteria met"
+      - "Verify yaw rate criteria met within specified time"
+      - "Test ESC malfunction warning indicator behavior"
+      - "Verify ESC OFF switch function per regulation"
+      - "Document all compliance test results"
+      - "Prepare regulatory submission documentation"
+    outputs:
+      - "Regulatory compliance test results"
+      - "Compliance certification data"
+      - "Submission documentation"
+    tools:
+      - "Compliance test equipment"
+      - "Certified measurement systems"
+      - "Documentation system"
+    quality_gates:
+      - "All ECE R13H criteria met"
+      - "All FMVSS 126 criteria met"
+      - "Warning indicator behavior compliant"
+
+  - name: "Release and Production Validation"
+    description: "Final validation and release of ESC calibration for production"
+    inputs:
+      - "Compliance-tested calibration"
+      - "Production validation test procedures"
+      - "Production-representative vehicles"
+    steps:
+      - "Validate ESC on production-representative vehicles"
+      - "Test across vehicle weight variants: curb to gross"
+      - "Test with different tire options in specification"
+      - "Validate ESC interaction with other chassis systems"
+      - "Execute winter testing in cold climate conditions"
+      - "Verify ESC diagnostic monitoring on production hardware"
+      - "Freeze ESC calibration parameters"
+      - "Generate production release documentation"
+      - "Obtain functional safety release for ESC"
+      - "Release calibration to production"
+    outputs:
+      - "Production validation results"
+      - "Frozen ESC calibration"
+      - "Functional safety release"
+    tools:
+      - "Production test vehicles"
+      - "Winter test facility"
+      - "Release management system"
+    quality_gates:
+      - "ESC functions correctly across all variants"
+      - "Winter testing passed"
+      - "Functional safety sign-off obtained"

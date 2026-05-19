@@ -1,0 +1,164 @@
+name: remote-diagnostic-setup
+version: 1.0.0
+description: "Remote diagnostics infrastructure setup workflow for over-the-air diagnostic access to fleet vehicles"
+trigger: "When establishing remote diagnostic capability, onboarding new vehicle platforms, or upgrading infrastructure"
+domain: "Diagnostics"
+standard: "ISO 14229 over DoIP, ISO 13400"
+
+prerequisites:
+  - "Vehicle connectivity module with cellular capability"
+  - "Cloud infrastructure for diagnostic backend"
+  - "Security certificates for authenticated connections"
+  - "Vehicle diagnostic interface specification"
+  - "Fleet management system integration requirements"
+
+phases:
+  - name: "Architecture Design"
+    description: "Design the end-to-end remote diagnostic architecture including security and data flow"
+    inputs:
+      - "Vehicle connectivity capabilities"
+      - "Diagnostic use case requirements"
+      - "Security and privacy requirements"
+    steps:
+      - "Define remote diagnostic use cases and data requirements"
+      - "Design communication architecture: vehicle to cloud to backend"
+      - "Select diagnostic transport protocol: DoIP over cellular"
+      - "Design authentication and authorization model"
+      - "Define data encryption requirements for diagnostic traffic"
+      - "Design session management for remote diagnostic connections"
+      - "Plan bandwidth and latency requirements per use case"
+      - "Design data privacy controls per regional regulations"
+      - "Define diagnostic data retention and deletion policies"
+      - "Create architecture specification document"
+    outputs:
+      - "Remote diagnostic architecture specification"
+      - "Security design document"
+      - "Data flow diagrams"
+    tools:
+      - "Architecture design tool"
+      - "Security architecture framework"
+      - "Data flow modeling tool"
+    quality_gates:
+      - "Architecture reviewed by security team"
+      - "Privacy requirements addressed per applicable regulations"
+      - "Bandwidth requirements achievable with cellular connection"
+
+  - name: "Vehicle-Side Implementation"
+    description: "Implement the remote diagnostic agent in the vehicle connectivity module"
+    inputs:
+      - "Architecture specification"
+      - "Connectivity module SDK"
+      - "Vehicle diagnostic gateway interface"
+    steps:
+      - "Implement DoIP transport layer on connectivity module"
+      - "Implement TLS client for secure cloud connection"
+      - "Implement certificate-based mutual authentication"
+      - "Configure diagnostic routing from remote to vehicle bus"
+      - "Implement session timeout and connection management"
+      - "Implement bandwidth throttling for cellular efficiency"
+      - "Add diagnostic access control per vehicle owner consent"
+      - "Implement local logging of all remote diagnostic sessions"
+      - "Configure diagnostic firewall rules for safe remote access"
+      - "Test remote diagnostic agent in isolation"
+    outputs:
+      - "Vehicle-side remote diagnostic software"
+      - "Configuration for diagnostic routing"
+      - "Local audit logging implementation"
+    tools:
+      - "Connectivity module development kit"
+      - "DoIP implementation library"
+      - "TLS library"
+    quality_gates:
+      - "TLS connection established with mutual authentication"
+      - "Diagnostic routing functions correctly"
+      - "Access control enforced per consent settings"
+
+  - name: "Cloud Backend Implementation"
+    description: "Implement the cloud-side diagnostic backend services"
+    inputs:
+      - "Architecture specification"
+      - "Cloud platform resources"
+      - "Fleet management system APIs"
+    steps:
+      - "Deploy diagnostic proxy service for DoIP termination"
+      - "Implement user authentication and role-based access control"
+      - "Build diagnostic session management service"
+      - "Implement vehicle connection registry and status tracking"
+      - "Build diagnostic data logging and audit trail service"
+      - "Integrate with fleet management for vehicle identification"
+      - "Implement diagnostic campaign management for fleet-wide scans"
+      - "Build dashboard for remote diagnostic session monitoring"
+      - "Configure auto-scaling for concurrent session handling"
+      - "Implement alerting for connection failures and anomalies"
+    outputs:
+      - "Deployed cloud diagnostic backend"
+      - "User interface for remote diagnostic access"
+      - "Monitoring and alerting configuration"
+    tools:
+      - "Cloud platform services"
+      - "Container orchestration"
+      - "Monitoring platform"
+    quality_gates:
+      - "Backend handles required concurrent session count"
+      - "End-to-end latency within specification"
+      - "Audit trail captures all diagnostic actions"
+
+  - name: "End-to-End Verification"
+    description: "Verify the complete remote diagnostic chain from operator to vehicle and back"
+    inputs:
+      - "Vehicle-side and cloud-side implementations deployed"
+      - "Test vehicle with connectivity module"
+      - "End-to-end test scenarios"
+    steps:
+      - "Establish remote diagnostic session from cloud to vehicle"
+      - "Execute ReadDataByIdentifier remotely and verify response"
+      - "Execute DTC read remotely and verify results"
+      - "Test session timeout and reconnection handling"
+      - "Verify diagnostic session isolation between operators"
+      - "Test concurrent remote sessions to different vehicles"
+      - "Measure end-to-end response time for diagnostic requests"
+      - "Verify audit trail completeness after test sessions"
+      - "Test connection behavior under poor cellular conditions"
+      - "Verify graceful handling of connection drops"
+    outputs:
+      - "End-to-end verification results"
+      - "Performance measurements"
+      - "Connection robustness test results"
+    tools:
+      - "Remote diagnostic operator interface"
+      - "Network impairment simulator"
+      - "Performance measurement tool"
+    quality_gates:
+      - "All diagnostic services functional remotely"
+      - "Response time within acceptable limits"
+      - "Connection recovery works within specification"
+
+  - name: "Deployment and Onboarding"
+    description: "Deploy remote diagnostics to production fleet and onboard support teams"
+    inputs:
+      - "Verified remote diagnostic system"
+      - "Production fleet vehicles"
+      - "Support team training materials"
+    steps:
+      - "Deploy vehicle-side software via OTA update"
+      - "Activate remote diagnostic consent per vehicle"
+      - "Provision cloud backend for production traffic"
+      - "Create operator user accounts with appropriate roles"
+      - "Train service technicians on remote diagnostic procedures"
+      - "Create troubleshooting guides for common issues"
+      - "Enable monitoring and alerting for production"
+      - "Execute pilot with limited fleet for validation"
+      - "Expand to full fleet after pilot success"
+      - "Establish operational support process for system maintenance"
+    outputs:
+      - "Remote diagnostics operational on production fleet"
+      - "Trained support team"
+      - "Operational support procedures"
+    tools:
+      - "OTA deployment platform"
+      - "Training management system"
+      - "Operational monitoring dashboard"
+    quality_gates:
+      - "Pilot fleet validation successful"
+      - "Support team certified on procedures"
+      - "Monitoring and support processes operational"

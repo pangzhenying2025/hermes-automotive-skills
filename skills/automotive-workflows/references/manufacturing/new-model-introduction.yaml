@@ -1,0 +1,38 @@
+name: new-model-introduction
+version: 1.0.0
+description: |
+  New Model Introduction (NMI) workflow from pilot build to production ramp-up.
+
+domain: manufacturing
+safety_standard: IATF_16949
+estimated_duration: 6-12_months
+
+phases:
+  - phase: tooling
+    name: Tooling Design and Fabrication
+    duration: 3-6_months
+    outputs:
+      - production_tooling
+      - fixture_validation
+  - phase: pilot_build
+    name: Pilot Build and Process Validation
+    duration: 2-3_months
+    outputs:
+      - pilot_build_results
+      - process_fmea_updates
+  - phase: quality_validation
+    name: Quality Gate and Lessons Learned
+    duration: 1_month
+    outputs:
+      - quality_metrics
+      - improvement_actions
+  - phase: ramp_up
+    name: Production Ramp-Up to Full Volume
+    duration: 2-4_months
+    outputs:
+      - production_volume_curve
+      - yield_improvement_tracking
+
+references:
+  - APQP (Advanced Product Quality Planning)
+  - IATF 16949 (Quality management)

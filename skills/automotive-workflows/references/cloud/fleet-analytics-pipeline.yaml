@@ -1,0 +1,164 @@
+name: fleet-analytics-pipeline
+version: 1.0.0
+description: "Fleet data analytics pipeline development workflow for deriving insights from connected vehicle data"
+trigger: "When building new analytics capabilities, adding data sources, or optimizing fleet operations"
+domain: "Cloud"
+safety_level: "QM"
+
+prerequisites:
+  - "Vehicle IoT platform operational with data flowing"
+  - "Data lake or warehouse infrastructure available"
+  - "Analytics team with domain expertise"
+  - "Data governance framework established"
+  - "Business intelligence visualization tools"
+
+phases:
+  - name: "Analytics Requirements and Data Discovery"
+    description: "Define analytics objectives and discover available data sources"
+    inputs:
+      - "Business objectives for fleet analytics"
+      - "Available vehicle telemetry data catalog"
+      - "Stakeholder interview findings"
+    steps:
+      - "Interview fleet management stakeholders for analytics needs"
+      - "Define key performance indicators for fleet operations"
+      - "Catalog all available vehicle telemetry data points"
+      - "Assess data quality and completeness per data source"
+      - "Identify data gaps requiring new vehicle data collection"
+      - "Define data retention requirements per use case"
+      - "Map data privacy requirements per applicable regulations"
+      - "Prioritize analytics use cases by business value"
+      - "Define data access control requirements per team"
+      - "Create analytics requirements document"
+    outputs:
+      - "Analytics requirements document"
+      - "Data source catalog with quality assessment"
+      - "Prioritized use case list"
+    tools:
+      - "Data catalog tool"
+      - "Requirements management system"
+      - "Data quality profiler"
+    quality_gates:
+      - "KPIs defined and measurable from available data"
+      - "Data quality sufficient for priority use cases"
+      - "Privacy requirements addressed per regulation"
+
+  - name: "Data Pipeline Development"
+    description: "Build the ETL/ELT pipelines for ingesting and transforming vehicle data"
+    inputs:
+      - "Data source catalog"
+      - "Target data model for analytics"
+      - "Data engineering tools and frameworks"
+    steps:
+      - "Design data ingestion pipeline from IoT platform"
+      - "Implement streaming data transformation for real-time metrics"
+      - "Implement batch ETL for historical data aggregation"
+      - "Build data quality checks at each pipeline stage"
+      - "Implement data deduplication and late-arrival handling"
+      - "Create derived metrics: trip detection, usage patterns"
+      - "Implement vehicle health score calculation"
+      - "Build battery degradation tracking pipeline"
+      - "Implement geospatial data processing for fleet mapping"
+      - "Deploy pipelines with automated testing"
+    outputs:
+      - "Deployed data pipelines"
+      - "Data quality monitoring"
+      - "Pipeline test results"
+    tools:
+      - "Data pipeline orchestrator"
+      - "Stream processing framework"
+      - "Data quality framework"
+    quality_gates:
+      - "Pipeline processing latency within requirements"
+      - "Data quality checks passing above 99%"
+      - "No data loss in pipeline processing"
+
+  - name: "Analytics Model Development"
+    description: "Develop analytical models and algorithms for fleet insights"
+    inputs:
+      - "Processed and validated fleet data"
+      - "Analytics use case specifications"
+      - "ML framework and compute resources"
+    steps:
+      - "Build predictive maintenance model for component failures"
+      - "Develop battery state of health estimation from fleet data"
+      - "Create driving behavior scoring algorithm"
+      - "Build energy consumption prediction model"
+      - "Develop anomaly detection for vehicle health monitoring"
+      - "Create fleet utilization optimization model"
+      - "Build geospatial analysis for usage pattern mining"
+      - "Validate models against holdout test data"
+      - "Calculate model accuracy and business value metrics"
+      - "Document model methodology and limitations"
+    outputs:
+      - "Trained analytics models"
+      - "Model validation results"
+      - "Model documentation"
+    tools:
+      - "ML development platform"
+      - "Model evaluation framework"
+      - "Experiment tracking tool"
+    quality_gates:
+      - "Model accuracy meets business requirements"
+      - "Models validated on representative test data"
+      - "No data leakage in model training"
+
+  - name: "Dashboard and Visualization"
+    description: "Build interactive dashboards and reports for fleet analytics consumers"
+    inputs:
+      - "Analytics model outputs"
+      - "Aggregated fleet metrics"
+      - "Stakeholder visualization requirements"
+    steps:
+      - "Design fleet overview dashboard with key metrics"
+      - "Build vehicle health monitoring dashboard"
+      - "Create battery fleet analytics dashboard"
+      - "Build driving behavior analysis reports"
+      - "Create predictive maintenance alert dashboard"
+      - "Implement drill-down capability from fleet to individual vehicle"
+      - "Configure automated report generation and distribution"
+      - "Implement role-based dashboard access control"
+      - "Optimize query performance for interactive dashboards"
+      - "Validate dashboard data accuracy against source data"
+    outputs:
+      - "Interactive fleet dashboards"
+      - "Automated report configurations"
+      - "Dashboard validation results"
+    tools:
+      - "Business intelligence platform"
+      - "Report generation tool"
+      - "Dashboard design system"
+    quality_gates:
+      - "Dashboard load time under 5 seconds"
+      - "Data accuracy verified against source"
+      - "All stakeholder requirements met"
+
+  - name: "Production Operations and Scaling"
+    description: "Operationalize the analytics pipeline and establish ongoing management"
+    inputs:
+      - "Validated analytics pipeline and dashboards"
+      - "Production traffic and scaling requirements"
+      - "Operations team"
+    steps:
+      - "Configure pipeline auto-scaling for growing fleet"
+      - "Set up data pipeline monitoring and alerting"
+      - "Implement model retraining schedule"
+      - "Configure data lifecycle management: archival and deletion"
+      - "Set up cost monitoring and optimization"
+      - "Create operational runbooks for common issues"
+      - "Train analytics consumers on dashboard usage"
+      - "Establish feedback loop for analytics improvement"
+      - "Plan capacity for projected fleet growth"
+      - "Define SLAs for data freshness and availability"
+    outputs:
+      - "Production analytics pipeline"
+      - "Operational documentation"
+      - "SLA definitions"
+    tools:
+      - "Pipeline monitoring system"
+      - "Cost management tool"
+      - "SLA tracking dashboard"
+    quality_gates:
+      - "SLAs defined and measurable"
+      - "Auto-scaling handles projected growth"
+      - "Operational team trained and capable"

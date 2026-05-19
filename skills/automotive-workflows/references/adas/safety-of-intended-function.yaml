@@ -1,0 +1,163 @@
+name: safety-of-intended-function
+version: 1.0.0
+description: "SOTIF analysis workflow per ISO 21448 for identifying and mitigating hazards from functional insufficiencies in ADAS systems"
+trigger: "During ADAS feature development, when new triggering conditions are identified, or before safety release"
+domain: "ADAS"
+safety_level: "SOTIF"
+standard: "ISO 21448"
+
+prerequisites:
+  - "ADAS function specification and operational design domain defined"
+  - "Preliminary hazard analysis from ISO 26262 process available"
+  - "System architecture and sensor configuration documented"
+  - "Access to field data and simulation environments"
+  - "SOTIF-trained safety engineers assigned"
+
+phases:
+  - name: "Functional Insufficiency Identification"
+    description: "Systematically identify potential functional insufficiencies and triggering conditions"
+    inputs:
+      - "ADAS function specification"
+      - "System architecture description"
+      - "Operational design domain definition"
+      - "Known limitation list from development"
+    steps:
+      - "Analyze perception chain for potential insufficiencies"
+      - "Identify sensor limitations under adverse conditions"
+      - "Analyze algorithm limitations including edge cases"
+      - "Identify potential misuse and foreseeable misuse scenarios"
+      - "Review field incident data for similar systems"
+      - "Conduct brainstorming sessions with cross-functional team"
+      - "Catalog all identified triggering conditions"
+      - "Map triggering conditions to potential hazardous behaviors"
+      - "Classify triggering conditions as known or unknown"
+      - "Document assumptions and their validity boundaries"
+    outputs:
+      - "Triggering condition catalog"
+      - "Functional insufficiency register"
+      - "Known versus unknown area classification"
+    tools:
+      - "SOTIF analysis template"
+      - "Triggering condition database"
+      - "Hazard analysis tool"
+    quality_gates:
+      - "All sensor modalities analyzed for insufficiencies"
+      - "All algorithm components analyzed for limitations"
+      - "Cross-functional review of triggering conditions completed"
+
+  - name: "Hazard Classification"
+    description: "Classify identified hazards and evaluate risk using SOTIF-specific criteria"
+    inputs:
+      - "Triggering condition catalog"
+      - "Hazardous behavior descriptions"
+      - "Exposure and controllability data"
+    steps:
+      - "Define hazardous events from triggering condition combinations"
+      - "Evaluate severity of each hazardous event"
+      - "Estimate exposure frequency for each triggering condition"
+      - "Assess controllability by driver or other road users"
+      - "Classify scenarios into SOTIF areas one through four"
+      - "Area 1 is known safe scenarios requiring no action"
+      - "Area 2 is known unsafe scenarios requiring mitigation"
+      - "Area 3 is unknown unsafe scenarios requiring exploration"
+      - "Area 4 is unknown safe scenarios"
+      - "Prioritize Area 2 and Area 3 scenarios for mitigation"
+      - "Define acceptance criteria for residual risk"
+    outputs:
+      - "Hazard classification per SOTIF area"
+      - "Risk evaluation results"
+      - "Prioritized mitigation list"
+    tools:
+      - "SOTIF area classification tool"
+      - "Risk assessment matrix"
+      - "Scenario priority ranking system"
+    quality_gates:
+      - "All identified hazards classified into SOTIF areas"
+      - "Risk evaluation reviewed by safety team"
+      - "Acceptance criteria approved by safety manager"
+
+  - name: "Mitigation Development"
+    description: "Develop and implement measures to reduce known unsafe scenarios and explore unknown areas"
+    inputs:
+      - "Prioritized mitigation list"
+      - "System architecture for modification planning"
+      - "Budget and timeline constraints"
+    steps:
+      - "Design perception improvements to address Area 2 scenarios"
+      - "Implement additional plausibility checks for sensor data"
+      - "Design graceful degradation strategies for identified limitations"
+      - "Implement driver warning and handover strategies"
+      - "Design ODD monitoring to detect boundary conditions"
+      - "Implement runtime self-assessment for perception confidence"
+      - "Define fallback behaviors for low-confidence situations"
+      - "Review mitigation effectiveness through analysis"
+      - "Update system design documentation with mitigations"
+    outputs:
+      - "Mitigation measures implemented in software"
+      - "Updated system design documentation"
+      - "Mitigation effectiveness analysis"
+    tools:
+      - "Software development environment"
+      - "Design review tool"
+      - "Safety analysis tool"
+    quality_gates:
+      - "All Area 2 scenarios have defined mitigations"
+      - "Mitigation designs reviewed by safety team"
+      - "No new hazards introduced by mitigations"
+
+  - name: "Validation of SOTIF"
+    description: "Validate that residual risk from functional insufficiencies is acceptably low"
+    inputs:
+      - "Implemented mitigations"
+      - "Validation scenario catalog"
+      - "Acceptance criteria for residual risk"
+    steps:
+      - "Execute targeted test scenarios for all Area 2 mitigations"
+      - "Conduct exploratory testing to discover Area 3 scenarios"
+      - "Use adversarial testing techniques to stress perception system"
+      - "Execute large-scale simulation campaign for statistical evidence"
+      - "Analyze field operational test data if available"
+      - "Compute residual risk estimates with confidence bounds"
+      - "Verify Area 3 has been sufficiently explored"
+      - "Demonstrate that known unsafe area is acceptably small"
+      - "Document any remaining known limitations"
+    outputs:
+      - "SOTIF validation results"
+      - "Residual risk estimate with confidence intervals"
+      - "Updated SOTIF area classification after validation"
+    tools:
+      - "Simulation campaign platform"
+      - "Statistical analysis toolkit"
+      - "Field data analysis tool"
+    quality_gates:
+      - "Residual risk below acceptance threshold"
+      - "Sufficient evidence for Area 3 exploration"
+      - "All Area 2 mitigations validated effective"
+
+  - name: "SOTIF Argumentation and Release"
+    description: "Build the SOTIF safety argument and obtain release approval"
+    inputs:
+      - "All SOTIF analysis and validation results"
+      - "Residual risk assessment"
+      - "Field monitoring plan"
+    steps:
+      - "Construct SOTIF safety argument using structured argumentation"
+      - "Link all evidence to argument claims"
+      - "Document residual risk acceptance rationale"
+      - "Define field monitoring strategy for post-release"
+      - "Establish process for incorporating field findings"
+      - "Present SOTIF case to independent assessor"
+      - "Address assessor findings and update argument"
+      - "Obtain SOTIF release approval"
+    outputs:
+      - "SOTIF safety case document"
+      - "Field monitoring plan"
+      - "SOTIF release approval"
+    tools:
+      - "Safety case editor"
+      - "Document management system"
+      - "Independent assessment coordination tool"
+    quality_gates:
+      - "Safety argument complete with no gaps"
+      - "Independent assessor concurs with conclusions"
+      - "Field monitoring plan approved and resourced"

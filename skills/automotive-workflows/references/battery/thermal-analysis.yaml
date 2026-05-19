@@ -1,0 +1,162 @@
+name: thermal-analysis
+version: 1.0.0
+description: "Battery thermal analysis and thermal management system design workflow for optimal temperature control"
+trigger: "During battery system design, when thermal issues are identified, or when operating conditions change"
+domain: "Battery"
+safety_level: "ASIL-B"
+
+prerequisites:
+  - "Cell thermal characterization data available"
+  - "Pack mechanical design CAD model"
+  - "Vehicle installation space and cooling system constraints"
+  - "CFD and thermal simulation tools available"
+  - "Operating condition profiles defined"
+
+phases:
+  - name: "Thermal Requirements Definition"
+    description: "Define thermal performance requirements from cell, pack, and vehicle perspectives"
+    inputs:
+      - "Cell operating temperature specification from manufacturer"
+      - "Vehicle thermal load profiles for target markets"
+      - "Performance and lifetime targets"
+    steps:
+      - "Define maximum cell temperature limits for charge and discharge"
+      - "Define minimum cell temperature limits for charge and discharge"
+      - "Specify maximum temperature gradient across pack"
+      - "Specify maximum temperature gradient within a module"
+      - "Define temperature targets for optimal cell lifetime"
+      - "Specify precondition temperature range for fast charging"
+      - "Define thermal management response time requirements"
+      - "Specify coolant inlet temperature and flow rate range"
+      - "Define ambient temperature operating range"
+      - "Document thermal safety thresholds and responses"
+    outputs:
+      - "Thermal requirements specification"
+      - "Temperature limit definitions"
+      - "Cooling system boundary conditions"
+    tools:
+      - "Requirements management tool"
+      - "Thermal design guideline database"
+    quality_gates:
+      - "All thermal requirements traceable to cell specifications"
+      - "Requirements cover all operating modes"
+      - "Requirements reviewed by thermal and battery teams"
+
+  - name: "Thermal Simulation Setup"
+    description: "Build and configure the thermal simulation model of the battery system"
+    inputs:
+      - "Pack CAD model with all components"
+      - "Cell thermal property data from characterization"
+      - "Cooling system geometry and specifications"
+    steps:
+      - "Import pack CAD geometry into simulation tool"
+      - "Simplify geometry while preserving thermal paths"
+      - "Assign material properties to all components"
+      - "Apply cell heat generation models from characterization data"
+      - "Model thermal interface materials with measured conductance"
+      - "Configure coolant flow domain with fluid properties"
+      - "Set up conjugate heat transfer between solid and fluid"
+      - "Define mesh with refinement at critical thermal interfaces"
+      - "Configure boundary conditions for ambient and coolant"
+      - "Run mesh independence study to verify result quality"
+    outputs:
+      - "Validated thermal simulation model"
+      - "Mesh quality report"
+      - "Mesh independence study results"
+    tools:
+      - "CFD simulation software"
+      - "Thermal modeling tool"
+      - "Mesh generation tool"
+    quality_gates:
+      - "Mesh quality metrics within acceptable range"
+      - "Mesh independence demonstrated within 2% variation"
+      - "Material properties verified against measured data"
+
+  - name: "Steady-State Analysis"
+    description: "Analyze thermal performance under sustained operating conditions"
+    inputs:
+      - "Validated thermal simulation model"
+      - "Steady-state operating condition definitions"
+    steps:
+      - "Simulate continuous discharge at 1C rate at 25 degrees ambient"
+      - "Simulate continuous discharge at 1C rate at 40 degrees ambient"
+      - "Simulate continuous charge at C/3 rate at various ambient temperatures"
+      - "Simulate fast charge profile at high ambient temperature"
+      - "Analyze maximum cell temperature for each condition"
+      - "Analyze temperature gradient across pack for each condition"
+      - "Evaluate coolant pressure drop through cooling circuit"
+      - "Assess thermal management system power consumption"
+      - "Identify thermal bottlenecks and hot spots"
+      - "Compare results against thermal requirements"
+    outputs:
+      - "Steady-state temperature distribution maps"
+      - "Maximum temperature and gradient summary"
+      - "Pressure drop and pumping power data"
+    tools:
+      - "CFD solver"
+      - "Post-processing visualization tool"
+      - "Results comparison framework"
+    quality_gates:
+      - "Maximum cell temperature within limits for all conditions"
+      - "Temperature gradient within specification"
+      - "Pressure drop within cooling system capacity"
+
+  - name: "Transient Analysis"
+    description: "Analyze thermal behavior during dynamic operating profiles and extreme conditions"
+    inputs:
+      - "Validated thermal model"
+      - "Drive cycle thermal profiles"
+      - "Extreme condition definitions"
+    steps:
+      - "Simulate thermal response during highway drive cycle"
+      - "Simulate thermal response during urban drive cycle"
+      - "Simulate hot soak scenario after high-power driving"
+      - "Simulate cold start with cabin heating in winter conditions"
+      - "Simulate fast charge from cold to target temperature"
+      - "Analyze thermal management system response time"
+      - "Evaluate preconditioning time required for fast charging"
+      - "Simulate thermal runaway propagation scenario"
+      - "Analyze emergency cooling effectiveness"
+      - "Generate transient temperature histories for all cells"
+    outputs:
+      - "Transient temperature profiles"
+      - "Thermal management response time data"
+      - "Thermal runaway propagation analysis"
+    tools:
+      - "Transient CFD solver"
+      - "Drive cycle profile generator"
+      - "Thermal safety analysis tool"
+    quality_gates:
+      - "Cell temperatures remain within limits during all cycles"
+      - "Thermal management response time meets requirements"
+      - "Thermal propagation results inform safety design"
+
+  - name: "Design Optimization and Reporting"
+    description: "Optimize thermal design based on analysis results and compile recommendations"
+    inputs:
+      - "All steady-state and transient analysis results"
+      - "Identified thermal bottlenecks"
+      - "Design modification options"
+    steps:
+      - "Propose design modifications to address thermal bottlenecks"
+      - "Evaluate impact of improved thermal interface materials"
+      - "Optimize coolant flow distribution for temperature uniformity"
+      - "Assess impact of alternative cooling configurations"
+      - "Simulate optimized design to verify improvement"
+      - "Quantify impact on cell lifetime from thermal improvements"
+      - "Estimate cost impact of thermal design changes"
+      - "Compile thermal analysis report with recommendations"
+      - "Present findings to design review board"
+      - "Update thermal requirements if design constraints require"
+    outputs:
+      - "Thermal analysis report"
+      - "Design optimization recommendations"
+      - "Updated thermal management specifications"
+    tools:
+      - "Design optimization tool"
+      - "Lifetime estimation model"
+      - "Report generation tool"
+    quality_gates:
+      - "Optimized design meets all thermal requirements"
+      - "Recommendations include cost-benefit analysis"
+      - "Report reviewed and approved by thermal lead"

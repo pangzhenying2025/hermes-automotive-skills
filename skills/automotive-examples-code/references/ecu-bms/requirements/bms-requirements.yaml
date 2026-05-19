@@ -1,0 +1,426 @@
+# BMS ECU Functional Requirements
+# Compliant with ISO 26262 requirements format
+
+metadata:
+  project: BMS ECU Example
+  version: 1.0.0
+  date: 2026-03-19
+  safety_level: ASIL-C
+  standards:
+    - ISO 26262
+    - AUTOSAR Classic R20-11
+    - ISO 15765-2
+    - UL 2580
+
+# Functional Requirements
+functional_requirements:
+
+  # FR-001: Cell Voltage Monitoring
+  - id: FR-001
+    title: Cell Voltage Monitoring
+    description: ECU shall monitor individual cell voltages in the battery pack
+    priority: HIGH
+    safety_level: ASIL-C
+    verification_method: HIL Test
+    requirements:
+      - id: FR-001.1
+        description: Monitor 96 LiFePO4 cells (3.2V nominal)
+        acceptance_criteria:
+          - Voltage range: 2.0V - 4.0V
+          - Resolution: 0.5mV
+          - Accuracy: ±5mV
+          - Sampling rate: 100ms
+
+      - id: FR-001.2
+        description: Detect cell overvoltage condition
+        acceptance_criteria:
+          - Threshold: 3.65V (calibratable)
+          - Response time: < 100ms
+          - Trigger fault code: DTC_CELL_OV (0x100)
+
+      - id: FR-001.3
+        description: Detect cell undervoltage condition
+        acceptance_criteria:
+          - Threshold: 2.5V (calibratable)
+          - Response time: < 100ms
+          - Trigger fault code: DTC_CELL_UV (0x101)
+
+      - id: FR-001.4
+        description: Detect cell voltage imbalance
+        acceptance_criteria:
+          - Max delta between cells: 100mV
+          - Response time: < 500ms
+          - Trigger fault code: DTC_CELL_IMBALANCE (0x102)
+
+  # FR-002: State of Charge Estimation
+  - id: FR-002
+    title: State of Charge Estimation
+    description: ECU shall estimate battery State of Charge (SOC)
+    priority: HIGH
+    safety_level: QM
+    verification_method: Algorithm Test
+    requirements:
+      - id: FR-002.1
+        description: Implement Extended Kalman Filter for SOC estimation
+        acceptance_criteria:
+          - SOC range: 0-100%
+          - Resolution: 1%
+          - Accuracy: ±2% (20-80% SOC range)
+          - Accuracy: ±5% (0-20%, 80-100% SOC range)
+
+      - id: FR-002.2
+        description: Compensate for temperature effects
+        acceptance_criteria:
+          - Temperature range: -20°C to +60°C
+          - Apply capacity correction factor
+
+      - id: FR-002.3
+        description: Adapt to battery aging
+        acceptance_criteria:
+          - Track battery capacity fade
+          - Update capacity estimate every full charge cycle
+          - Store capacity history in EEPROM
+
+  # FR-003: Temperature Monitoring
+  - id: FR-003
+    title: Temperature Monitoring
+    description: ECU shall monitor battery pack temperature
+    priority: HIGH
+    safety_level: ASIL-C
+    verification_method: HIL Test
+    requirements:
+      - id: FR-003.1
+        description: Monitor 12 temperature sensors (NTC 10k)
+        acceptance_criteria:
+          - Temperature range: -40°C to +85°C
+          - Resolution: 1°C
+          - Accuracy: ±2°C
+          - Sampling rate: 500ms
+
+      - id: FR-003.2
+        description: Detect overtemperature condition
+        acceptance_criteria:
+          - Warning threshold: 50°C (calibratable)
+          - Critical threshold: 60°C (calibratable)
+          - Response time: < 500ms
+          - Trigger fault code: DTC_TEMP_HIGH (0x110)
+
+      - id: FR-003.3
+        description: Detect undertemperature condition
+        acceptance_criteria:
+          - Warning threshold: -10°C (calibratable)
+          - Critical threshold: -20°C (calibratable)
+          - Response time: < 500ms
+          - Trigger fault code: DTC_TEMP_LOW (0x111)
+
+  # FR-004: Contactor Control
+  - id: FR-004
+    title: Contactor Control
+    description: ECU shall control high-voltage contactors safely
+    priority: CRITICAL
+    safety_level: ASIL-D
+    verification_method: HIL + Safety Analysis
+    requirements:
+      - id: FR-004.1
+        description: Control main positive and negative contactors
+        acceptance_criteria:
+          - Dual-channel control (redundant)
+          - Feedback verification required
+          - Max switching time: 100ms
+
+      - id: FR-004.2
+        description: Implement pre-charge sequence
+        acceptance_criteria:
+          - Pre-charge resistor: 100Ω
+          - Target voltage: 95% of pack voltage
+          - Timeout: 5 seconds
+          - Monitor pre-charge current
+
+      - id: FR-004.3
+        description: Emergency shutdown capability
+        acceptance_criteria:
+          - Open contactors within 10ms of critical fault
+          - Independent of software execution
+          - Hardware watchdog backup
+
+      - id: FR-004.4
+        description: Welding detection
+        acceptance_criteria:
+          - Detect stuck contactors
+          - Monitor voltage across open contactors
+          - Threshold: > 5V indicates welding
+          - Trigger fault code: DTC_CONTACTOR_WELD (0x120)
+
+  # FR-005: CAN Communication
+  - id: FR-005
+    title: CAN Communication
+    description: ECU shall communicate via CAN bus
+    priority: HIGH
+    safety_level: ASIL-B
+    verification_method: CAN Test
+    requirements:
+      - id: FR-005.1
+        description: Transmit BMS status message
+        acceptance_criteria:
+          - CAN ID: 0x100
+          - Period: 100ms
+          - Signals: SOC, Voltage, Current, Temperature
+
+      - id: FR-005.2
+        description: Transmit cell voltage messages
+        acceptance_criteria:
+          - CAN IDs: 0x101-0x10C (12 messages)
+          - Period: 200ms
+          - 8 cells per message
+
+      - id: FR-005.3
+        description: Transmit fault messages
+        acceptance_criteria:
+          - CAN ID: 0x110
+          - Event-triggered
+          - DTC codes + severity level
+
+      - id: FR-005.4
+        description: Receive charge control commands
+        acceptance_criteria:
+          - CAN ID: 0x200
+          - Timeout: 500ms (enter safe state if missing)
+          - Commands: Enable/Disable charging
+
+  # FR-006: Safety Management
+  - id: FR-006
+    title: Safety Management
+    description: ECU shall manage safety-critical functions
+    priority: CRITICAL
+    safety_level: ASIL-C
+    verification_method: Safety Audit + HIL
+    requirements:
+      - id: FR-006.1
+        description: Implement safety state machine
+        acceptance_criteria:
+          - States: INIT, STANDBY, PRE_CHARGE, READY, FAULT, SHUTDOWN
+          - Safe transitions only
+          - Default to safe state on error
+
+      - id: FR-006.2
+        description: Watchdog monitoring
+        acceptance_criteria:
+          - Internal WDG: 100ms timeout
+          - External WDG: 500ms timeout
+          - Trigger ECU reset on timeout
+
+      - id: FR-006.3
+        description: Fault memory management
+        acceptance_criteria:
+          - Store faults in non-volatile memory
+          - Timestamp + occurrence counter
+          - Max 100 fault entries (FIFO)
+          - Clear faults via diagnostic command
+
+      - id: FR-006.4
+        description: Limp-home mode
+        acceptance_criteria:
+          - Reduced power operation on non-critical faults
+          - Max discharge current: 50% of nominal
+          - Disable charging
+          - Warning to driver via CAN
+
+  # FR-007: Balancing Control
+  - id: FR-007
+    title: Cell Balancing
+    description: ECU shall balance cell voltages
+    priority: MEDIUM
+    safety_level: QM
+    verification_method: Algorithm Test
+    requirements:
+      - id: FR-007.1
+        description: Passive balancing during charging
+        acceptance_criteria:
+          - Activate balancing when SOC > 80%
+          - Balance cells > 50mV above minimum
+          - Max balancing current: 100mA per cell
+          - Thermal monitoring during balancing
+
+      - id: FR-007.2
+        description: Balancing timeout protection
+        acceptance_criteria:
+          - Max continuous balancing time: 30 minutes
+          - Cool-down period: 15 minutes
+          - Monitor balancing resistor temperature
+
+  # FR-008: Diagnostics
+  - id: FR-008
+    title: Diagnostic Services
+    description: ECU shall support UDS diagnostic services
+    priority: MEDIUM
+    safety_level: QM
+    verification_method: Diagnostic Test
+    requirements:
+      - id: FR-008.1
+        description: Support ISO 14229 UDS services
+        acceptance_criteria:
+          - ReadDataByIdentifier (0x22)
+          - WriteDataByIdentifier (0x2E)
+          - ReadDTCInformation (0x19)
+          - ClearDiagnosticInformation (0x14)
+          - RoutineControl (0x31)
+
+      - id: FR-008.2
+        description: Calibration via XCP protocol
+        acceptance_criteria:
+          - XCP on CAN transport layer
+          - A2L file provided
+          - Protected calibration mode (seed/key)
+
+# Non-Functional Requirements
+non_functional_requirements:
+
+  performance:
+    - id: NFR-001
+      description: Task execution timing
+      requirements:
+        - Cell monitoring task: 100ms cycle
+        - SOC estimation task: 1000ms cycle
+        - CAN transmit task: 10ms cycle
+        - Safety monitoring task: 10ms cycle
+
+    - id: NFR-002
+      description: Response time requirements
+      requirements:
+        - Critical fault detection: < 10ms
+        - Non-critical fault detection: < 100ms
+        - CAN message latency: < 5ms
+        - Emergency shutdown: < 10ms
+
+  reliability:
+    - id: NFR-010
+      description: System reliability
+      requirements:
+        - MTBF: > 100,000 hours
+        - Software fault tolerance: Single fault tolerant
+        - Watchdog coverage: 100% of critical tasks
+        - ECC protection for RAM and Flash
+
+  safety:
+    - id: NFR-020
+      description: Safety integrity
+      requirements:
+        - ASIL-C compliance for safety functions
+        - Dual-channel monitoring for contactors
+        - Plausibility checks on all sensors
+        - Safe state: Contactors open, balancing off
+
+  security:
+    - id: NFR-030
+      description: Cybersecurity
+      requirements:
+        - Secure boot (authenticated firmware)
+        - CAN message authentication (optional)
+        - Calibration access protection (seed/key)
+        - Fault injection detection
+
+  maintainability:
+    - id: NFR-040
+      description: Software maintainability
+      requirements:
+        - MISRA C 2012 compliance
+        - Code coverage: > 95%
+        - Static analysis: No critical warnings
+        - Modular AUTOSAR architecture
+
+# Test Cases
+test_cases:
+
+  unit_tests:
+    - id: TC-U-001
+      requirement: FR-001.1
+      description: Cell voltage reading accuracy
+      method: Inject known voltage, verify reading
+      pass_criteria: Error < 5mV
+
+    - id: TC-U-002
+      requirement: FR-002.1
+      description: SOC estimation accuracy
+      method: Simulate charge/discharge cycle
+      pass_criteria: SOC error < 2% (20-80% range)
+
+  integration_tests:
+    - id: TC-I-001
+      requirement: FR-005
+      description: CAN communication functional
+      method: Send/receive all CAN messages
+      pass_criteria: All messages correct, timing met
+
+    - id: TC-I-002
+      requirement: FR-004
+      description: Contactor control sequence
+      method: Execute pre-charge and main close
+      pass_criteria: Sequence correct, timing < 5s
+
+  hil_tests:
+    - id: TC-H-001
+      requirement: FR-001.2
+      description: Overvoltage protection
+      method: Ramp cell voltage above threshold
+      pass_criteria: Fault triggered within 100ms
+
+    - id: TC-H-002
+      requirement: FR-006.4
+      description: Limp-home mode activation
+      method: Inject non-critical fault
+      pass_criteria: Enter limp-home, limit current
+
+  system_tests:
+    - id: TC-S-001
+      requirement: All
+      description: Full charge cycle
+      method: Charge battery from 20% to 100%
+      pass_criteria: No faults, balancing active, SOC accurate
+
+    - id: TC-S-002
+      requirement: All
+      description: Emergency shutdown
+      method: Trigger critical fault
+      pass_criteria: Contactors open < 10ms
+
+# Traceability Matrix
+traceability:
+  - requirement: FR-001
+    design: Cell Monitoring SWC
+    code: src/application/cell_monitor.c
+    test: TC-U-001, TC-H-001
+
+  - requirement: FR-002
+    design: SOC Estimator SWC
+    code: src/application/soc_estimator.c
+    test: TC-U-002
+
+  - requirement: FR-003
+    design: Thermal Management SWC
+    code: src/application/thermal_mgmt.c
+    test: TC-H-002
+
+  - requirement: FR-004
+    design: Safety Manager SWC
+    code: src/application/safety_mgr.c
+    test: TC-I-002, TC-S-002
+
+  - requirement: FR-005
+    design: CAN Stack BSW
+    code: src/bsw/can_stack.c
+    test: TC-I-001
+
+  - requirement: FR-006
+    design: Safety Manager SWC
+    code: src/application/safety_mgr.c
+    test: TC-S-001, TC-S-002
+
+# Change History
+change_history:
+  - version: 1.0.0
+    date: 2026-03-19
+    author: Automotive Agents Team
+    changes:
+      - Initial requirements baseline
+      - ASIL-C safety requirements defined
+      - Test cases specified

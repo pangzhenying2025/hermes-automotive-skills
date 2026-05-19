@@ -1,0 +1,165 @@
+name: cybersecurity-audit
+version: 1.0.0
+description: "Automotive cybersecurity management system audit workflow per UNECE R155 and ISO/SAE 21434"
+trigger: "For CSMS certification, annual surveillance audit, or supplier cybersecurity assessment"
+domain: "Compliance"
+standard: "UNECE R155, ISO/SAE 21434"
+
+prerequisites:
+  - "Cybersecurity management system documented"
+  - "Qualified cybersecurity auditor team assembled"
+  - "CSMS scope and organizational boundaries defined"
+  - "Previous audit results available if applicable"
+  - "Cybersecurity work products from active projects"
+
+phases:
+  - name: "Audit Scoping and Preparation"
+    description: "Define audit scope and prepare audit plan for cybersecurity management assessment"
+    inputs:
+      - "CSMS documentation"
+      - "Organizational structure with cybersecurity roles"
+      - "UNECE R155 and ISO 21434 requirements"
+    steps:
+      - "Define CSMS audit scope: organizational units, vehicle types"
+      - "Map UNECE R155 requirements to audit criteria"
+      - "Map ISO 21434 clauses to audit criteria"
+      - "Review CSMS policy and governance documents"
+      - "Identify cybersecurity roles and responsibilities to interview"
+      - "Select active projects for work product sampling"
+      - "Prepare audit checklist covering all R155 requirements"
+      - "Schedule interviews with cybersecurity management"
+      - "Plan evidence collection for each requirement"
+      - "Conduct audit team briefing on automotive cybersecurity"
+    outputs:
+      - "Cybersecurity audit plan"
+      - "Audit checklist mapped to R155 and ISO 21434"
+      - "Interview schedule"
+    tools:
+      - "Audit planning tool"
+      - "R155 requirements checklist"
+      - "ISO 21434 clause mapping"
+    quality_gates:
+      - "All R155 requirements covered in audit plan"
+      - "Audit team has cybersecurity audit competency"
+      - "Project samples representative of CSMS scope"
+
+  - name: "Governance and Organization Assessment"
+    description: "Assess the cybersecurity governance, organization, and management processes"
+    inputs:
+      - "CSMS policy and procedures"
+      - "Organizational chart with cybersecurity roles"
+      - "Management review records"
+    steps:
+      - "Verify cybersecurity policy exists and is approved by management"
+      - "Verify cybersecurity roles and responsibilities are defined"
+      - "Check competency requirements and training records"
+      - "Verify cybersecurity is integrated into product development"
+      - "Check management review process for cybersecurity"
+      - "Verify resource allocation for cybersecurity activities"
+      - "Assess continuous monitoring and improvement processes"
+      - "Check information sharing arrangements with suppliers"
+      - "Verify cybersecurity awareness across the organization"
+      - "Assess supplier cybersecurity management"
+    outputs:
+      - "Governance assessment findings"
+      - "Organization capability evaluation"
+      - "Supplier management assessment"
+    tools:
+      - "Interview guides"
+      - "Evidence review checklists"
+      - "Assessment recording tool"
+    quality_gates:
+      - "Cybersecurity governance structure demonstrated"
+      - "Roles and competencies verified"
+      - "Management commitment evidenced"
+
+  - name: "Engineering Process Assessment"
+    description: "Assess cybersecurity engineering processes through project-level work product review"
+    inputs:
+      - "Selected project work products"
+      - "TARA documentation"
+      - "Cybersecurity requirements and test records"
+    steps:
+      - "Review TARA methodology and completeness"
+      - "Verify cybersecurity goals derived from risk assessment"
+      - "Check cybersecurity requirements specification"
+      - "Review cybersecurity concept and architecture decisions"
+      - "Verify secure design principles application"
+      - "Check cybersecurity verification and testing evidence"
+      - "Review vulnerability management process"
+      - "Verify cybersecurity validation at vehicle level"
+      - "Check cybersecurity case documentation"
+      - "Verify post-development cybersecurity monitoring"
+    outputs:
+      - "Engineering process assessment findings"
+      - "Work product quality evaluation"
+      - "Process compliance evidence"
+    tools:
+      - "Work product review checklist"
+      - "TARA evaluation criteria"
+      - "ISO 21434 clause mapping"
+    quality_gates:
+      - "TARA complete and methodologically sound"
+      - "Cybersecurity requirements traceable to goals"
+      - "Verification evidence sufficient"
+
+  - name: "Incident Response and Monitoring Assessment"
+    description: "Assess cybersecurity monitoring, incident response, and update capabilities"
+    inputs:
+      - "Incident response procedures"
+      - "Monitoring infrastructure documentation"
+      - "Update process documentation"
+    steps:
+      - "Verify cybersecurity monitoring processes are operational"
+      - "Check vulnerability scanning and tracking procedures"
+      - "Verify threat intelligence collection and analysis"
+      - "Assess incident detection and classification process"
+      - "Review incident response plan and team readiness"
+      - "Check incident response exercise records"
+      - "Verify security update development and deployment process"
+      - "Check field monitoring for cybersecurity events"
+      - "Verify communication plan for cybersecurity incidents"
+      - "Assess lessons learned process from incidents"
+    outputs:
+      - "Monitoring and response assessment findings"
+      - "Incident readiness evaluation"
+      - "Update capability assessment"
+    tools:
+      - "Incident response evaluation criteria"
+      - "Monitoring system review checklist"
+      - "Update process assessment guide"
+    quality_gates:
+      - "Monitoring processes operational"
+      - "Incident response team trained and ready"
+      - "Update mechanism tested and functional"
+
+  - name: "Audit Reporting and CSMS Certification"
+    description: "Compile audit findings and support CSMS certification decision"
+    inputs:
+      - "All audit findings from previous phases"
+      - "Evidence records"
+      - "Certification criteria"
+    steps:
+      - "Compile all findings into formal audit report"
+      - "Classify findings: nonconformity, observation, best practice"
+      - "Assess overall CSMS maturity against R155 requirements"
+      - "Identify mandatory corrective actions for nonconformities"
+      - "Present findings to organization management"
+      - "Support corrective action planning for findings"
+      - "Verify critical corrective actions before certification"
+      - "Prepare certification recommendation for approval body"
+      - "Support type approval authority CSMS certificate issuance"
+      - "Define surveillance audit schedule for certificate maintenance"
+    outputs:
+      - "Formal cybersecurity audit report"
+      - "CSMS certification recommendation"
+      - "Corrective action plan"
+      - "Surveillance audit schedule"
+    tools:
+      - "Audit report template"
+      - "Certification recommendation form"
+      - "Corrective action tracking system"
+    quality_gates:
+      - "All R155 requirements assessed"
+      - "Nonconformities addressed before certification"
+      - "Audit report accepted by certification body"

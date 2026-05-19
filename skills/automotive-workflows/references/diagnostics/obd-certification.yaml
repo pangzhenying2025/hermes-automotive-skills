@@ -1,0 +1,165 @@
+name: obd-certification
+version: 1.0.0
+description: "On-Board Diagnostics certification workflow for regulatory compliance with emission monitoring requirements"
+trigger: "Before vehicle type approval, when emission-related software changes, or for annual OBD compliance renewal"
+domain: "Diagnostics"
+standard: "SAE J1979, ISO 15031, CARB OBD-II, EU OBD"
+
+prerequisites:
+  - "Emission-relevant fault monitors implemented and calibrated"
+  - "OBD scan tool conformance tested"
+  - "Emission dynamometer and drive cycle facility available"
+  - "Regulatory submission documentation templates"
+  - "Certification test vehicle prepared"
+
+phases:
+  - name: "OBD System Review"
+    description: "Review the OBD system design for compliance with applicable regulations"
+    inputs:
+      - "OBD system specification"
+      - "Applicable OBD regulation version"
+      - "Monitor list with threshold values"
+    steps:
+      - "Verify all required monitors are implemented per regulation"
+      - "Review monitor threshold values against emission standards"
+      - "Verify MIL illumination strategy meets requirements"
+      - "Check DTC storage and clearing behavior per regulation"
+      - "Review freeze frame data content requirements"
+      - "Verify readiness flag management logic"
+      - "Check in-use performance ratio tracking"
+      - "Review permanent DTC handling"
+      - "Verify communication protocol compliance (ISO 15765, SAE J1979)"
+      - "Document any regulatory interpretation decisions"
+    outputs:
+      - "OBD system compliance review report"
+      - "Gap analysis if any requirements not met"
+      - "Interpretation decisions documented"
+    tools:
+      - "OBD compliance checklist"
+      - "Regulatory database"
+      - "Review management system"
+    quality_gates:
+      - "All required monitors identified and implemented"
+      - "No compliance gaps identified"
+      - "System review approved by emission compliance engineer"
+
+  - name: "Monitor Demonstration Testing"
+    description: "Demonstrate each OBD monitor detects its target fault within specified thresholds"
+    inputs:
+      - "Monitor list with detection thresholds"
+      - "Fault simulation capability"
+      - "Emission test dynamometer"
+    steps:
+      - "Execute catalyst monitor demonstration with degraded catalyst"
+      - "Execute oxygen sensor monitor demonstration"
+      - "Execute misfire monitor demonstration at various conditions"
+      - "Execute EGR system monitor demonstration"
+      - "Execute fuel system monitor demonstration"
+      - "Execute evaporative system monitor demonstration"
+      - "Verify each monitor sets correct DTC on fault detection"
+      - "Verify MIL illuminates within required drive cycles"
+      - "Measure emission level at monitor detection threshold"
+      - "Document monitor detection margin relative to emission limit"
+    outputs:
+      - "Monitor demonstration test results per monitor"
+      - "Emission measurements at detection thresholds"
+      - "MIL illumination verification records"
+    tools:
+      - "Emission dynamometer"
+      - "Fault simulation equipment"
+      - "OBD scan tool"
+    quality_gates:
+      - "All monitors detect faults before emission threshold exceeded"
+      - "MIL illuminates within regulatory drive cycle limit"
+      - "Detection margin positive for all monitors"
+
+  - name: "Standardized Drive Cycle Testing"
+    description: "Execute regulatory drive cycles to verify monitor completion and readiness"
+    inputs:
+      - "OBD drive cycle definitions per regulation"
+      - "Test vehicle on dynamometer"
+      - "OBD readiness monitoring tool"
+    steps:
+      - "Clear all DTCs and readiness flags"
+      - "Execute preconditioning cycle if required"
+      - "Execute OBD-II Type I drive cycle"
+      - "Record readiness flag status after drive cycle"
+      - "Verify all monitors complete within specified cycles"
+      - "Execute cold start and hot restart variations"
+      - "Record in-use performance ratio denominators"
+      - "Verify no false DTCs set during normal driving"
+      - "Test monitor operation at temperature and altitude extremes"
+      - "Document number of cycles required per monitor"
+    outputs:
+      - "Drive cycle test results"
+      - "Readiness completion summary"
+      - "In-use performance ratio data"
+    tools:
+      - "Chassis dynamometer"
+      - "OBD monitoring tool"
+      - "Drive cycle driver aid"
+    quality_gates:
+      - "All monitors achieve readiness in regulatory cycle count"
+      - "No false DTCs during normal operation"
+      - "In-use performance ratios above minimum thresholds"
+
+  - name: "Scan Tool Communication Verification"
+    description: "Verify OBD communication protocol compliance with standardized scan tools"
+    inputs:
+      - "ECU with OBD software"
+      - "Reference OBD scan tools"
+      - "Protocol compliance test specification"
+    steps:
+      - "Test Mode 01 current data PIDs response"
+      - "Verify all required PIDs are supported and accurate"
+      - "Test Mode 02 freeze frame data response"
+      - "Test Mode 03 confirmed DTC reporting"
+      - "Test Mode 04 DTC clear functionality"
+      - "Test Mode 06 on-board monitoring test results"
+      - "Test Mode 07 pending DTC reporting"
+      - "Test Mode 09 vehicle information response"
+      - "Test Mode 0A permanent DTC reporting"
+      - "Verify response timing meets protocol requirements"
+      - "Test with multiple commercial scan tools for compatibility"
+    outputs:
+      - "Protocol compliance test results"
+      - "PID accuracy verification data"
+      - "Scan tool compatibility results"
+    tools:
+      - "Reference OBD scan tools"
+      - "Protocol analyzer"
+      - "Commercial scan tool set"
+    quality_gates:
+      - "All required modes and PIDs respond correctly"
+      - "PID values accurate within regulatory tolerance"
+      - "Compatible with all tested scan tools"
+
+  - name: "Certification Submission"
+    description: "Compile certification documentation and submit to regulatory authority"
+    inputs:
+      - "All test results from previous phases"
+      - "Certification submission forms"
+      - "Vehicle and engine specifications"
+    steps:
+      - "Compile OBD certification application package"
+      - "Include monitor demonstration test results"
+      - "Include drive cycle readiness completion data"
+      - "Include communication protocol compliance evidence"
+      - "Document all monitor thresholds and emission margins"
+      - "Include calibration part numbers and software versions"
+      - "Review submission package for completeness"
+      - "Submit to regulatory authority (CARB, EPA, or EU authority)"
+      - "Respond to any authority questions or requests"
+      - "Obtain OBD certification approval"
+    outputs:
+      - "OBD certification application package"
+      - "Regulatory authority submission record"
+      - "OBD certification approval"
+    tools:
+      - "Certification document management system"
+      - "Regulatory submission portal"
+      - "Communication tracking system"
+    quality_gates:
+      - "Application package complete per regulatory checklist"
+      - "All test evidence included and properly referenced"
+      - "Certification approval obtained"

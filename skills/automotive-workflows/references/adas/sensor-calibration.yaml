@@ -1,0 +1,151 @@
+name: sensor-calibration
+version: 1.0.0
+description: "End-to-end sensor calibration workflow for ADAS perception systems including camera, radar, and lidar sensors"
+trigger: "When new sensors are installed, after mechanical changes, or when perception accuracy degrades below threshold"
+domain: "ADAS"
+safety_level: "ASIL-B"
+
+prerequisites:
+  - "Calibration targets and fixtures available"
+  - "Vehicle positioned on level ground in controlled environment"
+  - "All sensor firmware updated to approved versions"
+  - "Calibration tool suite installed and licensed"
+  - "Environmental conditions within specification (temperature, lighting)"
+
+phases:
+  - name: "Preparation"
+    description: "Prepare the vehicle, environment, and tooling for sensor calibration"
+    inputs:
+      - "Vehicle identification and sensor configuration manifest"
+      - "Calibration target specifications and placement diagrams"
+      - "Previous calibration records for comparison"
+    steps:
+      - "Verify vehicle is on level surface using precision leveling tool"
+      - "Inspect all sensor mounting points for mechanical integrity"
+      - "Clean all sensor surfaces including camera lenses and radar covers"
+      - "Position calibration targets at specified distances and angles"
+      - "Verify calibration target reflectivity and pattern integrity"
+      - "Connect diagnostic interface and launch calibration software"
+      - "Record ambient temperature, humidity, and lighting conditions"
+      - "Verify all sensors are powered and reporting status"
+    outputs:
+      - "Environment readiness report"
+      - "Sensor health status for all connected sensors"
+    tools:
+      - "Precision leveling system"
+      - "Calibration target kit"
+      - "Diagnostic interface tool"
+    quality_gates:
+      - "All sensors report healthy status"
+      - "Environmental conditions within specification limits"
+      - "Calibration targets verified against reference patterns"
+
+  - name: "Intrinsic Calibration"
+    description: "Calibrate individual sensor intrinsic parameters including focal length, distortion, and internal alignment"
+    inputs:
+      - "Sensor health status from preparation phase"
+      - "Intrinsic parameter specifications per sensor model"
+    steps:
+      - "Capture camera intrinsic calibration images using checkerboard pattern"
+      - "Compute camera matrix and distortion coefficients using Zhang method"
+      - "Validate reprojection error is below 0.5 pixel threshold"
+      - "Calibrate radar antenna alignment using corner reflector targets"
+      - "Verify radar range accuracy against known target distances"
+      - "Calibrate lidar internal timing and intensity response"
+      - "Validate lidar point cloud density at reference distances"
+      - "Store intrinsic parameters in sensor-specific calibration files"
+    outputs:
+      - "Camera intrinsic matrices and distortion coefficients"
+      - "Radar antenna alignment parameters"
+      - "Lidar timing and intensity calibration data"
+    tools:
+      - "OpenCV calibration module"
+      - "Radar calibration software"
+      - "Lidar manufacturer calibration tool"
+    quality_gates:
+      - "Camera reprojection error below 0.5 pixels"
+      - "Radar range accuracy within 0.1 meters at 50 meter reference"
+      - "Lidar point density meets minimum specification"
+
+  - name: "Extrinsic Calibration"
+    description: "Determine the spatial relationship between all sensors and the vehicle reference frame"
+    inputs:
+      - "Intrinsic calibration results"
+      - "Vehicle coordinate system definition"
+      - "Sensor mounting geometry from CAD model"
+    steps:
+      - "Capture synchronized data from all sensors viewing common targets"
+      - "Compute camera-to-vehicle extrinsic transformation matrices"
+      - "Compute radar-to-vehicle extrinsic transformation using shared targets"
+      - "Compute lidar-to-vehicle extrinsic transformation"
+      - "Cross-validate camera-lidar alignment using projected point clouds"
+      - "Cross-validate camera-radar alignment using detected target positions"
+      - "Compute full sensor fusion transformation chain"
+      - "Verify all transformations are consistent and form a closed loop"
+      - "Store extrinsic parameters in vehicle calibration database"
+    outputs:
+      - "Sensor-to-vehicle transformation matrices for all sensors"
+      - "Cross-sensor alignment verification report"
+      - "Calibration consistency metrics"
+    tools:
+      - "Multi-sensor calibration framework"
+      - "Point cloud alignment tool"
+      - "Transformation chain validator"
+    quality_gates:
+      - "Translation error below 20mm for all sensor pairs"
+      - "Rotation error below 0.2 degrees for all sensor pairs"
+      - "Closed-loop consistency error below threshold"
+
+  - name: "Dynamic Validation"
+    description: "Validate calibration accuracy under dynamic driving conditions"
+    inputs:
+      - "Completed intrinsic and extrinsic calibration parameters"
+      - "Dynamic test route definition"
+      - "Ground truth reference data"
+    steps:
+      - "Load calibration parameters into perception software stack"
+      - "Execute low-speed validation drive on structured test track"
+      - "Verify object detection bounding boxes align across sensor modalities"
+      - "Check lane detection accuracy against painted reference lines"
+      - "Validate free-space detection at known distances"
+      - "Execute highway-speed validation on controlled route"
+      - "Measure object tracking consistency across sensor handoff zones"
+      - "Compare perception output against ground truth annotations"
+      - "Generate calibration accuracy report with statistical metrics"
+    outputs:
+      - "Dynamic validation report with pass/fail per sensor"
+      - "Perception accuracy metrics against ground truth"
+      - "Calibration certificate with validity period"
+    tools:
+      - "Data logging system"
+      - "Ground truth annotation tool"
+      - "Perception accuracy evaluation framework"
+    quality_gates:
+      - "Object detection accuracy above 95% at valid ranges"
+      - "Lane detection lateral error below 10cm"
+      - "No false positive detections during structured test"
+
+  - name: "Documentation and Release"
+    description: "Finalize calibration records and release parameters for production use"
+    inputs:
+      - "All calibration results and validation reports"
+      - "Vehicle and sensor serial numbers"
+    steps:
+      - "Compile complete calibration report with all parameters"
+      - "Sign calibration data with integrity checksum"
+      - "Upload calibration package to vehicle calibration server"
+      - "Update vehicle configuration management database"
+      - "Archive raw calibration data for traceability"
+      - "Issue calibration certificate with expiration date"
+      - "Schedule next calibration based on service interval"
+    outputs:
+      - "Signed calibration package"
+      - "Calibration certificate"
+      - "Updated vehicle configuration record"
+    tools:
+      - "Calibration management system"
+      - "Configuration management database"
+    quality_gates:
+      - "All calibration parameters within specification"
+      - "Integrity checksum verified"
+      - "Traceability chain complete from raw data to release"

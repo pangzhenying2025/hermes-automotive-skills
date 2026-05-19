@@ -1,0 +1,67 @@
+apiVersion: v2
+name: adas-service
+description: ADAS (Advanced Driver Assistance Systems) processing service for automotive platform
+type: application
+version: 1.0.0
+appVersion: "2.5.0"
+
+keywords:
+  - automotive
+  - adas
+  - sensor-fusion
+  - autonomous-driving
+  - kubernetes
+
+home: https://github.com/automotive/adas-service
+sources:
+  - https://github.com/automotive/adas-service
+  - https://github.com/automotive/automotive-platform
+
+maintainers:
+  - name: Automotive Platform Team
+    email: platform@automotive.example.com
+    url: https://automotive.example.com
+
+icon: https://automotive.example.com/icons/adas-service.png
+
+annotations:
+  # Automotive-specific annotations
+  automotive.io/safety-level: "ASIL-B"
+  automotive.io/aspice-level: "AL2"
+  automotive.io/component: "adas"
+  automotive.io/category: "perception"
+
+  # Compliance
+  compliance/iso26262: "true"
+  compliance/gdpr: "true"
+
+  # Artifact Hub annotations
+  artifacthub.io/changes: |
+    - kind: added
+      description: Support for multi-camera fusion
+    - kind: changed
+      description: Improved object detection latency
+    - kind: fixed
+      description: Memory leak in radar processing
+  artifacthub.io/containsSecurityUpdates: "false"
+  artifacthub.io/license: Proprietary
+  artifacthub.io/operator: "false"
+  artifacthub.io/prerelease: "false"
+  artifacthub.io/recommendations: |
+    - url: https://artifacthub.io/packages/helm/automotive/battery-analytics
+  artifacthub.io/links: |
+    - name: Documentation
+      url: https://docs.automotive.example.com/adas-service
+    - name: Support
+      url: https://support.automotive.example.com
+
+dependencies: []
+# Uncomment if you have dependencies
+# - name: postgresql
+#   version: 12.x.x
+#   repository: https://charts.bitnami.com/bitnami
+#   condition: postgresql.enabled
+# - name: redis
+#   version: 17.x.x
+#   repository: https://charts.bitnami.com/bitnami
+#   condition: redis.enabled

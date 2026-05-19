@@ -1,0 +1,466 @@
+name: sil-regression-testing
+version: 1.0.0
+description: |
+  Software-in-the-Loop (SIL) regression testing workflow for continuous validation.
+  Automated build, test execution, coverage analysis, and CI/CD integration for
+  embedded automotive software following ASPICE and ISO 26262 practices.
+
+domain: testing
+safety_standard: ISO_26262
+estimated_duration: 1-2_weeks
+
+phases:
+  - phase: environment_setup
+    name: SIL Environment Configuration
+    description: Set up host-based simulation environment for embedded software testing
+    duration: 1-2_days
+    inputs:
+      - embedded_source_code
+      - unit_test_suite
+      - plant_models (vehicle dynamics, sensor models)
+      - requirements_specification
+    outputs:
+      - sil_build_environment
+      - simulation_configuration
+      - test_infrastructure
+      - ci_pipeline_config
+    tools:
+      - Docker (containerized build environment)
+      - CMake/Make (build system)
+      - GCC/Clang (host compiler)
+      - MATLAB/Simulink (plant models)
+      - TargetLink (production code generation)
+      - Jenkins/GitLab CI (automation)
+    skills_used:
+      - build-automation
+      - docker-containerization
+      - continuous-integration
+    agents_involved:
+      - devops-engineer
+      - test-automation-engineer
+      - embedded-software-engineer
+    tasks:
+      build_environment:
+        - Create Dockerfile with toolchain (GCC 11+, CMake 3.20+)
+        - Install test frameworks (GoogleTest, Unity, CppUTest)
+        - Configure cross-compilation settings for target architecture
+        - Set up code coverage tools (gcov, lcov, gcovr)
+        - Install static analysis tools (cppcheck, clang-tidy)
+      simulation_setup:
+        - Import Simulink plant models for vehicle/ECU simulation
+        - Generate S-functions or C code from models
+        - Configure solver settings (fixed-step, 1ms sample time)
+        - Set up data logging and visualization
+      ci_integration:
+        - Create Jenkins pipeline (Jenkinsfile) or GitLab CI (.gitlab-ci.yml)
+        - Configure triggers (commit, pull request, nightly)
+        - Set up artifact storage for test results
+        - Configure notifications (email, Slack, JIRA)
+    acceptance_criteria:
+      - Docker image builds successfully with all dependencies
+      - Sample test executes and passes
+      - Coverage report generates correctly
+      - CI pipeline triggers on git push
+    safety_considerations:
+      - Ensure toolchain version matches production compiler
+      - Validate code generation settings identical to target
+
+  - phase: test_development
+    name: Test Case Development and Maintenance
+    description: Develop comprehensive unit and integration tests with requirements traceability
+    duration: 3-5_days
+    inputs:
+      - requirements_specification
+      - software_architecture
+      - coding_standards (MISRA C)
+      - previous_test_suite
+    outputs:
+      - unit_test_suite
+      - integration_test_suite
+      - test_stubs_and_mocks
+      - traceability_matrix
+    tools:
+      - GoogleTest/Unity (C/C++ test framework)
+      - FFF (Fake Function Framework for mocks)
+      - Ceedling (Ruby-based test automation)
+      - DOORS/Polarion (requirements management)
+    skills_used:
+      - unit-testing
+      - test-driven-development
+      - requirements-traceability
+    agents_involved:
+      - test-engineer
+      - embedded-software-engineer
+    tasks:
+      unit_tests:
+        - Write unit tests for each function (white-box testing)
+        - Test boundary conditions (min, max, overflow)
+        - Test error paths (invalid inputs, null pointers)
+        - Achieve MC/DC coverage for ASIL-C/D code
+        - Mock hardware dependencies (timers, interrupts, peripherals)
+      integration_tests:
+        - Test module interactions (function call sequences)
+        - Validate state machine transitions
+        - Test inter-task communication (message queues, semaphores)
+        - Verify data flow through processing pipeline
+      test_infrastructure:
+        - Create stubs for hardware abstraction layer (HAL)
+        - Implement fakes for CAN/LIN drivers
+        - Mock RTOS primitives (osDelay, osMutex, osMessageQueue)
+        - Set up test fixtures for complex initialization
+    acceptance_criteria:
+      - 100% statement coverage for non-safety code
+      - MC/DC coverage >95% for ASIL-C/D functions
+      - All requirements traced to at least one test case
+      - Test execution time <5 minutes for unit tests
+    safety_considerations:
+      - Safety-critical functions have redundant test cases
+      - Negative testing for all error conditions
+
+  - phase: build_and_compile
+    name: Automated Build and Static Analysis
+    description: Compile source code with all warnings enabled and run static analysis
+    duration: 30_minutes (automated)
+    inputs:
+      - embedded_source_code
+      - test_suite
+      - build_configuration
+      - coding_standards_config
+    outputs:
+      - compiled_binaries
+      - static_analysis_report
+      - misra_compliance_report
+      - compiler_warnings_log
+    tools:
+      - GCC/Clang (compiler)
+      - CMake (build generator)
+      - cppcheck (static analysis)
+      - PC-Lint/QAC (MISRA checker)
+      - clang-tidy (linter)
+    skills_used:
+      - build-automation
+      - static-analysis
+      - misra-compliance
+    agents_involved:
+      - build-engineer
+      - embedded-software-engineer
+    tasks:
+      compilation:
+        - Compile with -Wall -Wextra -Werror (treat warnings as errors)
+        - Enable optimization level matching production (-O2 or -Os)
+        - Generate debug symbols for coverage analysis
+        - Build test executables with GoogleTest linked
+      static_analysis:
+        - Run cppcheck with MISRA addon
+        - Execute clang-tidy with automotive checks
+        - Analyze for undefined behavior (UBSan)
+        - Check for memory leaks (AddressSanitizer)
+        - Validate against CERT C Secure Coding Standard
+      quality_checks:
+        - Measure cyclomatic complexity (max 15 per function)
+        - Check function length (max 50 lines)
+        - Validate naming conventions
+        - Detect code duplication
+    acceptance_criteria:
+      - Zero compiler errors
+      - Zero compiler warnings
+      - MISRA compliance >98%
+      - Cyclomatic complexity within limits
+      - AddressSanitizer clean run
+    safety_considerations:
+      - MISRA mandatory rules: 100% compliance
+      - MISRA required rules: compliance or documented deviation
+
+  - phase: test_execution
+    name: Automated Test Execution
+    description: Run complete test suite and collect results
+    duration: 1-2_hours (automated)
+    inputs:
+      - compiled_test_binaries
+      - test_data_sets
+      - simulation_models
+    outputs:
+      - test_execution_results (JUnit XML)
+      - test_logs
+      - performance_metrics
+      - failure_analysis
+    tools:
+      - CTest (CMake test runner)
+      - GoogleTest (test framework)
+      - Valgrind (memory profiling)
+      - perf/gprof (performance profiling)
+    skills_used:
+      - test-automation
+      - debugging
+      - performance-analysis
+    agents_involved:
+      - test-automation-engineer
+    tasks:
+      unit_test_execution:
+        - Run all unit tests in parallel (CTest -j8)
+        - Collect test results in JUnit XML format
+        - Log failures with stack traces
+        - Measure test execution time per suite
+      integration_test_execution:
+        - Execute integration tests with Simulink co-simulation
+        - Run end-to-end scenarios (startup, normal operation, shutdown)
+        - Validate communication protocols (CAN message sequences)
+        - Test concurrency (multi-threaded execution)
+      memory_validation:
+        - Run tests under Valgrind to detect leaks
+        - Check for buffer overruns with AddressSanitizer
+        - Validate stack usage (within RTOS limits)
+      performance_profiling:
+        - Measure function execution time (worst-case)
+        - Profile CPU usage per task
+        - Analyze memory allocation patterns
+    acceptance_criteria:
+      - 100% test pass rate
+      - Zero memory leaks detected
+      - Zero undefined behavior (UBSan clean)
+      - Execution time within acceptable limits
+    safety_considerations:
+      - All ASIL-C/D tests executed successfully
+      - Safety mechanisms tested (watchdog, E2E protection)
+
+  - phase: coverage_analysis
+    name: Code Coverage Analysis
+    description: Measure test coverage and identify untested code paths
+    duration: 1_hour (automated)
+    inputs:
+      - test_execution_results
+      - instrumented_binaries
+      - source_code
+    outputs:
+      - coverage_report (HTML, Cobertura XML)
+      - uncovered_code_report
+      - mcdc_coverage_report
+      - coverage_trends
+    tools:
+      - gcov/gcovr (coverage tool)
+      - lcov (HTML report generator)
+      - VectorCAST (MC/DC coverage for safety code)
+      - SonarQube (coverage visualization)
+    skills_used:
+      - code-coverage-analysis
+      - safety-validation
+    agents_involved:
+      - test-engineer
+      - safety-engineer
+    coverage_metrics:
+      statement_coverage:
+        - Lines of code executed during testing
+        - "Target: >95% for production code"
+      branch_coverage:
+        - "Decision points (if/else, switch) exercised"
+        - "Target: >90% for all code"
+      function_coverage:
+        - Functions called at least once
+        - Target: 100% for public API
+      mcdc_coverage:
+        - Modified Condition/Decision Coverage for ASIL-C/D
+        - "Target: >95% for safety-critical functions"
+    tasks:
+      - Generate coverage data from gcov .gcda files
+      - Merge coverage from all test runs
+      - Generate HTML report with lcov
+      - Export Cobertura XML for CI dashboard
+      - Identify untested code (dead code or missing tests)
+      - Compare coverage against previous baseline
+    acceptance_criteria:
+      - Statement coverage >95%
+      - Branch coverage >90%
+      - MC/DC coverage >95% for ASIL-C/D
+      - No decrease in coverage from baseline
+    safety_considerations:
+      - 100% coverage for safety mechanisms
+      - MC/DC analysis for all safety-critical decisions
+
+  - phase: regression_validation
+    name: Regression Test Validation
+    description: Compare test results against baseline to detect regressions
+    duration: 30_minutes (automated)
+    inputs:
+      - current_test_results
+      - baseline_test_results
+      - git_commit_history
+    outputs:
+      - regression_analysis_report
+      - delta_report (new failures, fixed tests)
+      - performance_comparison
+    tools:
+      - JUnit report diff tool
+      - Git (version control)
+      - Jenkins Test Results Analyzer
+    skills_used:
+      - test-result-analysis
+      - version-control
+    agents_involved:
+      - test-automation-engineer
+    tasks:
+      - Compare test pass/fail status against baseline
+      - Identify newly failing tests (regressions)
+      - Identify newly passing tests (fixes)
+      - Analyze performance degradation (slower execution)
+      - Generate trend charts (test count, coverage, failures over time)
+      - Bisect git history to find regression-introducing commit
+    acceptance_criteria:
+      - Zero new test failures (no regressions)
+      - Explanation for any newly skipped tests
+      - Performance within 10% of baseline
+    safety_considerations:
+      - Safety tests must never regress
+      - Automatic rollback on critical regression
+
+  - phase: ci_integration
+    name: CI/CD Pipeline Integration
+    description: Integrate SIL testing into continuous integration workflow
+    duration: 1_day (one-time setup)
+    inputs:
+      - test_automation_scripts
+      - ci_platform_config
+      - artifact_storage_config
+    outputs:
+      - ci_pipeline_definition
+      - automated_test_jobs
+      - notification_rules
+      - quality_gates
+    tools:
+      - Jenkins/GitLab CI/GitHub Actions
+      - Docker (containerized execution)
+      - Artifactory/Nexus (artifact storage)
+      - SonarQube (quality dashboard)
+    skills_used:
+      - devops
+      - continuous-integration
+      - infrastructure-as-code
+    agents_involved:
+      - devops-engineer
+      - test-automation-engineer
+    pipeline_stages:
+      - Checkout source code
+      - Build Docker image with dependencies
+      - Compile source code with static analysis
+      - Run unit tests with coverage
+      - Run integration tests
+      - Generate reports (coverage, test results, MISRA)
+      - Publish artifacts and reports
+      - Notify team of results
+    quality_gates:
+      - Build must succeed (zero errors)
+      - Zero compiler warnings
+      - Test pass rate 100%
+      - Coverage >95%
+      - MISRA compliance >98%
+    tasks:
+      - Create Jenkinsfile or .gitlab-ci.yml
+      - Configure triggers (on commit, PR, nightly schedule)
+      - Set up parallel test execution
+      - Configure artifact archival
+      - Set up email/Slack notifications
+      - Integrate with SonarQube for quality metrics
+    acceptance_criteria:
+      - Pipeline executes successfully on clean repository
+      - Test results published to CI dashboard
+      - Notifications sent on failure
+      - Artifacts stored for 90 days
+    safety_considerations:
+      - Safety-critical builds tagged and archived long-term
+      - Traceability from git commit to test results
+
+  - phase: reporting
+    name: Test Reporting and Metrics
+    description: Generate comprehensive test reports and track metrics over time
+    duration: 1_hour (automated)
+    inputs:
+      - test_execution_results
+      - coverage_report
+      - static_analysis_report
+      - requirements_traceability_matrix
+    outputs:
+      - consolidated_test_report
+      - metrics_dashboard
+      - trend_analysis
+      - certification_evidence
+    tools:
+      - Allure (test reporting)
+      - Grafana (metrics visualization)
+      - Confluence (documentation)
+      - DOORS (requirements traceability)
+    skills_used:
+      - technical-writing
+      - data-analytics
+    agents_involved:
+      - test-manager
+      - technical-writer
+    report_sections:
+      test_summary:
+        - Total tests, passed, failed, skipped
+        - Test duration
+        - Pass rate trend
+      coverage_summary:
+        - Statement, branch, function, MC/DC coverage
+        - Coverage by module
+        - Uncovered code hotspots
+      quality_metrics:
+        - MISRA compliance percentage
+        - Cyclomatic complexity distribution
+        - Code duplication percentage
+        - Technical debt ratio
+      traceability:
+        - Requirements to test case mapping
+        - Test coverage by requirement
+        - Orphaned tests (not linked to requirements)
+    metrics_tracked:
+      - Test pass rate over time
+      - Code coverage trend
+      - Test execution duration
+      - Defect density (defects per KLOC)
+      - MISRA compliance trend
+      - Build success rate
+    acceptance_criteria:
+      - Report generated automatically after each CI run
+      - Metrics dashboard updated in real-time
+      - Trend analysis shows improvement or stability
+    safety_considerations:
+      - Safety test results prominently reported
+      - MC/DC coverage tracked separately for ASIL code
+
+quality_gates:
+  - gate: build_success
+    phase: build_and_compile
+    criteria:
+      - Zero compilation errors
+      - Zero warnings
+      - MISRA compliance >98%
+  - gate: test_pass
+    phase: test_execution
+    criteria:
+      - 100% test pass rate
+      - Zero memory leaks
+  - gate: coverage_target
+    phase: coverage_analysis
+    criteria:
+      - Statement coverage >95%
+      - MC/DC coverage >95% for ASIL-C/D
+  - gate: no_regression
+    phase: regression_validation
+    criteria:
+      - Zero new test failures
+      - Performance within 10% of baseline
+
+metrics:
+  - Test pass rate
+  - Code coverage (statement, branch, MC/DC)
+  - Build success rate
+  - Test execution duration
+  - MISRA compliance percentage
+  - Defect detection rate
+  - Mean time to repair (MTTR)
+
+references:
+  - ISO 26262-6 (Software unit testing)
+  - ASPICE SWE.4 (Software unit verification)
+  - ASPICE SWE.5 (Software integration and test)
+  - MISRA C:2012 (Coding standard)
+  - DO-178C (Software testing for avionics - applicable principles)

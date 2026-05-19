@@ -1,0 +1,228 @@
+{
+  "$schema": "https://www.autosar.org/schema/r23-11/machine_manifest.json",
+  "shortName": "QnxAdaptivePlatform",
+  "version": "1.0",
+  "description": "Machine Manifest for AUTOSAR Adaptive Platform on QNX Neutrino",
+  "lastModified": "2026-03-19T10:00:00Z",
+
+  "machine": {
+    "shortName": "AdaptiveECU",
+    "hardwareConfiguration": {
+      "processor": {
+        "architecture": "ARMv8-A",
+        "cores": 4,
+        "baseFrequencyMhz": 1500,
+        "cache": {
+          "l1DataKB": 32,
+          "l1InstructionKB": 32,
+          "l2KB": 512,
+          "l3KB": 0
+        }
+      },
+      "memory": {
+        "totalMB": 2048,
+        "reservedForOsMB": 256,
+        "availableForApplicationsMB": 1792
+      },
+      "networkInterfaces": [
+        {
+          "name": "eth0",
+          "type": "Ethernet",
+          "speedMbps": 1000,
+          "macAddress": "00:11:22:33:44:55",
+          "ipAddress": "192.168.1.100",
+          "netmask": "255.255.255.0"
+        },
+        {
+          "name": "can0",
+          "type": "CAN-FD",
+          "baudrate": 500000,
+          "fdBaudrate": 2000000
+        }
+      ],
+      "storage": {
+        "type": "eMMC",
+        "totalMB": 8192,
+        "filesystem": "qnx6",
+        "mountPoint": "/fs/qnx6"
+      }
+    },
+
+    "operatingSystem": {
+      "name": "QNX Neutrino RTOS",
+      "version": "7.1.0",
+      "safetyLevel": "ASIL-D",
+      "scheduler": {
+        "policy": "SCHED_FIFO",
+        "priorityRange": {
+          "min": 1,
+          "max": 99
+        },
+        "adaptivePartitioning": true,
+        "partitions": [
+          {
+            "name": "adas_partition",
+            "cpuBudgetPercent": 40,
+            "guaranteedLatencyUs": 100
+          },
+          {
+            "name": "network_partition",
+            "cpuBudgetPercent": 20,
+            "guaranteedLatencyUs": 1000
+          },
+          {
+            "name": "system_partition",
+            "cpuBudgetPercent": 10,
+            "guaranteedLatencyUs": 5000
+          },
+          {
+            "name": "infotainment_partition",
+            "cpuBudgetPercent": 30,
+            "guaranteedLatencyUs": 10000
+          }
+        ]
+      },
+      "ipc": {
+        "mechanism": "QNX_CHANNELS",
+        "maxChannels": 1024,
+        "maxConnections": 4096,
+        "messageQueueDepth": 32
+      }
+    }
+  },
+
+  "functionGroups": [
+    {
+      "shortName": "ADAS",
+      "description": "Advanced Driver Assistance Systems",
+      "startupMode": "automatic",
+      "shutdownDelay": 5000,
+      "processes": [
+        "AdasController",
+        "RadarService",
+        "CameraService"
+      ]
+    },
+    {
+      "shortName": "Communication",
+      "description": "Network gateway and communication services",
+      "startupMode": "automatic",
+      "shutdownDelay": 2000,
+      "processes": [
+        "Gateway",
+        "DiagnosticsManager"
+      ]
+    },
+    {
+      "shortName": "VehicleDynamics",
+      "description": "Vehicle speed, acceleration, steering angle",
+      "startupMode": "automatic",
+      "shutdownDelay": 1000,
+      "processes": [
+        "VehicleDynamicsService"
+      ]
+    }
+  ],
+
+  "serviceDiscovery": {
+    "mechanism": "SOME/IP-SD",
+    "multicastAddress": "224.244.224.245",
+    "multicastPort": 30490,
+    "unicastPort": 30491,
+    "ttl": 255,
+    "initialDelayMin": 10,
+    "initialDelayMax": 100,
+    "repetitionsBaseDelay": 200,
+    "repetitionsMax": 3,
+    "cyclicOfferDelay": 2000
+  },
+
+  "logging": {
+    "backend": "slogger2",
+    "bufferSizeKB": 256,
+    "numBuffers": 8,
+    "rotationPolicy": "size",
+    "maxFileSizeMB": 10,
+    "maxFiles": 5,
+    "defaultLevel": "info",
+    "persistentStorage": "/var/log/adaptive"
+  },
+
+  "persistency": {
+    "backend": "filesystem",
+    "rootPath": "/fs/qnx6/adaptive/per",
+    "keyValueStore": {
+      "maxKeys": 10000,
+      "maxValueSizeKB": 64,
+      "syncPolicy": "immediate"
+    },
+    "fileStorage": {
+      "maxFiles": 1000,
+      "maxFileSizeMB": 100,
+      "redundancy": true
+    }
+  },
+
+  "platformHealthManagement": {
+    "enabled": true,
+    "watchdogTimeoutMs": 5000,
+    "supervisionCycleMs": 100,
+    "maxRestartAttempts": 3,
+    "recoveryAction": "restart",
+    "safeStateAction": "shutdown"
+  },
+
+  "security": {
+    "secureBootEnabled": true,
+    "encryptedStorageEnabled": true,
+    "tlsVersion": "1.3",
+    "certificatePath": "/etc/adaptive/certs",
+    "firewall": {
+      "enabled": true,
+      "defaultPolicy": "deny",
+      "allowedPorts": [
+        {
+          "port": 30490,
+          "protocol": "udp",
+          "description": "SOME/IP Service Discovery"
+        },
+        {
+          "port": 30500,
+          "protocol": "tcp",
+          "description": "SOME/IP Methods"
+        },
+        {
+          "port": 6801,
+          "protocol": "tcp",
+          "description": "UDS Diagnostics"
+        }
+      ]
+    }
+  },
+
+  "timeSynchronization": {
+    "mechanism": "PTP",
+    "domain": 0,
+    "priority1": 128,
+    "priority2": 128,
+    "syncIntervalMs": 125,
+    "announceIntervalMs": 1000
+  },
+
+  "performance": {
+    "maxServiceInstances": 100,
+    "maxEventsPerSecond": 10000,
+    "maxMethodCallsPerSecond": 50000,
+    "ipcLatencyTargetUs": 5,
+    "eventLatencyTargetUs": 10
+  },
+
+  "diagnostics": {
+    "protocol": "UDS",
+    "transportProtocol": "DoIP",
+    "targetAddress": "0x1234",
+    "testerAddress": "0x0F00",
+    "port": 6801,
+    "dtcStoragePath": "/fs/qnx6/adaptive/dtc"
+  }
+}

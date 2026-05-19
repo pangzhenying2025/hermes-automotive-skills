@@ -1,0 +1,164 @@
+name: v2x-security-enrollment
+version: 1.0.0
+description: "V2X Security Credential Management System enrollment workflow for vehicle and infrastructure equipment"
+trigger: "During production provisioning, certificate renewal, or new SCMS deployment"
+domain: "V2X"
+standard: "IEEE 1609.2, CAMP SCMS"
+
+prerequisites:
+  - "SCMS infrastructure deployed and operational"
+  - "Hardware security module in V2X device provisioned"
+  - "Enrollment certificate authority accessible"
+  - "Device identity pre-provisioned during manufacturing"
+  - "Policy framework for certificate lifecycle defined"
+
+phases:
+  - name: "Pre-Enrollment Preparation"
+    description: "Prepare V2X devices and infrastructure for SCMS enrollment"
+    inputs:
+      - "V2X device manufacturing records"
+      - "SCMS enrollment requirements"
+      - "Device identity credentials"
+    steps:
+      - "Verify HSM in each V2X device is initialized"
+      - "Generate enrollment key pair within device HSM"
+      - "Create enrollment certificate request"
+      - "Verify device identity against manufacturing database"
+      - "Configure SCMS endpoint addresses on device"
+      - "Verify network connectivity to SCMS enrollment services"
+      - "Check SCMS service availability and status"
+      - "Prepare batch enrollment manifest for production line"
+      - "Configure retry and fallback parameters"
+      - "Document enrollment preparation checklist"
+    outputs:
+      - "Enrollment-ready V2X devices"
+      - "Batch enrollment manifest"
+      - "Preparation verification records"
+    tools:
+      - "HSM management tool"
+      - "Device provisioning system"
+      - "Network connectivity checker"
+    quality_gates:
+      - "All device HSMs initialized with unique key pairs"
+      - "SCMS endpoint connectivity verified"
+      - "Device identity verification passed"
+
+  - name: "Enrollment Certificate Acquisition"
+    description: "Acquire enrollment certificates from the SCMS Enrollment Certificate Authority"
+    inputs:
+      - "Enrollment-ready devices"
+      - "Enrollment CA credentials"
+      - "Enrollment policy"
+    steps:
+      - "Submit enrollment certificate request to Enrollment CA"
+      - "Authenticate device identity during enrollment"
+      - "Receive enrollment certificate from Enrollment CA"
+      - "Store enrollment certificate in device secure storage"
+      - "Verify enrollment certificate chain to root CA"
+      - "Test enrollment certificate usage for signing"
+      - "Record enrollment certificate serial and validity"
+      - "Handle enrollment failures with retry logic"
+      - "Track enrollment status per device"
+      - "Generate enrollment completion report"
+    outputs:
+      - "Devices with valid enrollment certificates"
+      - "Enrollment status records"
+      - "Enrollment completion report"
+    tools:
+      - "SCMS enrollment client"
+      - "Certificate management tool"
+      - "Enrollment tracking system"
+    quality_gates:
+      - "All devices enrolled successfully"
+      - "Certificate chains validate to trusted root"
+      - "Enrollment certificates stored in HSM"
+
+  - name: "Pseudonym Certificate Provisioning"
+    description: "Provision rotating pseudonym certificates for privacy-preserving V2X communication"
+    inputs:
+      - "Enrolled V2X devices"
+      - "Pseudonym CA configuration"
+      - "Privacy policy for certificate rotation"
+    steps:
+      - "Request initial pseudonym certificate batch from Pseudonym CA"
+      - "Configure certificate rotation interval per privacy policy"
+      - "Download pseudonym certificate batch to device"
+      - "Verify pseudonym certificates are usable for message signing"
+      - "Test message signing with different pseudonym certificates"
+      - "Verify pseudonym certificates cannot be linked to enrollment"
+      - "Configure automatic certificate refill trigger"
+      - "Test certificate refill process before batch exhaustion"
+      - "Verify butterfly key expansion if used"
+      - "Monitor certificate supply status"
+    outputs:
+      - "Devices with pseudonym certificate supply"
+      - "Certificate rotation verification"
+      - "Privacy unlinkability verification"
+    tools:
+      - "Pseudonym CA client"
+      - "Certificate rotation tester"
+      - "Privacy analysis tool"
+    quality_gates:
+      - "Sufficient pseudonym certificates provisioned"
+      - "Certificate rotation functions per policy"
+      - "Privacy unlinkability verified by analysis"
+
+  - name: "Misbehavior Reporting Configuration"
+    description: "Configure misbehavior detection and reporting for compromised or faulty devices"
+    inputs:
+      - "Misbehavior Authority configuration"
+      - "Misbehavior detection rules"
+      - "Reporting protocol specification"
+    steps:
+      - "Configure local misbehavior detection algorithms"
+      - "Set plausibility check thresholds for received messages"
+      - "Configure misbehavior report generation format"
+      - "Set up secure channel to Misbehavior Authority"
+      - "Test misbehavior report submission"
+      - "Verify device can process certificate revocation lists"
+      - "Configure CRL download schedule"
+      - "Test device behavior when peer certificate is revoked"
+      - "Verify revoked certificate messages are rejected"
+      - "Document misbehavior handling configuration"
+    outputs:
+      - "Configured misbehavior detection"
+      - "CRL handling verification"
+      - "Misbehavior reporting test results"
+    tools:
+      - "Misbehavior testing tool"
+      - "CRL distribution test server"
+      - "V2X message injector for testing"
+    quality_gates:
+      - "Misbehavior reports submitted correctly"
+      - "Revoked certificates detected and rejected"
+      - "CRL updates applied within specified time"
+
+  - name: "Production Deployment and Monitoring"
+    description: "Deploy SCMS enrollment to production and establish ongoing monitoring"
+    inputs:
+      - "Verified enrollment and provisioning processes"
+      - "Production line integration requirements"
+      - "Monitoring requirements"
+    steps:
+      - "Integrate enrollment into production line workflow"
+      - "Train production line operators on enrollment process"
+      - "Execute pilot production run of 100 devices"
+      - "Verify pilot production enrollment success rate"
+      - "Optimize enrollment timing for production line cycle"
+      - "Deploy to full production line"
+      - "Monitor enrollment success rates in production"
+      - "Configure alerting for enrollment failures"
+      - "Establish certificate lifecycle monitoring dashboard"
+      - "Define process for certificate renewal at end of validity"
+    outputs:
+      - "Production enrollment operational"
+      - "Monitoring dashboard"
+      - "Certificate lifecycle management plan"
+    tools:
+      - "Production line integration system"
+      - "Monitoring dashboard"
+      - "Alerting system"
+    quality_gates:
+      - "Production enrollment success rate above 99.5%"
+      - "Enrollment time within production cycle limit"
+      - "Monitoring and alerting operational"

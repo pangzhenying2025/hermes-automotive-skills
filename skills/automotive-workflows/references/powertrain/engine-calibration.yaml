@@ -1,0 +1,165 @@
+name: engine-calibration
+version: 1.0.0
+description: "Engine management system calibration workflow for optimizing performance, emissions, and fuel economy"
+trigger: "During new engine development, after hardware changes, or for emission regulation compliance updates"
+domain: "Powertrain"
+safety_level: "ASIL-A"
+
+prerequisites:
+  - "Engine test cell with dynamometer available"
+  - "Calibration tool with ECU access configured"
+  - "Emission measurement equipment calibrated"
+  - "Base calibration dataset from simulation or previous project"
+  - "Calibration plan with target objectives defined"
+
+phases:
+  - name: "Calibration Planning"
+    description: "Define calibration objectives, constraints, and measurement plan"
+    inputs:
+      - "Engine performance targets"
+      - "Emission regulation limits"
+      - "Fuel economy targets"
+      - "Drivability requirements"
+    steps:
+      - "Define calibration operating points across speed-load map"
+      - "Prioritize calibration parameters by impact"
+      - "Define measurement variables and sampling rates"
+      - "Plan design of experiments for key parameter interactions"
+      - "Define optimization criteria: emissions, performance, economy"
+      - "Identify calibration constraints from component limits"
+      - "Schedule test cell time and resources"
+      - "Prepare base calibration dataset for loading"
+      - "Configure calibration tool for all required parameters"
+      - "Define acceptance criteria for each calibration objective"
+    outputs:
+      - "Calibration plan document"
+      - "Operating point matrix"
+      - "Measurement plan"
+    tools:
+      - "Calibration planning tool"
+      - "Design of experiments software"
+      - "Test scheduling system"
+    quality_gates:
+      - "All operating points within engine safe limits"
+      - "Measurement plan covers all calibration variables"
+      - "Calibration plan reviewed and approved"
+
+  - name: "Steady-State Calibration"
+    description: "Optimize engine parameters at steady-state operating points"
+    inputs:
+      - "Base calibration loaded on ECU"
+      - "Engine on dynamometer at operating temperature"
+      - "Emission analyzers connected and warmed up"
+    steps:
+      - "Calibrate ignition timing for MBT at each operating point"
+      - "Optimize fuel injection timing and duration"
+      - "Calibrate air-fuel ratio maps for stoichiometric operation"
+      - "Optimize EGR rate maps for NOx reduction"
+      - "Calibrate boost pressure targets for turbocharged engines"
+      - "Optimize variable valve timing for each operating zone"
+      - "Measure brake specific fuel consumption at each point"
+      - "Record emission levels at each calibrated operating point"
+      - "Apply knock limit retard where needed"
+      - "Verify component temperatures within safe limits"
+    outputs:
+      - "Optimized steady-state calibration maps"
+      - "Performance measurements per operating point"
+      - "Emission measurements per operating point"
+    tools:
+      - "Calibration tool"
+      - "Engine dynamometer"
+      - "Emission analyzer suite"
+    quality_gates:
+      - "Emission levels below target at all points"
+      - "BSFC meets economy targets"
+      - "No knock detected at any calibrated point"
+
+  - name: "Transient Calibration"
+    description: "Optimize engine response during transient operating conditions"
+    inputs:
+      - "Steady-state calibration complete"
+      - "Transient test profiles"
+      - "Drivability criteria"
+    steps:
+      - "Calibrate acceleration enrichment for tip-in response"
+      - "Optimize torque reserve for fast load acceptance"
+      - "Calibrate turbocharger wastegate control during transients"
+      - "Optimize EGR valve response during load changes"
+      - "Calibrate anti-surge control for compressor protection"
+      - "Optimize catalyst light-off strategy for cold start"
+      - "Calibrate cold start fueling and timing"
+      - "Optimize warm-up enrichment schedule"
+      - "Tune idle speed control for stability and economy"
+      - "Verify drivability meets subjective evaluation criteria"
+    outputs:
+      - "Transient calibration parameters"
+      - "Drivability evaluation results"
+      - "Cold start emission measurements"
+    tools:
+      - "Calibration tool with real-time adjustment"
+      - "Transient emission analyzer"
+      - "Drivability evaluation tool"
+    quality_gates:
+      - "Tip-in response meets drivability targets"
+      - "Cold start emissions within development targets"
+      - "Idle stability within specification"
+
+  - name: "Drive Cycle Optimization"
+    description: "Optimize calibration for regulatory drive cycle emission compliance"
+    inputs:
+      - "Transient calibration complete"
+      - "Regulatory drive cycle definitions"
+      - "Emission measurement setup"
+    steps:
+      - "Execute WLTP drive cycle on chassis dynamometer"
+      - "Analyze second-by-second emission data"
+      - "Identify drive cycle segments with highest emission contribution"
+      - "Optimize calibration at critical segments"
+      - "Re-execute drive cycle to verify improvements"
+      - "Execute FTP-75 cycle if US certification required"
+      - "Optimize catalyst thermal management during cycle"
+      - "Verify fuel economy over complete drive cycle"
+      - "Execute RDE route simulation for real driving emissions"
+      - "Iterate optimization until all targets achieved"
+    outputs:
+      - "Drive cycle emission results"
+      - "Fuel economy measurements"
+      - "Optimized calibration dataset"
+    tools:
+      - "Chassis dynamometer"
+      - "CVS emission measurement system"
+      - "Drive cycle automation system"
+    quality_gates:
+      - "WLTP emissions below regulation limits with margin"
+      - "Fuel economy meets CO2 target"
+      - "RDE results within conformity factors"
+
+  - name: "Calibration Freeze and Release"
+    description: "Freeze the calibration dataset and release for production"
+    inputs:
+      - "Optimized calibration dataset"
+      - "All emission and performance test results"
+      - "Calibration freeze criteria"
+    steps:
+      - "Review final calibration data for consistency"
+      - "Execute final validation drive cycle test"
+      - "Verify calibration in altitude and temperature chambers"
+      - "Freeze all calibration parameters"
+      - "Generate calibration release documentation"
+      - "Calculate calibration checksum for integrity"
+      - "Create production calibration data file"
+      - "Archive all test data and calibration history"
+      - "Obtain calibration release approval"
+      - "Deliver calibration to production flash programming"
+    outputs:
+      - "Frozen calibration dataset"
+      - "Calibration release documentation"
+      - "Production calibration data file"
+    tools:
+      - "Calibration data management system"
+      - "Checksum tool"
+      - "Release management system"
+    quality_gates:
+      - "Final validation passes all criteria"
+      - "Calibration checksum verified"
+      - "Release approval obtained from all stakeholders"

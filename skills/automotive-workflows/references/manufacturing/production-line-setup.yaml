@@ -1,0 +1,164 @@
+name: production-line-setup
+version: 1.0.0
+description: "Automotive production line setup workflow for new vehicle or component manufacturing"
+trigger: "When commissioning new production line, adding new product variant, or upgrading manufacturing equipment"
+domain: "Manufacturing"
+safety_level: "QM"
+
+prerequisites:
+  - "Production line layout design approved"
+  - "Manufacturing equipment procured and delivered"
+  - "Manufacturing execution system available"
+  - "Quality management system configured"
+  - "Production team recruited and available for training"
+
+phases:
+  - name: "Equipment Installation and Commissioning"
+    description: "Install and commission all production line equipment and tooling"
+    inputs:
+      - "Equipment layout drawings"
+      - "Equipment installation manuals"
+      - "Utility connections: power, compressed air, coolant"
+    steps:
+      - "Install equipment foundations and mounting per layout"
+      - "Connect power supply and verify voltage and phase"
+      - "Connect compressed air and verify pressure and flow"
+      - "Connect coolant circuits and verify flow rates"
+      - "Install safety guarding and light curtains"
+      - "Commission each station individually"
+      - "Verify robot teach points and motion paths"
+      - "Calibrate measurement and test equipment"
+      - "Verify material handling systems and conveyors"
+      - "Document equipment as-installed configuration"
+    outputs:
+      - "Commissioned equipment per station"
+      - "Equipment calibration records"
+      - "As-installed documentation"
+    tools:
+      - "Equipment commissioning tools"
+      - "Calibration instruments"
+      - "Safety verification equipment"
+    quality_gates:
+      - "All equipment passes commissioning tests"
+      - "Safety systems verified and functional"
+      - "Calibration certificates current for all instruments"
+
+  - name: "MES and IT Integration"
+    description: "Integrate manufacturing execution system and IT infrastructure"
+    inputs:
+      - "MES configuration requirements"
+      - "Equipment communication interfaces"
+      - "Production tracking requirements"
+    steps:
+      - "Configure MES for production line workflow"
+      - "Set up work order management and scheduling"
+      - "Configure equipment data collection interfaces"
+      - "Set up barcode or RFID tracking at each station"
+      - "Configure quality data collection points"
+      - "Set up traceability linking components to assemblies"
+      - "Configure real-time production monitoring dashboard"
+      - "Integrate with ERP for material management"
+      - "Configure alarm and notification system"
+      - "Test end-to-end production data flow"
+    outputs:
+      - "Configured MES system"
+      - "Production monitoring dashboards"
+      - "Data flow verification results"
+    tools:
+      - "Manufacturing execution system"
+      - "SCADA system"
+      - "Database management tools"
+    quality_gates:
+      - "Traceability tracks component to final assembly"
+      - "Real-time monitoring displays accurate data"
+      - "ERP integration verified for material management"
+
+  - name: "Process Validation"
+    description: "Validate manufacturing processes meet quality and output requirements"
+    inputs:
+      - "Process specifications per station"
+      - "Quality acceptance criteria"
+      - "Target cycle times"
+    steps:
+      - "Execute Installation Qualification for each station"
+      - "Execute Operational Qualification with test parts"
+      - "Execute Process Qualification with production materials"
+      - "Measure process capability for critical characteristics"
+      - "Verify cycle time meets production rate requirement"
+      - "Validate torque tool accuracy and repeatability"
+      - "Verify weld quality meets specification"
+      - "Validate leak test station sensitivity and repeatability"
+      - "Verify end-of-line test coverage and accuracy"
+      - "Generate process validation report"
+    outputs:
+      - "Process validation report per station"
+      - "Process capability study results"
+      - "Cycle time measurements"
+    tools:
+      - "Statistical process control software"
+      - "Measurement systems analysis tools"
+      - "Cycle time analysis tool"
+    quality_gates:
+      - "Process capability Cpk above 1.33 for critical characteristics"
+      - "Cycle time achieves target production rate"
+      - "All measurement systems pass MSA study"
+
+  - name: "Team Training and Trial Production"
+    description: "Train production team and execute trial production runs"
+    inputs:
+      - "Validated production processes"
+      - "Work instruction documents"
+      - "Training materials"
+    steps:
+      - "Create standardized work instructions per station"
+      - "Conduct classroom training on product and process"
+      - "Execute hands-on training at each station"
+      - "Certify operators on critical processes"
+      - "Execute first trial production run of 10 units"
+      - "Inspect trial units against quality standards"
+      - "Identify and resolve process issues found during trial"
+      - "Execute second trial run of 50 units"
+      - "Measure quality metrics: first-pass yield, defect rate"
+      - "Refine work instructions based on trial findings"
+    outputs:
+      - "Trained and certified operators"
+      - "Trial production results"
+      - "Refined work instructions"
+    tools:
+      - "Training management system"
+      - "Quality inspection tools"
+      - "Work instruction system"
+    quality_gates:
+      - "All operators certified on assigned stations"
+      - "First-pass yield above 95% on trial run"
+      - "No safety-critical defects in trial production"
+
+  - name: "Production Launch"
+    description: "Ramp up to full production rate with quality monitoring"
+    inputs:
+      - "Validated processes and trained team"
+      - "Production schedule"
+      - "Quality monitoring plan"
+    steps:
+      - "Begin production at 25% of target rate"
+      - "Monitor quality closely with increased inspection"
+      - "Implement statistical process control on critical parameters"
+      - "Ramp to 50% of target rate after quality confirmation"
+      - "Address any quality or process issues during ramp"
+      - "Ramp to 75% of target rate"
+      - "Ramp to 100% of target production rate"
+      - "Verify sustained production at target rate"
+      - "Transition from launch to steady-state quality monitoring"
+      - "Generate production launch report"
+    outputs:
+      - "Production running at target rate"
+      - "Launch quality metrics"
+      - "Production launch report"
+    tools:
+      - "Production monitoring system"
+      - "SPC charting software"
+      - "Quality dashboard"
+    quality_gates:
+      - "Target production rate sustained for 5 consecutive days"
+      - "Quality metrics meet or exceed targets"
+      - "No recurring quality issues"

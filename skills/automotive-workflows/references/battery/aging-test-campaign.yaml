@@ -1,0 +1,166 @@
+name: aging-test-campaign
+version: 1.0.0
+description: "Battery aging test campaign workflow for characterizing degradation mechanisms and predicting lifetime"
+trigger: "During cell qualification, for lifetime model development, or when evaluating new operating strategies"
+domain: "Battery"
+safety_level: "High Voltage Safety"
+
+prerequisites:
+  - "Characterized cell samples with baseline performance data"
+  - "Environmental test chambers with long-term stability"
+  - "Battery cyclers configured for extended operation"
+  - "Data acquisition with reliable long-term logging"
+  - "Aging test matrix designed per statistical requirements"
+
+phases:
+  - name: "Test Matrix Design"
+    description: "Design the aging test matrix to cover relevant stress factors and their interactions"
+    inputs:
+      - "Target application usage profiles"
+      - "Cell manufacturer aging guidelines"
+      - "Statistical design of experiments methodology"
+    steps:
+      - "Identify primary aging stress factors: temperature, SOC, C-rate, DOD"
+      - "Define stress factor levels for test matrix"
+      - "Apply design of experiments methodology for factor combinations"
+      - "Include calendar aging conditions at multiple temperatures and SOC"
+      - "Include cycle aging conditions with varying DOD and C-rate"
+      - "Define reference performance test (RPT) protocol and intervals"
+      - "Calculate number of cell samples per condition for statistical significance"
+      - "Estimate total test duration and resource requirements"
+      - "Define data collection requirements and storage plan"
+      - "Create detailed test procedure for each aging condition"
+    outputs:
+      - "Aging test matrix with all conditions"
+      - "Reference performance test protocol"
+      - "Resource plan and schedule estimate"
+    tools:
+      - "Design of experiments software"
+      - "Test planning tool"
+      - "Resource scheduling system"
+    quality_gates:
+      - "Test matrix covers all critical stress factor combinations"
+      - "Minimum three cells per condition for statistical validity"
+      - "RPT interval sufficient to capture degradation trends"
+
+  - name: "Test Setup and Baseline"
+    description: "Set up test equipment and establish baseline performance for all cells"
+    inputs:
+      - "Aging test matrix"
+      - "Characterized cell samples"
+      - "Test equipment assignments"
+    steps:
+      - "Assign cells to test channels per aging matrix"
+      - "Configure cycler programs for each aging condition"
+      - "Configure environmental chambers for each temperature condition"
+      - "Verify safety limits are set on all test channels"
+      - "Execute baseline reference performance test on all cells"
+      - "Record baseline capacity, resistance, and EIS for each cell"
+      - "Verify all data logging systems are recording correctly"
+      - "Configure automated alerts for safety events"
+      - "Document initial conditions for all cells and channels"
+      - "Start aging test programs with synchronized timestamps"
+    outputs:
+      - "Baseline performance data for all cells"
+      - "Test channel configuration records"
+      - "Aging test start timestamp log"
+    tools:
+      - "Battery cycler system"
+      - "Environmental chambers"
+      - "Data acquisition system"
+    quality_gates:
+      - "Baseline capacity spread within 2% across test population"
+      - "All safety limits verified functional"
+      - "Data logging confirmed for all channels"
+
+  - name: "Ongoing Monitoring and RPTs"
+    description: "Monitor aging test progress and execute periodic reference performance tests"
+    inputs:
+      - "Running aging tests"
+      - "RPT schedule"
+      - "Previous RPT data for trend analysis"
+    steps:
+      - "Monitor daily cycling data for anomalies"
+      - "Check temperature chamber stability weekly"
+      - "Execute reference performance test at scheduled intervals"
+      - "Measure capacity at reference conditions during RPT"
+      - "Measure DC resistance at reference conditions during RPT"
+      - "Perform EIS measurement during RPT"
+      - "Calculate capacity fade and resistance growth metrics"
+      - "Plot degradation trends and compare across conditions"
+      - "Identify any cells showing abnormal degradation"
+      - "Replace failed equipment and document any test interruptions"
+      - "Update stakeholders with interim aging results quarterly"
+    outputs:
+      - "RPT data accumulated over campaign duration"
+      - "Degradation trend plots"
+      - "Quarterly progress reports"
+    tools:
+      - "Automated RPT scheduler"
+      - "Trend analysis dashboard"
+      - "Anomaly detection system"
+    quality_gates:
+      - "RPTs executed within scheduled tolerance"
+      - "Data quality verified at each RPT checkpoint"
+      - "Abnormal cells identified and investigated promptly"
+
+  - name: "Aging Model Development"
+    description: "Develop empirical aging model from accumulated test data"
+    inputs:
+      - "Complete aging test dataset"
+      - "Modeling framework and methodology"
+      - "Validation data from independent test conditions"
+    steps:
+      - "Extract aging metrics: capacity fade, resistance growth, energy fade"
+      - "Fit calendar aging model to storage condition data"
+      - "Fit cycle aging model to cycling condition data"
+      - "Develop combined aging model incorporating both mechanisms"
+      - "Identify dominant degradation mechanisms per condition"
+      - "Validate model against held-out test conditions"
+      - "Predict lifetime for target application profiles"
+      - "Perform sensitivity analysis on model parameters"
+      - "Quantify model prediction uncertainty"
+      - "Document model equations, parameters, and validity range"
+    outputs:
+      - "Parameterized aging model"
+      - "Model validation results"
+      - "Lifetime predictions for target applications"
+    tools:
+      - "Statistical fitting software"
+      - "Aging model framework"
+      - "Sensitivity analysis tool"
+    quality_gates:
+      - "Model fits training data with R-squared above 0.95"
+      - "Validation error below 5% on independent conditions"
+      - "Lifetime prediction includes confidence intervals"
+
+  - name: "Campaign Closure and Reporting"
+    description: "Conclude aging campaign, compile findings, and deliver results to stakeholders"
+    inputs:
+      - "Complete aging test data"
+      - "Aging model and lifetime predictions"
+      - "End-of-life test results if cells reached EOL criteria"
+    steps:
+      - "Perform final RPT on all surviving cells"
+      - "Disassemble selected cells for post-mortem analysis"
+      - "Conduct electrochemical post-mortem characterization"
+      - "Correlate post-mortem findings with aging model predictions"
+      - "Compile comprehensive aging test report"
+      - "Deliver aging model to BMS and system design teams"
+      - "Update cell warranty and lifetime specifications"
+      - "Archive all raw data with complete metadata"
+      - "Present findings to technical review board"
+      - "Define follow-up testing needs if gaps identified"
+    outputs:
+      - "Aging test campaign report"
+      - "Delivered aging model package"
+      - "Updated cell specifications"
+      - "Archived raw data"
+    tools:
+      - "Post-mortem analysis equipment"
+      - "Report generation tool"
+      - "Data archival system"
+    quality_gates:
+      - "Report includes all test conditions and results"
+      - "Aging model delivered with documentation"
+      - "Data archived with long-term accessibility ensured"

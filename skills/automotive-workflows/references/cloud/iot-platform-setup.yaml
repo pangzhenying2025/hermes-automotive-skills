@@ -1,0 +1,164 @@
+name: iot-platform-setup
+version: 1.0.0
+description: "Automotive IoT platform setup workflow for connecting vehicles to cloud backend services"
+trigger: "When establishing vehicle connectivity platform, onboarding new vehicle models, or migrating cloud providers"
+domain: "Cloud"
+safety_level: "QM"
+
+prerequisites:
+  - "Cloud provider account with required services provisioned"
+  - "Vehicle connectivity module specifications"
+  - "Data model for vehicle telemetry defined"
+  - "Security architecture including certificate management"
+  - "DevOps team with infrastructure-as-code experience"
+
+phases:
+  - name: "Infrastructure Architecture"
+    description: "Design the cloud infrastructure architecture for vehicle IoT connectivity"
+    inputs:
+      - "Expected fleet size and growth projections"
+      - "Data volume and frequency requirements"
+      - "Latency and availability requirements"
+    steps:
+      - "Design IoT message ingestion architecture"
+      - "Select IoT hub or broker service for MQTT connections"
+      - "Design message routing and processing pipeline"
+      - "Plan hot, warm, and cold data storage tiers"
+      - "Design event processing for real-time alerts"
+      - "Plan API gateway for external service access"
+      - "Design multi-region deployment for global fleet"
+      - "Plan disaster recovery and business continuity"
+      - "Design monitoring and observability architecture"
+      - "Create infrastructure-as-code templates"
+    outputs:
+      - "Cloud architecture document"
+      - "Infrastructure-as-code templates"
+      - "Capacity planning estimates"
+    tools:
+      - "Cloud architecture design tool"
+      - "Terraform or CloudFormation"
+      - "Cost estimation tool"
+    quality_gates:
+      - "Architecture reviewed by cloud solutions architect"
+      - "Cost estimate within budget"
+      - "Availability targets achievable with design"
+
+  - name: "Platform Deployment"
+    description: "Deploy the IoT platform infrastructure using automation"
+    inputs:
+      - "Infrastructure-as-code templates"
+      - "Cloud provider credentials"
+      - "Network and security configurations"
+    steps:
+      - "Deploy virtual network with subnet isolation"
+      - "Deploy IoT Hub with device provisioning service"
+      - "Configure MQTT broker with TLS and authentication"
+      - "Deploy message processing pipeline: functions and streams"
+      - "Deploy time-series database for telemetry storage"
+      - "Deploy blob storage for firmware and large data"
+      - "Configure API gateway with rate limiting"
+      - "Deploy monitoring stack: metrics, logs, traces"
+      - "Configure alerting rules for system health"
+      - "Execute infrastructure smoke tests"
+    outputs:
+      - "Deployed IoT platform infrastructure"
+      - "Smoke test results"
+      - "Monitoring dashboard URLs"
+    tools:
+      - "Infrastructure deployment pipeline"
+      - "Cloud CLI tools"
+      - "Monitoring platform"
+    quality_gates:
+      - "All services healthy and responsive"
+      - "TLS certificates valid and properly configured"
+      - "Monitoring capturing all required metrics"
+
+  - name: "Device Onboarding Pipeline"
+    description: "Implement the vehicle device registration and onboarding pipeline"
+    inputs:
+      - "Device provisioning service"
+      - "Vehicle identity management requirements"
+      - "Certificate management infrastructure"
+    steps:
+      - "Implement device registration API for manufacturing line"
+      - "Configure X.509 certificate-based authentication"
+      - "Implement automatic certificate provisioning per vehicle"
+      - "Create device twin schema for vehicle state management"
+      - "Implement device group management for fleet segmentation"
+      - "Configure device-to-cloud message routing rules"
+      - "Implement cloud-to-device command delivery"
+      - "Test device registration with simulated vehicle"
+      - "Test certificate rotation and renewal process"
+      - "Document onboarding procedure for production"
+    outputs:
+      - "Device onboarding pipeline operational"
+      - "Test results for registration and authentication"
+      - "Production onboarding documentation"
+    tools:
+      - "Device provisioning service"
+      - "Certificate authority"
+      - "Device simulator"
+    quality_gates:
+      - "Device registration completes within 30 seconds"
+      - "Certificate authentication verified end-to-end"
+      - "Device twin updates propagate correctly"
+
+  - name: "Data Pipeline Validation"
+    description: "Validate the complete data pipeline from vehicle to cloud storage and analytics"
+    inputs:
+      - "Deployed platform with onboarded test devices"
+      - "Telemetry data schema"
+      - "Data pipeline test scenarios"
+    steps:
+      - "Send simulated telemetry data through pipeline"
+      - "Verify data arrives in time-series database"
+      - "Check data integrity: no loss, no corruption"
+      - "Test pipeline throughput at expected peak load"
+      - "Verify real-time alerting triggers on threshold events"
+      - "Test data retention and lifecycle management"
+      - "Verify API query performance for telemetry retrieval"
+      - "Test data export for analytics and reporting"
+      - "Validate data privacy controls: anonymization, access"
+      - "Execute pipeline chaos testing for resilience"
+    outputs:
+      - "Data pipeline validation results"
+      - "Performance and throughput measurements"
+      - "Resilience test results"
+    tools:
+      - "Load testing tool"
+      - "Data validation framework"
+      - "Chaos engineering tool"
+    quality_gates:
+      - "Zero data loss at expected throughput"
+      - "Query latency within performance requirements"
+      - "Pipeline recovers from component failures"
+
+  - name: "Production Readiness and Launch"
+    description: "Prepare platform for production traffic and launch vehicle connectivity"
+    inputs:
+      - "Validated IoT platform"
+      - "Production traffic estimates"
+      - "Operations team"
+    steps:
+      - "Configure auto-scaling rules for production load"
+      - "Set up production monitoring and alerting thresholds"
+      - "Create runbooks for common operational scenarios"
+      - "Train operations team on platform management"
+      - "Execute production readiness review"
+      - "Conduct security review of production configuration"
+      - "Deploy to production environment"
+      - "Onboard pilot fleet of production vehicles"
+      - "Monitor pilot fleet data flow and system health"
+      - "Expand to full production fleet"
+    outputs:
+      - "Production-ready IoT platform"
+      - "Operational runbooks"
+      - "Pilot fleet monitoring results"
+    tools:
+      - "Production monitoring dashboard"
+      - "Runbook documentation system"
+      - "Fleet management interface"
+    quality_gates:
+      - "Production readiness review passed"
+      - "Security review approved"
+      - "Pilot fleet operates without issues"

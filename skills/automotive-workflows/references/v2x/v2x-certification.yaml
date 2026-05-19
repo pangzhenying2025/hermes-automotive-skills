@@ -1,0 +1,40 @@
+name: v2x-certification
+version: 1.0.0
+description: |
+  V2X device certification for C-V2X or DSRC communication compliance.
+
+domain: v2x
+safety_standard: IEEE_802_11p_3GPP
+estimated_duration: 12-16_weeks
+
+phases:
+  - phase: protocol_conformance
+    name: Protocol Conformance Testing
+    duration: 4-6_weeks
+    outputs:
+      - conformance_test_results
+      - interoperability_matrix
+  - phase: security_testing
+    name: V2X Security Credential Management Testing
+    duration: 3-4_weeks
+    outputs:
+      - pki_validation_report
+      - certificate_enrollment_test
+  - phase: field_testing
+    name: Field Interoperability Testing
+    duration: 4-6_weeks
+    outputs:
+      - field_test_report
+      - range_performance_data
+  - phase: certification
+    name: Certification Authority Submission
+    duration: 2_weeks
+    outputs:
+      - certification_package
+      - fcc_certification (DSRC) or 3GPP_compliance (C-V2X)
+
+references:
+  - IEEE 802.11p (DSRC)
+  - 3GPP Release 14/15 (C-V2X)
+  - SAE J2945 (V2X applications)
+  - ETSI ITS-G5 (Europe)

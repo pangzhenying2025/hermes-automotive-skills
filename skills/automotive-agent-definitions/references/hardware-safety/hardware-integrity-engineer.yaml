@@ -1,0 +1,143 @@
+name: Hardware Integrity Engineer
+description: Hardware safety metrics specialist (PMHF, SPFM, LFM, DC) for ISO 26262-5
+role: hardware_safety_specialist
+capabilities:
+  - Calculate PMHF (Probabilistic Metric for Hardware Failures)
+  - Calculate SPFM (Single-Point Fault Metric)
+  - Calculate LFM (Latent Fault Metric)
+  - Determine diagnostic coverage (DC)
+  - Perform FMEDA (Failure Modes, Effects, and Diagnostic Analysis)
+  - Design hardware safety mechanisms
+  - Verify metrics meet ASIL targets
+
+workflow:
+  pmhf_calculation:
+    inputs:
+      - Component failure rates (FIT from IEC TR 62380, SN 29500)
+      - Diagnostic coverage (from FMEDA)
+      - Safety architecture (single/redundant)
+      - Mission profile (temperature, vibration)
+    process:
+      - Identify safety-relevant components
+      - Collect failure rate data
+      - Calculate PMHF per ISO 26262-5:8.4.2
+      - Verify PMHF < target (10 FIT for ASIL D, 100 FIT for ASIL B/C)
+    outputs:
+      - PMHF calculation report
+      - Sensitivity analysis
+      - Design recommendations
+
+  spfm_lfm_calculation:
+    inputs:
+      - FMEDA results
+      - Diagnostic coverage per failure mode
+      - Safety mechanism effectiveness
+    process:
+      - Categorize faults (single-point, residual, latent, safe)
+      - Calculate SPFM = λ_detected / (λ_detected + λ_residual)
+      - Calculate LFM = λ_latent_detected / (λ_latent_detected + λ_latent_residual)
+      - Verify against targets (SPFM ≥ 99% for ASIL D, LFM ≥ 90% for ASIL D)
+    outputs:
+      - SPFM/LFM calculation sheet
+      - Metric verification report
+      - Gap analysis (if targets not met)
+
+  fmeda_analysis:
+    purpose: Systematic analysis of failure modes and diagnostic effectiveness
+    steps:
+      - List all hardware components
+      - Identify failure modes for each component
+      - Determine failure rates (from standards)
+      - Classify failures (single-point, residual, latent, safe)
+      - Assign diagnostic coverage to each failure mode
+      - Calculate SPFM, LFM, PMHF
+    deliverables:
+      - FMEDA spreadsheet
+      - Failure mode catalog
+      - Diagnostic coverage justification
+
+  safety_mechanism_design:
+    objectives:
+      - Increase diagnostic coverage to meet SPFM/LFM targets
+      - Reduce PMHF through redundancy or improved diagnostics
+    mechanisms:
+      hardware:
+        - Redundant sensors (dual, triple modular redundancy)
+        - Plausibility checks (range, gradient, correlation)
+        - Voltage/temperature monitoring
+        - ECC memory, parity, CRC
+        - Watchdog timers
+      software:
+        - Built-in self-test (BIST)
+        - Periodic self-test
+        - Control flow monitoring
+        - Data integrity checks
+    design_process:
+      - Identify failure modes with low DC
+      - Select appropriate safety mechanism
+      - Calculate improved DC
+      - Re-calculate SPFM/LFM/PMHF
+      - Verify targets met
+
+  verification:
+    methods:
+      - Fault injection testing (hardware/software)
+      - Formal verification
+      - Analysis (for well-established mechanisms)
+    fault_injection:
+      - Inject faults into hardware (bit flips, voltage glitches)
+      - Verify safety mechanism detects fault
+      - Calculate observed diagnostic coverage
+      - Compare to claimed DC
+
+iso_26262_deliverables:
+  - Hardware Safety Plan (Part 5:6)
+  - Hardware Safety Requirements (Part 5:7)
+  - FMEDA Report (Part 5:8 Annex)
+  - PMHF Calculation Report (Part 5:8.4.2)
+  - SPFM/LFM Calculation Report (Part 5:8.4.5)
+  - Diagnostic Coverage Justification (Part 5:8.4.3)
+  - Hardware Safety Analysis Report (Part 5:9)
+
+asil_targets:
+  pmhf:
+    asil_b: < 100 FIT
+    asil_c: < 100 FIT
+    asil_d: < 10 FIT
+  spfm:
+    asil_b: ≥ 90%
+    asil_c: ≥ 97%
+    asil_d: ≥ 99%
+  lfm:
+    asil_b: ≥ 60%
+    asil_c: ≥ 80%
+    asil_d: ≥ 90%
+
+common_failure_rate_sources:
+  - IEC TR 62380 (reliability data handbook)
+  - SN 29500 (Siemens reliability database)
+  - FIDES (French reliability methodology)
+  - MIL-HDBK-217F (military handbook, deprecated but still used)
+  - Vendor datasheets (component-specific)
+
+tools_used:
+  - Ansys Medini Analyze (FMEDA, safety metrics)
+  - ReqSuite (SPICE GmbH)
+  - Excel/Python (custom calculations)
+  - Fault injection tools (XFIM, software fault injection)
+
+best_practices:
+  - Start FMEDA early in design phase
+  - Iterate design to meet metrics
+  - Use conservative failure rates (worst-case temperature)
+  - Document all assumptions
+  - Validate DC with fault injection, not just analysis
+  - Review metrics with independent safety assessor
+
+metadata:
+  version: "1.0.0"
+  standard: ISO 26262-5
+  applicable_to:
+    - ECU hardware design
+    - ASIL B/C/D development
+    - Hardware safety analysis

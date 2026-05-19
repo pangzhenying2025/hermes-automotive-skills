@@ -1,0 +1,288 @@
+name: penetration-test-campaign
+version: 1.0.0
+description: |
+  Security penetration testing workflow for automotive ECUs and vehicle systems.
+  Follows ISO 21434 cybersecurity requirements with ethical hacking methodology
+  to identify vulnerabilities before malicious actors can exploit them.
+
+domain: security
+safety_standard: ISO_21434
+estimated_duration: 3-4_weeks
+
+phases:
+  - phase: scope_definition
+    name: Penetration Test Scope and Planning
+    description: Define test scope, rules of engagement, and threat scenarios
+    duration: 3-5_days
+    inputs:
+      - tara_analysis (Threat Analysis and Risk Assessment)
+      - system_architecture_diagram
+      - attack_surface_map
+      - cybersecurity_requirements
+      - asset_inventory
+    outputs:
+      - pentest_scope_document
+      - rules_of_engagement
+      - test_scenarios_matrix
+      - threat_actor_profiles
+      - legal_authorization
+    tools:
+      - OWASP Automotive Threat Modeling
+      - STRIDE methodology
+      - CVSS calculator
+    skills_used:
+      - cybersecurity-assessment
+      - threat-modeling
+      - risk-analysis
+    agents_involved:
+      - security-engineer
+      - penetration-tester
+      - system-architect
+    tasks:
+      - Define test boundaries (in-scope vs out-of-scope systems)
+      - Identify critical assets (firmware, calibration, keys)
+      - Map attack vectors (OBD-II, CAN, WiFi, cellular, USB)
+      - Define threat actor capabilities (script kiddie to nation-state)
+      - Establish constraints (no destructive testing on production vehicles)
+      - Obtain management approval and legal authorization
+    acceptance_criteria:
+      - Scope approved by stakeholders
+      - Legal authorization signed
+      - Test scenarios prioritized by risk level
+    safety_considerations:
+      - Define safety stop criteria (no testing while vehicle moving)
+      - Establish rollback procedures for bricked ECUs
+
+  - phase: reconnaissance
+    name: Information Gathering and Reconnaissance
+    description: Passive and active reconnaissance to map attack surface
+    duration: 3-5_days
+    inputs:
+      - pentest_scope_document
+      - vehicle_documentation
+      - publicly_available_information
+    outputs:
+      - attack_surface_inventory
+      - network_topology_map
+      - firmware_inventory
+      - exposed_services_list
+      - osint_report
+    tools:
+      - Wireshark (network sniffing)
+      - Nmap (port scanning)
+      - CANoe (CAN bus monitoring)
+      - binwalk (firmware analysis)
+      - Shodan (exposed device search)
+    skills_used:
+      - network-analysis
+      - reverse-engineering
+      - osint (Open Source Intelligence)
+    agents_involved:
+      - penetration-tester
+      - reverse-engineer
+    tasks:
+      passive_reconnaissance:
+        - Collect publicly available information (manuals, patents, forums)
+        - Identify software versions from OBD-II diagnostic data
+        - Monitor CAN bus traffic passively
+        - Analyze WiFi/Bluetooth broadcasts
+      active_reconnaissance:
+        - Scan IP network (if vehicle has Ethernet/cellular)
+        - Enumerate CAN message IDs (0x000-0x7FF)
+        - Probe UDS diagnostic services (0x10, 0x22, 0x27, 0x2E)
+        - Identify exposed debug interfaces (JTAG, UART)
+        - Dump firmware from ECUs (via bootloader or JTAG)
+    acceptance_criteria:
+      - Complete attack surface mapped
+      - All exposed services documented
+      - Firmware images acquired for analysis
+    safety_considerations:
+      - Passive reconnaissance preferred to avoid triggering DTCs
+
+  - phase: vulnerability_analysis
+    name: Vulnerability Identification and Analysis
+    description: Analyze firmware and protocols for security weaknesses
+    duration: 1-2_weeks
+    inputs:
+      - firmware_images
+      - network_traffic_captures
+      - protocol_specifications
+      - attack_surface_inventory
+    outputs:
+      - vulnerability_report
+      - exploitability_assessment
+      - proof_of_concept_code
+      - cve_analysis
+    tools:
+      - Ghidra/IDA Pro (reverse engineering)
+      - AFL/LibFuzzer (fuzzing)
+      - Scapy (packet crafting)
+      - CANToolz (CAN fuzzing)
+      - Burp Suite (web API testing if applicable)
+    skills_used:
+      - reverse-engineering
+      - vulnerability-research
+      - exploit-development
+    agents_involved:
+      - security-researcher
+      - reverse-engineer
+    vulnerability_categories:
+      authentication_bypass:
+        - Weak seed algorithms (predictable UDS security access)
+        - Hardcoded keys in firmware
+        - Replay attacks on authentication tokens
+      injection_attacks:
+        - CAN message injection (spoofing critical messages)
+        - Command injection via diagnostic services
+        - SQL injection in backend APIs (telematics)
+      buffer_overflows:
+        - Stack overflow in UDS message handlers
+        - Heap corruption in CAN frame parsing
+      cryptographic_weaknesses:
+        - Use of deprecated algorithms (DES, MD5)
+        - Insufficient key length (<128-bit)
+        - Lack of secure boot verification
+      dos_attacks:
+        - CAN bus flooding (denial of service)
+        - Resource exhaustion (memory leak, CPU spike)
+    tasks:
+      - Disassemble firmware with Ghidra
+      - Identify weak cryptography and hardcoded secrets
+      - Fuzz CAN message handlers for crashes
+      - Analyze UDS security access seed/key algorithm
+      - Search for known CVEs in third-party libraries
+      - Develop proof-of-concept exploits
+    acceptance_criteria:
+      - All discovered vulnerabilities documented with CVSS score
+      - Exploitability demonstrated with PoC
+      - Vulnerabilities prioritized by severity
+    safety_considerations:
+      - Flag any vulnerability affecting safety-critical functions
+
+  - phase: exploitation
+    name: Exploitation and Impact Demonstration
+    description: Demonstrate real-world exploitability of identified vulnerabilities
+    duration: 1-2_weeks
+    inputs:
+      - vulnerability_report
+      - proof_of_concept_code
+      - test_vehicle_access
+    outputs:
+      - exploitation_report
+      - attack_chain_documentation
+      - impact_videos
+      - remediation_recommendations
+    tools:
+      - CANToolz (CAN injection)
+      - Metasploit (exploit framework)
+      - Custom exploit scripts
+      - JTAG debugger (if needed)
+    skills_used:
+      - exploit-development
+      - automotive-hacking
+    agents_involved:
+      - penetration-tester
+      - security-researcher
+    attack_scenarios:
+      remote_code_execution:
+        - Exploit buffer overflow in telematics unit
+        - Achieve arbitrary code execution on ECU
+        - Demonstrate ability to flash malicious firmware
+      vehicle_control:
+        - Inject CAN messages to control steering/braking
+        - Disable safety systems (ABS, ESC)
+        - Unlock doors remotely
+      data_exfiltration:
+        - Extract cryptographic keys from ECU
+        - Dump personal data from infotainment system
+        - Clone key fob via RFID relay attack
+    tasks:
+      - Develop full exploit chain from initial access to impact
+      - Demonstrate on test vehicle in controlled environment
+      - Record video evidence of successful exploitation
+      - Document all steps for reproducibility
+      - Propose mitigations for each vulnerability
+    acceptance_criteria:
+      - At least 3 high-severity vulnerabilities demonstrated
+      - Impact clearly shown (not just theoretical)
+      - Remediation recommendations provided
+    safety_considerations:
+      - Testing only on stationary vehicle in secure facility
+      - No permanent damage to vehicle
+
+  - phase: reporting
+    name: Penetration Test Reporting and Remediation
+    description: Deliver comprehensive security assessment report with actionable recommendations
+    duration: 1_week
+    inputs:
+      - all_test_results
+      - exploitation_videos
+      - vulnerability_database
+    outputs:
+      - executive_summary
+      - technical_penetration_test_report
+      - remediation_roadmap
+      - residual_risk_assessment
+    tools:
+      - Microsoft Word/LaTeX
+      - CVSS calculator
+      - Risk matrix
+    skills_used:
+      - technical-writing
+      - risk-management
+    agents_involved:
+      - security-engineer
+      - technical-writer
+    report_sections:
+      executive_summary:
+        - High-level findings for management
+        - Risk rating (Critical, High, Medium, Low)
+        - Business impact assessment
+      methodology:
+        - Test scope and approach
+        - Tools and techniques used
+        - Limitations and constraints
+      findings:
+        - Detailed vulnerability descriptions
+        - CVSS scores and severity ratings
+        - Exploitation steps with screenshots
+        - Impact analysis per ISO 21434
+      recommendations:
+        - Short-term mitigations (patches, workarounds)
+        - Long-term improvements (secure boot, encryption)
+        - Architectural changes (network segmentation)
+    acceptance_criteria:
+      - Report reviewed by security team
+      - Findings validated by product team
+      - Remediation plan approved with timelines
+    safety_considerations:
+      - Prioritize remediation of safety-critical vulnerabilities
+
+quality_gates:
+  - gate: scope_approval
+    phase: scope_definition
+    criteria:
+      - Scope approved by stakeholders
+      - Legal authorization obtained
+  - gate: vulnerability_validation
+    phase: vulnerability_analysis
+    criteria:
+      - All findings verified as true positives
+  - gate: report_delivery
+    phase: reporting
+    criteria:
+      - Report delivered to customer
+      - Remediation plan agreed
+
+metrics:
+  - Number of vulnerabilities found (by severity)
+  - CVSS scores
+  - Exploitability rating
+  - Remediation time
+  - Residual risk level
+
+references:
+  - ISO 21434 (Cybersecurity engineering)
+  - UNECE WP.29 (Cyber security and software updates)
+  - OWASP Automotive Top 10
+  - SAE J3061 (Cybersecurity guidebook)

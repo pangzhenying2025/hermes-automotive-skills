@@ -1,0 +1,162 @@
+name: adaptive-service-deploy
+version: 1.0.0
+description: "AUTOSAR Adaptive Platform service deployment workflow for high-performance ECUs and SOC-based systems"
+trigger: "When deploying new adaptive services, updating service instances, or migrating to new platform versions"
+domain: "AUTOSAR"
+standard: "AUTOSAR Adaptive Platform R22-11"
+
+prerequisites:
+  - "Adaptive Platform runtime installed on target hardware"
+  - "Service interface definitions in ARXML format"
+  - "Application binaries compiled for target architecture"
+  - "Execution manifest templates available"
+  - "Network binding configuration for SOME/IP or DDS"
+
+phases:
+  - name: "Service Design Review"
+    description: "Review service interfaces and deployment architecture before implementation"
+    inputs:
+      - "Service interface ARXML definitions"
+      - "Deployment architecture diagram"
+      - "Resource allocation plan for target hardware"
+    steps:
+      - "Review service interface definitions for completeness"
+      - "Verify method, event, and field definitions match requirements"
+      - "Validate serialization properties for all data types"
+      - "Review service discovery configuration parameters"
+      - "Check quality of service requirements per service instance"
+      - "Verify resource isolation between applications"
+      - "Review inter-machine communication requirements"
+      - "Validate backward compatibility with existing service consumers"
+      - "Assess impact on platform resource consumption"
+    outputs:
+      - "Reviewed service interface specifications"
+      - "Resource allocation approval"
+      - "Compatibility assessment report"
+    tools:
+      - "ARXML editor and validator"
+      - "Architecture modeling tool"
+      - "Resource estimation tool"
+    quality_gates:
+      - "All service interfaces pass ARXML schema validation"
+      - "Resource allocation within hardware capacity"
+      - "Backward compatibility confirmed or migration plan defined"
+
+  - name: "Manifest Configuration"
+    description: "Create execution and service instance manifests for the adaptive application"
+    inputs:
+      - "Service interface definitions"
+      - "Application binary and library dependencies"
+      - "Process scheduling requirements"
+    steps:
+      - "Create execution manifest with process configuration"
+      - "Define startup and shutdown dependencies between processes"
+      - "Configure resource groups and scheduling parameters"
+      - "Create service instance manifest for provided services"
+      - "Create service instance manifest for required services"
+      - "Configure SOME/IP service discovery parameters"
+      - "Define network endpoints and port assignments"
+      - "Configure health monitoring and supervision parameters"
+      - "Set up logging and diagnostic reporting configuration"
+      - "Configure persistency deployment for state storage"
+    outputs:
+      - "Execution manifest ARXML files"
+      - "Service instance manifest ARXML files"
+      - "Network binding configuration"
+    tools:
+      - "Adaptive Platform configurator"
+      - "Manifest editor"
+      - "Network configuration tool"
+    quality_gates:
+      - "All manifests pass schema validation"
+      - "No port conflicts in network configuration"
+      - "Service discovery parameters consistent across instances"
+
+  - name: "Build and Package"
+    description: "Build the application, package with manifests, and create deployment artifacts"
+    inputs:
+      - "Application source code"
+      - "Configured manifests"
+      - "Platform SDK and toolchain"
+    steps:
+      - "Compile application against Adaptive Platform SDK"
+      - "Link with required platform libraries"
+      - "Run static analysis on application code"
+      - "Package application binary with execution manifest"
+      - "Package service instance manifests"
+      - "Create software package with version metadata"
+      - "Sign package with code signing certificate"
+      - "Generate package integrity hash"
+      - "Create deployment descriptor for update manager"
+    outputs:
+      - "Signed software package"
+      - "Deployment descriptor"
+      - "Build report with static analysis results"
+    tools:
+      - "Cross-compilation toolchain"
+      - "Package builder"
+      - "Code signing tool"
+    quality_gates:
+      - "Build completes without errors or critical warnings"
+      - "Static analysis shows no critical findings"
+      - "Package signature verified successfully"
+
+  - name: "Deployment and Verification"
+    description: "Deploy the service to target hardware and verify correct operation"
+    inputs:
+      - "Signed software package"
+      - "Target hardware with Adaptive Platform"
+      - "Deployment procedure"
+    steps:
+      - "Transfer package to target using update manager"
+      - "Verify package integrity after transfer"
+      - "Install application using platform package manager"
+      - "Verify process starts according to execution manifest"
+      - "Confirm service registration with service discovery"
+      - "Verify service is discoverable by consumer applications"
+      - "Execute functional test of service methods and events"
+      - "Verify health monitoring reports healthy status"
+      - "Check resource consumption matches allocation"
+      - "Execute communication test with remote service instances"
+    outputs:
+      - "Deployment verification report"
+      - "Service availability confirmation"
+      - "Resource utilization measurements"
+    tools:
+      - "Update manager client"
+      - "Service discovery monitor"
+      - "Platform diagnostic tool"
+    quality_gates:
+      - "Service registered and discoverable within timeout"
+      - "All functional tests pass"
+      - "Resource consumption within allocated limits"
+
+  - name: "Integration Testing"
+    description: "Validate the deployed service in the context of the full system"
+    inputs:
+      - "Deployed service on target hardware"
+      - "Integration test specifications"
+      - "System-level test environment"
+    steps:
+      - "Execute end-to-end communication tests with all consumers"
+      - "Verify service behavior under nominal load"
+      - "Test service behavior under overload conditions"
+      - "Verify graceful degradation when dependencies unavailable"
+      - "Test service restart and recovery scenarios"
+      - "Execute long-running stability test over 24 hours"
+      - "Verify no memory leaks or resource exhaustion"
+      - "Test concurrent access from multiple consumers"
+      - "Validate logging output for diagnostic completeness"
+      - "Generate integration test report"
+    outputs:
+      - "Integration test results"
+      - "Stability test report"
+      - "Performance characterization data"
+    tools:
+      - "Integration test framework"
+      - "Load generation tool"
+      - "Performance monitoring dashboard"
+    quality_gates:
+      - "All integration tests pass"
+      - "No resource leaks detected over 24 hours"
+      - "Service meets latency requirements under nominal load"

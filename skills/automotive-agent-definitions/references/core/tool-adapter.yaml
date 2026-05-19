@@ -1,0 +1,498 @@
+# Tool Adapter Agent
+# Abstraction layer for commercial and opensource tool integration
+
+name: tool-adapter
+version: "1.0.0"
+description: |
+  Provides a unified interface for interacting with both commercial and
+  opensource automotive development tools, enabling seamless tool switching
+  and migration paths.
+
+capabilities:
+  - "Detect installed commercial and opensource tools"
+  - "Provide unified interface across tool vendors"
+  - "Manage tool migration paths between commercial and opensource"
+  - "Validate tool licenses and availability"
+  - "Abstract vendor-specific APIs into common commands"
+metadata:
+  author: Automotive Claude Code Team
+  license: MIT
+  domain: orchestration
+  keywords:
+    - tool-abstraction
+    - adapter
+    - integration
+    - commercial
+    - opensource
+
+# Adapter Registry
+adapters:
+  autosar:
+    tresos:
+      type: commercial
+      vendor: Elektrobit
+      description: EB tresos Studio for AUTOSAR BSW configuration
+      detection:
+        paths:
+          - "C:\\EB\\tresos"
+          - "/opt/EB/tresos"
+        env_vars:
+          - TRESOS_HOME
+        executables:
+          - tresos_cmd.sh
+          - tresos_cmd.bat
+      license:
+        type: node-locked
+        file: license/license.lic
+      adapter_module: tools.adapters.autosar.tresos_adapter
+
+    davinci:
+      type: commercial
+      vendor: Vector
+      description: DaVinci Developer/Configurator for AUTOSAR
+      detection:
+        paths:
+          - "C:\\Vector\\DaVinci"
+          - "/opt/Vector/DaVinci"
+        env_vars:
+          - DAVINCI_HOME
+        executables:
+          - davinci.exe
+      license:
+        type: flexnet
+        server_env: VECTOR_LICENSE_FILE
+      adapter_module: tools.adapters.autosar.davinci_adapter
+
+    arctic_core:
+      type: opensource
+      vendor: ArcCore
+      description: Arctic Core open-source AUTOSAR stack
+      detection:
+        paths:
+          - "/opt/arccore"
+        env_vars:
+          - ARCCORE_HOME
+        executables:
+          - arctic_core
+      license:
+        type: gpl-v3
+        always_valid: true
+      adapter_module: tools.adapters.autosar.arctic_core_adapter
+
+  calibration:
+    inca:
+      type: commercial
+      vendor: ETAS
+      description: INCA for ECU calibration and measurement
+      detection:
+        paths:
+          - "C:\\ETAS\\INCA"
+        env_vars:
+          - INCA_HOME
+        executables:
+          - INCA.exe
+      license:
+        type: dongle
+        hardware_required: true
+      adapter_module: tools.adapters.calibration.inca_adapter
+
+    canape:
+      type: commercial
+      vendor: Vector
+      description: CANape for ECU calibration
+      detection:
+        paths:
+          - "C:\\Vector\\CANape"
+        env_vars:
+          - CANAPE_HOME
+        executables:
+          - CANape.exe
+      license:
+        type: flexnet
+        server_env: VECTOR_LICENSE_FILE
+      adapter_module: tools.adapters.calibration.canape_adapter
+
+    openxcp:
+      type: opensource
+      vendor: Community
+      description: Open-source XCP implementation
+      detection:
+        python_packages:
+          - pyxcp
+        executables:
+          - xcp-cli
+      license:
+        type: mit
+        always_valid: true
+      adapter_module: tools.adapters.calibration.openxcp_adapter
+
+  network:
+    canoe:
+      type: commercial
+      vendor: Vector
+      description: CANoe for network simulation and analysis
+      detection:
+        paths:
+          - "C:\\Vector\\CANoe"
+        env_vars:
+          - CANOE_HOME
+        executables:
+          - CANoe64.exe
+      license:
+        type: flexnet
+        server_env: VECTOR_LICENSE_FILE
+      adapter_module: tools.adapters.network.canoe_adapter
+
+    canalyzer:
+      type: commercial
+      vendor: Vector
+      description: CANalyzer for bus analysis
+      detection:
+        paths:
+          - "C:\\Vector\\CANalyzer"
+        executables:
+          - CANalyzer64.exe
+      license:
+        type: flexnet
+        server_env: VECTOR_LICENSE_FILE
+      adapter_module: tools.adapters.network.canalyzer_adapter
+
+    savvycan:
+      type: opensource
+      vendor: EVTV
+      description: SavvyCAN for CAN bus analysis
+      detection:
+        executables:
+          - SavvyCAN
+          - savvycan
+        flatpak:
+          - com.evtv.savvycan
+      license:
+        type: gpl-v3
+        always_valid: true
+      adapter_module: tools.adapters.network.savvycan_adapter
+
+  mbd:
+    simulink:
+      type: commercial
+      vendor: MathWorks
+      description: Simulink for model-based design
+      detection:
+        paths:
+          - "C:\\Program Files\\MATLAB"
+          - "/usr/local/MATLAB"
+        env_vars:
+          - MATLAB_ROOT
+        executables:
+          - matlab
+          - matlab.exe
+      license:
+        type: flexnet
+        server_env: MLM_LICENSE_FILE
+      adapter_module: tools.adapters.mbd.simulink_adapter
+
+    targetlink:
+      type: commercial
+      vendor: dSPACE
+      description: TargetLink for production code generation
+      detection:
+        paths:
+          - "C:\\dSPACE\\TargetLink"
+        executables:
+          - targetlink.exe
+      license:
+        type: flexnet
+        server_env: DSPACE_LICENSE
+      adapter_module: tools.adapters.mbd.targetlink_adapter
+
+    openmodelica:
+      type: opensource
+      vendor: Open Source Modelica Consortium
+      description: OpenModelica for Modelica simulation
+      detection:
+        paths:
+          - "/opt/openmodelica"
+          - "/usr/lib/openmodelica"
+        env_vars:
+          - OPENMODELICAHOME
+        executables:
+          - omc
+          - OMEdit
+      license:
+        type: osmc-pl
+        always_valid: true
+      adapter_module: tools.adapters.mbd.openmodelica_adapter
+
+  safety:
+    medini_analyze:
+      type: commercial
+      vendor: ANSYS
+      description: medini analyze for safety analysis
+      detection:
+        paths:
+          - "C:\\Program Files\\ANSYS Inc\\medini"
+        executables:
+          - medini.exe
+      license:
+        type: flexnet
+        server_env: ANSYSLMD_LICENSE_FILE
+      adapter_module: tools.adapters.safety.medini_adapter
+
+    cppcheck:
+      type: opensource
+      vendor: Community
+      description: Cppcheck static analysis
+      detection:
+        executables:
+          - cppcheck
+        package_managers:
+          apt: cppcheck
+          brew: cppcheck
+          choco: cppcheck
+      license:
+        type: gpl-v3
+        always_valid: true
+      adapter_module: tools.adapters.safety.cppcheck_adapter
+
+  hil_sil:
+    scalexio:
+      type: commercial
+      vendor: dSPACE
+      description: SCALEXIO real-time system
+      detection:
+        paths:
+          - "C:\\dSPACE\\SCALEXIO"
+        executables:
+          - ConfigurationDesk.exe
+      license:
+        type: hardware
+        hardware_required: true
+      adapter_module: tools.adapters.hil_sil.scalexio_adapter
+
+    carla:
+      type: opensource
+      vendor: Intel/Toyota
+      description: CARLA autonomous driving simulator
+      detection:
+        paths:
+          - "/opt/carla-simulator"
+        executables:
+          - CarlaUE4.sh
+          - CarlaUE4.exe
+        python_packages:
+          - carla
+      license:
+        type: mit
+        always_valid: true
+      adapter_module: tools.adapters.hil_sil.carla_adapter
+
+  embedded:
+    trace32:
+      type: commercial
+      vendor: Lauterbach
+      description: TRACE32 for debugging and tracing
+      detection:
+        paths:
+          - "C:\\T32"
+          - "/opt/t32"
+        env_vars:
+          - T32SYS
+        executables:
+          - t32marm.exe
+          - t32marm
+      license:
+        type: hardware
+        hardware_required: true
+      adapter_module: tools.adapters.embedded.trace32_adapter
+
+    openocd:
+      type: opensource
+      vendor: Community
+      description: Open On-Chip Debugger
+      detection:
+        executables:
+          - openocd
+        package_managers:
+          apt: openocd
+          brew: open-ocd
+          choco: openocd
+      license:
+        type: gpl-v2
+        always_valid: true
+      adapter_module: tools.adapters.embedded.openocd_adapter
+
+  diagnostics:
+    vflash:
+      type: commercial
+      vendor: Vector
+      description: vFlash for ECU flashing
+      detection:
+        paths:
+          - "C:\\Vector\\vFlash"
+        executables:
+          - vFlash.exe
+      license:
+        type: flexnet
+        server_env: VECTOR_LICENSE_FILE
+      adapter_module: tools.adapters.diagnostics.vflash_adapter
+
+    python_uds:
+      type: opensource
+      vendor: Community
+      description: Python UDS library
+      detection:
+        python_packages:
+          - udsoncan
+          - python-can
+      license:
+        type: mit
+        always_valid: true
+      adapter_module: tools.adapters.diagnostics.python_uds_adapter
+
+# Tool Selection Strategy
+selection:
+  default_preference: auto
+
+  strategies:
+    auto:
+      description: Prefer commercial if licensed, fall back to opensource
+      priority:
+        - licensed_commercial
+        - opensource
+        - unlicensed_commercial
+
+    commercial_only:
+      description: Only use commercial tools
+      priority:
+        - licensed_commercial
+      error_on_unavailable: true
+
+    opensource_only:
+      description: Only use opensource tools
+      priority:
+        - opensource
+      error_on_unavailable: true
+
+    cost_optimized:
+      description: Minimize licensing costs
+      priority:
+        - opensource
+        - licensed_commercial
+
+# Migration Paths
+migrations:
+  tresos_to_arctic_core:
+    source: tresos
+    target: arctic_core
+    complexity: high
+    steps:
+      - export_arxml_from_tresos
+      - convert_bsw_config
+      - adapt_to_arctic_core_api
+      - validate_functionality
+    documentation: knowledge-base/tools/migrations/tresos-to-arctic-core.md
+
+  canoe_to_savvycan:
+    source: canoe
+    target: savvycan
+    complexity: medium
+    steps:
+      - export_dbc_files
+      - configure_savvycan_connections
+      - migrate_signal_definitions
+      - setup_logging_format
+    documentation: knowledge-base/tools/migrations/canoe-to-savvycan.md
+
+  simulink_to_openmodelica:
+    source: simulink
+    target: openmodelica
+    complexity: high
+    steps:
+      - export_model_to_fmi
+      - convert_to_modelica
+      - adapt_solver_settings
+      - validate_simulation_results
+    documentation: knowledge-base/tools/migrations/simulink-to-openmodelica.md
+
+  inca_to_openxcp:
+    source: inca
+    target: openxcp
+    complexity: medium
+    steps:
+      - export_a2l_file
+      - configure_xcp_connection
+      - setup_measurement_points
+      - validate_calibration_access
+    documentation: knowledge-base/tools/migrations/inca-to-openxcp.md
+
+# Detection Configuration
+detection:
+  scan_on_startup: true
+  cache_results: true
+  cache_ttl_seconds: 3600
+  parallel_detection: true
+
+  custom_paths:
+    - ${HOME}/tools
+    - /opt/automotive
+    - C:\\Automotive
+
+# Unified Command Interface
+commands:
+  generate:
+    description: Generate code or configuration
+    supported_by:
+      - tresos
+      - davinci
+      - arctic_core
+      - simulink
+      - targetlink
+      - openmodelica
+
+  analyze:
+    description: Analyze code, network, or safety
+    supported_by:
+      - canoe
+      - canalyzer
+      - savvycan
+      - medini_analyze
+      - cppcheck
+
+  flash:
+    description: Flash ECU firmware
+    supported_by:
+      - vflash
+      - python_uds
+      - openocd
+
+  debug:
+    description: Debug embedded targets
+    supported_by:
+      - trace32
+      - openocd
+
+  simulate:
+    description: Run simulation
+    supported_by:
+      - simulink
+      - openmodelica
+      - carla
+      - scalexio
+
+  calibrate:
+    description: ECU calibration operations
+    supported_by:
+      - inca
+      - canape
+      - openxcp
+
+# Permissions
+permissions:
+  required:
+    - filesystem:read
+    - process:execute
+
+  optional:
+    - network:localhost
+    - hardware:usb
+    - hardware:ethernet

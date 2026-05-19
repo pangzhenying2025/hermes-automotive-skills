@@ -1,0 +1,520 @@
+name: xcp-calibration-workflow
+version: 1.0.0
+description: |
+  ECU calibration workflow using XCP/CCP protocol for measurement and calibration.
+  Covers A2L file management, online measurement, parameter tuning, and production dataset release.
+
+domain: calibration
+protocol: XCP_CCP
+estimated_duration: 8-16_weeks
+
+phases:
+  - phase: measurement_planning
+    name: Measurement and Calibration Planning
+    description: Define measurement variables and calibration parameters for the project
+    duration: 1-2_weeks
+    inputs:
+      - ecu_software_specification
+      - vehicle_testing_requirements
+      - calibration_requirements_document
+      - regulatory_test_procedures (WLTC, RDE, emissions)
+    outputs:
+      - measurement_plan (signals to record)
+      - calibration_parameter_list
+      - test_scenario_definitions
+      - data_acquisition_strategy
+    tools:
+      - Excel / calibration databases
+      - ETAS ASCET (model documentation)
+      - Confluence (documentation)
+    skills_used:
+      - calibration-engineering
+      - test-planning
+      - requirements-analysis
+    agents_involved:
+      - calibration-engineer
+      - test-engineer
+      - controls-engineer
+    planning_activities:
+      measurement_identification:
+        - Identify signals for monitoring (sensor inputs, control outputs, internal states)
+        - Classify by measurement rate (10ms, 100ms, 1s)
+        - Determine data logging memory requirements
+        - Prioritize critical signals for real-time display
+      calibration_parameter_identification:
+        - Identify tunable parameters (lookup tables, scalar values, curves)
+        - Classify by subsystem (engine, transmission, ADAS, battery)
+        - Determine calibration authority (OEM, supplier, test engineer)
+        - Define permissible value ranges and safety limits
+      test_scenario_definition:
+        - Define drive cycles (WLTC, NEDC, RDE, customer-specific)
+        - Define static tests (idle, ramp, step response)
+        - Define environmental conditions (temperature, altitude)
+        - Define instrumentation requirements (dyno, emissions bench)
+    acceptance_criteria:
+      - Measurement plan approved by stakeholders
+      - Calibration parameter list complete
+      - Test scenarios cover all functional requirements
+      - Resource requirements estimated (personnel, equipment, time)
+
+  - phase: a2l_setup
+    name: A2L File Setup and XCP Configuration
+    description: Generate and configure A2L file for ECU access via XCP protocol
+    duration: 1-2_weeks
+    inputs:
+      - ecu_hex_file (compiled software)
+      - linker_map_file
+      - xcp_slave_configuration (in ECU software)
+    outputs:
+      - a2l_file (ASAM MCD-2MC format)
+      - xcp_connection_configuration
+      - calibration_database (ETAS INCA DBase, Vector CANape project)
+      - validation_report (A2L correctness)
+    tools:
+      - Vector CANape (A2L editor and validation)
+      - ETAS INCA (A2L import and database creation)
+      - ASAP2 Tool Set (A2L generation and checking)
+      - Python scripts (automated A2L generation from ELF)
+    skills_used:
+      - a2l-file-management
+      - xcp-protocol-configuration
+      - calibration-database-setup
+    agents_involved:
+      - calibration-engineer
+      - embedded-software-engineer
+    a2l_generation_process:
+      symbol_extraction:
+        - Extract symbols from ELF file (addresses, data types, sizes)
+        - Identify measurement variables (MEASUREMENT objects)
+        - Identify calibration parameters (CHARACTERISTIC objects)
+        - Extract ECU information (project name, version, supplier)
+      a2l_authoring:
+        - Create A2L file header (ASAP2 version, project info)
+        - Define MOD_PAR (module parameters, XCP settings)
+        - Define MOD_COMMON (memory layout, byte order)
+        - Define MEASUREMENT objects (name, address, data type, conversion)
+        - Define CHARACTERISTIC objects (scalars, curves, maps)
+        - Define COMPU_METHOD (conversion formulas, physical units)
+        - Define RECORD_LAYOUT (memory layout for characteristics)
+      xcp_configuration:
+        - XCP transport layer (CAN, CAN-FD, Ethernet, FlexRay)
+        - XCP connection parameters (address, timing)
+        - XCP resource protection (calibration, DAQ, STIM, PGM)
+        - Memory segments (RAM, Flash, EEPROM)
+        - Page switching (if supported)
+    a2l_validation:
+      - Syntax check (ASAM MCD-2MC compliance)
+      - Address range validation (within ECU memory map)
+      - Data type consistency checks
+      - Test connection with calibration tool
+      - Verify read/write access to sample parameters
+    acceptance_criteria:
+      - A2L file passes syntax validation
+      - XCP connection established successfully
+      - Sample measurements readable
+      - Sample calibration parameter writeable
+      - Database imported into calibration tools
+
+  - phase: online_measurement
+    name: Online Measurement and Data Acquisition
+    description: Connect to ECU via XCP, configure DAQ lists, and record measurement data
+    duration: 2-4_weeks (iterative during testing)
+    inputs:
+      - a2l_file
+      - xcp_connection_configuration
+      - test_vehicle_with_ecu
+      - measurement_plan
+    outputs:
+      - measurement_data_files (MDF4, MAT, CSV formats)
+      - daq_list_configurations
+      - measurement_validation_reports
+    tools:
+      - ETAS INCA (measurement and calibration)
+      - Vector CANape (measurement and calibration)
+      - ETAS MDA (measurement data analyzer)
+      - ATI VISION (data acquisition and analysis)
+      - MATLAB (data post-processing)
+    skills_used:
+      - xcp-measurement
+      - data-acquisition
+      - signal-validation
+    agents_involved:
+      - calibration-engineer
+      - test-engineer
+      - data-analyst
+    measurement_workflow:
+      connection_setup:
+        - Connect calibration tool to ECU via CAN/Ethernet
+        - Load A2L database
+        - Establish XCP connection (connect to XCP slave in ECU)
+        - Verify ECU identity (ECU ID, software version)
+      daq_configuration:
+        - Create DAQ lists (groups of signals at same rate)
+        - Allocate ODT entries (measurement objects)
+        - Configure sampling rates (10ms, 100ms, 1s, event-triggered)
+        - Optimize DAQ list packing (minimize CAN bandwidth)
+        - Start DAQ transmission
+      data_recording:
+        - Monitor signals in real-time (oscilloscope view)
+        - Trigger recording based on conditions (vehicle speed > 50 km/h)
+        - Record to MDF4 files (ASAM MDF standard)
+        - Annotate test runs (test ID, driver notes, conditions)
+        - Monitor XCP overload and data loss
+      signal_validation:
+        - Check signal plausibility (range, units, noise)
+        - Verify synchronization between signals
+        - Compare with expected behavior (simulation results)
+        - Identify and troubleshoot anomalies
+    measurement_scenarios:
+      - Steady-state mapping (constant speed, load points)
+      - Transient tests (acceleration, tip-in/tip-out)
+      - Drive cycle recording (WLTC, RDE routes)
+      - Fault injection (sensor disconnection, out-of-range)
+      - Environmental sweeps (temperature, altitude)
+    acceptance_criteria:
+      - All planned signals successfully measured
+      - Data quality acceptable (no loss, low noise)
+      - Measurement rate meets requirements
+      - Data files exported in standard formats
+
+  - phase: parameter_tuning
+    name: Parameter Tuning and Optimization
+    description: Modify calibration parameters online and optimize for performance/emissions
+    duration: 4-8_weeks (iterative)
+    inputs:
+      - measurement_data_files
+      - baseline_calibration_dataset
+      - optimization_targets (fuel economy, emissions, drivability)
+    outputs:
+      - tuned_calibration_parameters
+      - optimization_reports (before/after comparisons)
+      - calibration_change_log
+      - experimental_dataset_versions
+    tools:
+      - ETAS INCA (online calibration)
+      - Vector CANape (online calibration)
+      - MATLAB (optimization algorithms, DoE)
+      - AVL CAMEO (automated calibration)
+      - ETAS ASCET (model-based calibration)
+    skills_used:
+      - calibration-tuning
+      - optimization-algorithms
+      - doe-analysis
+    agents_involved:
+      - calibration-engineer
+      - controls-engineer
+      - test-engineer
+    tuning_workflow:
+      baseline_establishment:
+        - Load baseline calibration to ECU RAM
+        - Perform baseline measurements (performance, emissions)
+        - Document baseline performance metrics
+      parameter_modification:
+        - Identify parameter to tune (e.g., ignition timing map)
+        - Modify parameter value online (write via XCP)
+        - Observe effect in real-time (torque, emissions)
+        - Iterate to find optimal value
+        - Freeze parameter to Flash (if satisfactory)
+      optimization_techniques:
+        model_based:
+          - Use DoE (Design of Experiments) to explore parameter space
+          - Build surrogate model (response surface, neural network)
+          - Run optimization algorithm (genetic algorithm, gradient descent)
+          - Validate optimal solution on vehicle
+        automated_calibration:
+          - Configure automated test sequence (AVL Cameo)
+          - Define input parameters and output metrics
+          - Execute automated sweeps on dyno
+          - Analyze results and select optimal calibration
+      multi_objective_optimization:
+        - Objectives: minimize fuel consumption, minimize NOx/PM, maximize torque
+        - Constraints: EGT limit, smoke limit, NVH acceptable
+        - Pareto frontier analysis (trade-offs)
+        - Select calibration based on prioritization
+    tuning_domains:
+      engine_calibration:
+        - Fuel injection maps (quantity, timing, pressure)
+        - Ignition timing maps (spark advance vs load/RPM)
+        - Airflow control (throttle, wastegate, VGT)
+        - EGR control maps
+      transmission_calibration:
+        - Shift schedules (upshift/downshift vs vehicle speed)
+        - Torque converter lockup strategy
+        - Clutch pressure profiles
+      adas_calibration:
+        - Sensor thresholds (radar sensitivity, camera exposure)
+        - Control gains (ACC following distance, lane-keep assist)
+        - Warning timing and escalation
+      battery_calibration:
+        - SOC estimation parameters (Coulomb counting gains, EKF tuning)
+        - Thermal management thresholds (fan speed vs temperature)
+        - Balancing thresholds and currents
+    acceptance_criteria:
+      - Optimization targets achieved (within acceptable trade-offs)
+      - All parameter changes documented and versioned
+      - Tuned calibration validated on multiple test runs
+      - No adverse effects on other subsystems
+
+  - phase: validation
+    name: Calibration Validation and Verification
+    description: Validate tuned calibration meets all requirements and regulations
+    duration: 3-5_weeks
+    inputs:
+      - tuned_calibration_parameters
+      - validation_test_plan
+      - regulatory_test_procedures
+    outputs:
+      - validation_test_results
+      - emissions_test_reports (WLTC, RDE)
+      - performance_benchmark_results
+      - calibration_validation_sign_off
+    tools:
+      - Chassis dynamometer (emissions testing)
+      - PEMS (Portable Emissions Measurement System for RDE)
+      - Data acquisition systems
+      - ETAS INCA / Vector CANape (measurement during validation)
+    skills_used:
+      - validation-testing
+      - emissions-testing
+      - regulatory-compliance
+    agents_involved:
+      - validation-engineer
+      - emissions-engineer
+      - test-driver
+    validation_tests:
+      regulatory_compliance:
+        - WLTC (Worldwide harmonized Light vehicles Test Cycle)
+        - RDE (Real Driving Emissions) on public roads
+        - Evaporative emissions (SHED test)
+        - OBD (On-Board Diagnostics) functionality
+      performance_validation:
+        - Acceleration (0-100 km/h, quarter-mile)
+        - Top speed
+        - Fuel economy (highway, city, combined)
+        - Gradeability (climb capability)
+      durability_validation:
+        - High-mileage accumulation (10,000+ km)
+        - Extreme temperature testing (-40°C to +50°C)
+        - Altitude testing (sea level to 3000m)
+        - Humidity and salt corrosion
+      customer_acceptance:
+        - Drivability assessment (NVH, pedal response)
+        - Subjective evaluation by test drivers
+        - Benchmark against competitors
+    validation_criteria:
+      - Emissions below regulatory limits (Euro 6d, EPA Tier 3)
+      - Fuel economy meets targets (within 5% of simulation)
+      - Performance meets specifications (0-100 km/h time)
+      - No DTCs during validation tests
+      - Subjective ratings acceptable
+    acceptance_criteria:
+      - All validation tests passed
+      - Regulatory compliance demonstrated
+      - Customer acceptance achieved
+      - Validation report approved for production release
+
+  - phase: dataset_management
+    name: Dataset Management and Versioning
+    description: Manage calibration dataset versions and maintain traceability
+    duration: 1-2_weeks (continuous)
+    inputs:
+      - tuned_calibration_parameters
+      - calibration_change_log
+      - ecu_software_version
+    outputs:
+      - versioned_calibration_datasets
+      - dataset_release_notes
+      - traceability_matrix (requirements to calibration)
+      - calibration_database_backup
+    tools:
+      - Vector CANape (dataset export/import)
+      - ETAS INCA (dataset management)
+      - Git / SVN (version control for datasets)
+      - PLM systems (Teamcenter, Windchill)
+    skills_used:
+      - configuration-management
+      - version-control
+      - traceability
+    agents_involved:
+      - calibration-engineer
+      - configuration-manager
+    dataset_management_activities:
+      versioning:
+        - Naming convention: ECU_Project_vX.Y.Z (e.g., TCU_Hybrid_v2.3.1)
+        - Major version (X): Incompatible changes, new ECU software
+        - Minor version (Y): Feature additions, map refinements
+        - Patch version (Z): Bug fixes, minor adjustments
+      release_process:
+        - Freeze calibration dataset
+        - Export to standard format (HEX, S19, CDF)
+        - Generate release notes (changes since last version)
+        - Code review and approval
+        - Commit to version control repository
+        - Tag release in VCS
+      traceability:
+        - Link calibration parameters to requirements
+        - Document rationale for parameter values
+        - Link to validation test results
+        - Maintain change history (who, when, why)
+      backup_and_archival:
+        - Automated daily backups of calibration database
+        - Long-term archival of production datasets (10+ years)
+        - Disaster recovery procedures
+    acceptance_criteria:
+      - All datasets versioned and tagged
+      - Traceability to requirements established
+      - Release notes complete
+      - Backups verified
+
+  - phase: production_release
+    name: Production Release and Flash Programming
+    description: Prepare calibration for production ECU flashing and field deployment
+    duration: 2-3_weeks
+    inputs:
+      - validated_calibration_dataset
+      - production_ecu_software
+      - flash_programming_specification
+    outputs:
+      - production_calibration_hex_file
+      - flash_container (ODX-F format)
+      - end_of_line_programming_procedure
+      - field_update_package (OTA)
+    tools:
+      - Vector vFlash (ECU flashing)
+      - ETAS INCA (hex file generation)
+      - Softing ODX Studio (ODX container creation)
+      - Lauterbach (production programming)
+    skills_used:
+      - production-programming
+      - flash-file-generation
+      - odx-container-creation
+    agents_involved:
+      - calibration-engineer
+      - manufacturing-engineer
+      - cybersecurity-engineer
+    production_preparation:
+      hex_file_generation:
+        - Merge calibration dataset with ECU software
+        - Generate combined hex file (code + data)
+        - Calculate checksums and CRC
+        - Sign file per cybersecurity requirements (ISO 21434)
+      odx_container_creation:
+        - Create ODX-F flash container (ISO 22900-2)
+        - Include flash driver, data blocks, dependencies
+        - Specify flash sequence and timing
+        - Encrypt sensitive calibration data
+      eol_programming:
+        - Define end-of-line flashing procedure
+        - Configure flash tool parameters (CAN bitrate, timing)
+        - Test on sample ECUs (flash success rate)
+        - Document programming time and resources
+      ota_preparation:
+        - Package calibration update for OTA deployment
+        - Implement rollback mechanism (in case of failure)
+        - Test OTA update on pilot vehicles
+        - Configure backend for update campaign management
+    security_considerations:
+      - Secure boot validation (signed calibration)
+      - Encrypted flash data (AES-256)
+      - Authentication before flash (challenge-response)
+      - Anti-rollback protection (version downgrade prevention)
+    acceptance_criteria:
+      - Production hex file validated on test ECUs
+      - Flash programming procedure documented
+      - ODX container validated with flash tools
+      - OTA update tested successfully
+      - Cybersecurity review passed
+      - Manufacturing approval for production
+
+quality_gates:
+  - gate: measurement_plan_approval
+    phase: measurement_planning
+    criteria:
+      - Stakeholder sign-off
+      - Resource allocation confirmed
+  - gate: a2l_validation
+    phase: a2l_setup
+    criteria:
+      - A2L syntax valid
+      - XCP connection successful
+      - Sample parameter access verified
+  - gate: measurement_data_quality
+    phase: online_measurement
+    criteria:
+      - All signals measured
+      - Data quality acceptable
+      - No XCP overload
+  - gate: calibration_optimization_complete
+    phase: parameter_tuning
+    criteria:
+      - Optimization targets met
+      - All changes documented
+      - No regressions detected
+  - gate: validation_approval
+    phase: validation
+    criteria:
+      - Regulatory tests passed
+      - Performance targets met
+      - Customer acceptance
+  - gate: dataset_release
+    phase: dataset_management
+    criteria:
+      - Version tagged
+      - Traceability complete
+      - Release notes approved
+  - gate: production_release_approval
+    phase: production_release
+    criteria:
+      - Flash file validated
+      - EOL programming tested
+      - Cybersecurity approved
+      - Manufacturing sign-off
+
+xcp_protocol_details:
+  transport_layers:
+    - CAN (up to 1 Mbps)
+    - CAN-FD (up to 8 Mbps)
+    - Ethernet (UDP, TCP)
+    - FlexRay
+    - SPI (for direct ECU access)
+  xcp_services:
+    - CONNECT / DISCONNECT
+    - GET_STATUS / GET_ID
+    - UPLOAD / DOWNLOAD (calibration parameter access)
+    - SHORT_UPLOAD / SHORT_DOWNLOAD (optimized access)
+    - SET_MTA (memory transfer address)
+    - START_STOP_DAQ (measurement control)
+    - PROGRAM (flash programming)
+  resource_protection:
+    - CAL (calibration access)
+    - DAQ (measurement access)
+    - STIM (stimulation/bypassing)
+    - PGM (flash programming)
+
+calibration_tools_comparison:
+  etas_inca:
+    - Strengths: User-friendly, strong measurement, ASCET integration
+    - Best for: Powertrain calibration, model-based development
+  vector_canape:
+    - Strengths: Powerful scripting, multi-tool integration, CAN focus
+    - Best for: Complex ECU networks, automated calibration
+  ati_vision:
+    - Strengths: High-speed data acquisition, FPGA-based, multi-protocol
+    - Best for: High-frequency measurement, rapid prototyping
+
+metrics:
+  - Number of calibration parameters
+  - Number of measurement signals
+  - Data acquisition rate (samples/sec)
+  - XCP bandwidth utilization (%)
+  - Calibration cycle time (baseline to validated)
+  - Dataset version history (number of releases)
+  - Flash programming success rate (%)
+
+references:
+  - ASAM MCD-2MC (A2L standard)
+  - ASAM MCD-1 XCP (XCP protocol)
+  - ASAM MDF (Measurement Data Format)
+  - ISO 22900-2 (ODX standard)
+  - ISO 14229 (UDS diagnostic services)
+  - ISO 21434 (Cybersecurity engineering)

@@ -1,0 +1,165 @@
+name: abs-validation
+version: 1.0.0
+description: "Anti-lock Braking System validation workflow for regulatory compliance and performance verification"
+trigger: "During new vehicle development, after brake system changes, or for regulatory type approval"
+domain: "Chassis"
+safety_level: "ASIL-D"
+standard: "ECE R13H, FMVSS 135"
+
+prerequisites:
+  - "ABS system installed and mechanically verified"
+  - "Brake system bedded-in per manufacturer procedure"
+  - "Test surfaces with characterized friction coefficients"
+  - "Instrumented test vehicle with wheel speed and pressure sensors"
+  - "ABS calibration tools and diagnostic access"
+
+phases:
+  - name: "System Verification"
+    description: "Verify ABS system components and communication before performance testing"
+    inputs:
+      - "ABS system specification"
+      - "Component installation records"
+      - "Diagnostic interface"
+    steps:
+      - "Verify all wheel speed sensor signals present and accurate"
+      - "Calibrate wheel speed sensor scaling factors"
+      - "Verify hydraulic unit solenoid valve operation"
+      - "Test ABS pump motor function"
+      - "Verify brake pressure sensor calibration"
+      - "Check ABS warning lamp function on key-on and fault"
+      - "Verify CAN communication with other chassis ECUs"
+      - "Execute ABS self-test and verify no fault codes"
+      - "Verify brake fluid level sensor function"
+      - "Document system verification results"
+    outputs:
+      - "System verification checklist completed"
+      - "Sensor calibration records"
+      - "Fault-free diagnostic state"
+    tools:
+      - "ABS diagnostic tester"
+      - "Oscilloscope for sensor signals"
+      - "CAN bus analyzer"
+    quality_gates:
+      - "All sensors reading accurately"
+      - "All actuators functioning correctly"
+      - "No diagnostic fault codes present"
+
+  - name: "Straight-Line ABS Performance"
+    description: "Validate ABS stopping performance on straight surfaces with various friction levels"
+    inputs:
+      - "Verified ABS system"
+      - "Test surfaces: dry asphalt, wet asphalt, ice"
+      - "Performance measurement equipment"
+    steps:
+      - "Measure stopping distance from 100 km/h on dry surface"
+      - "Measure stopping distance from 100 km/h on wet surface"
+      - "Measure stopping distance from 80 km/h on ice"
+      - "Compare ABS stopping distance to locked-wheel distance"
+      - "Verify ABS maintains steering control during braking"
+      - "Test ABS at various initial speeds: 40, 60, 80, 120 km/h"
+      - "Measure wheel speed oscillation quality during ABS"
+      - "Verify ABS cycle frequency is within specification"
+      - "Test ABS response with sudden brake application"
+      - "Test ABS with gradual increase to full brake pressure"
+    outputs:
+      - "Stopping distance data per surface and speed"
+      - "ABS efficiency calculations"
+      - "Wheel speed oscillation quality data"
+    tools:
+      - "GPS-based distance measurement"
+      - "Deceleration measurement system"
+      - "Wheel speed data logger"
+    quality_gates:
+      - "ABS stopping distance shorter than locked-wheel baseline"
+      - "Steering control maintained during all tests"
+      - "ABS cycle frequency within specification"
+
+  - name: "Split Surface and Cornering Tests"
+    description: "Validate ABS performance on split-friction and during cornering"
+    inputs:
+      - "ABS calibrated for straight-line performance"
+      - "Split-friction test surface"
+      - "Cornering test area"
+    steps:
+      - "Test ABS braking on split-mu surface: one side wet, one dry"
+      - "Verify vehicle maintains directional stability on split-mu"
+      - "Measure yaw rate during split-mu ABS braking"
+      - "Test ABS during steady-state cornering"
+      - "Test ABS during corner entry braking"
+      - "Verify ABS does not cause unexpected oversteer or understeer"
+      - "Test ABS on transition surfaces: dry-to-wet"
+      - "Verify rapid surface recognition and pressure adaptation"
+      - "Test ABS behavior with one wheel on gravel"
+      - "Document vehicle behavior in each test condition"
+    outputs:
+      - "Split-mu test results"
+      - "Cornering ABS test results"
+      - "Yaw stability measurements"
+    tools:
+      - "Split-mu test surface"
+      - "Inertial measurement unit"
+      - "High-speed cameras"
+    quality_gates:
+      - "Vehicle remains stable on split-mu surfaces"
+      - "Yaw rate within controllable limits"
+      - "ABS adapts to surface transitions within specification"
+
+  - name: "Regulatory Compliance Testing"
+    description: "Execute regulatory compliance tests per ECE R13H and FMVSS 135"
+    inputs:
+      - "Validated ABS calibration"
+      - "Regulatory test procedures"
+      - "Certified test track"
+    steps:
+      - "Execute ECE R13H Annex 6 ABS performance tests"
+      - "Verify adhesion utilization meets minimum requirements"
+      - "Execute wheel lock-up check per regulation"
+      - "Test ABS on high and low friction surfaces per regulation"
+      - "Execute FMVSS 135 stopping distance tests"
+      - "Test with engine running and engine off conditions"
+      - "Verify ABS malfunction detection and warning"
+      - "Test with partial system failure conditions"
+      - "Document all regulatory test results"
+      - "Prepare type approval submission package"
+    outputs:
+      - "Regulatory test results"
+      - "Adhesion utilization calculations"
+      - "Type approval submission data"
+    tools:
+      - "Certified measurement equipment"
+      - "Regulatory test surfaces"
+      - "Compliance documentation system"
+    quality_gates:
+      - "ECE R13H adhesion utilization requirements met"
+      - "FMVSS 135 stopping distance requirements met"
+      - "No wheel lock-up events exceeding regulatory allowance"
+
+  - name: "Durability and Release"
+    description: "Validate ABS durability and release calibration for production"
+    inputs:
+      - "Regulatory-compliant ABS calibration"
+      - "Durability test procedures"
+      - "Production vehicles for validation"
+    steps:
+      - "Execute ABS cycle endurance test per component specification"
+      - "Verify hydraulic unit performance after endurance cycling"
+      - "Test ABS with worn brake pads at minimum thickness"
+      - "Test ABS with cold brakes and hot brakes"
+      - "Validate ABS on all tire options in vehicle specification"
+      - "Verify ABS performance at temperature extremes"
+      - "Execute production-vehicle validation tests"
+      - "Freeze ABS calibration parameters"
+      - "Generate ABS validation report"
+      - "Obtain functional safety and regulatory release"
+    outputs:
+      - "Durability test results"
+      - "Production validation results"
+      - "ABS release approval"
+    tools:
+      - "Durability test bench"
+      - "Environmental test facility"
+      - "Production vehicles"
+    quality_gates:
+      - "Endurance test passed without degradation"
+      - "Performance acceptable with worn brakes"
+      - "Release approved by safety and regulatory teams"

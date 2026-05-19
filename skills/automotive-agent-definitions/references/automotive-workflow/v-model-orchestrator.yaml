@@ -1,0 +1,370 @@
+name: V-Model Orchestrator
+description: Complete automotive V-Model lifecycle orchestration from requirements to validation
+role: v_model_master
+capabilities:
+  - Orchestrate complete V-Model development lifecycle
+  - Coordinate left side (development) and right side (testing)
+  - Ensure traceability across all phases
+  - Manage safety requirements (ISO 26262)
+  - Coordinate with Scrum/SAFe teams
+  - Generate all phase deliverables
+
+v_model_structure:
+  left_side_development:
+    phase_1_customer_requirements:
+      activities:
+        - Elicit customer needs and expectations
+        - Define system-level requirements
+        - Identify safety goals (ISO 26262)
+        - Create product specification
+      deliverables:
+        - Customer Requirements Specification (CRS)
+        - System Requirements Specification (SRS)
+        - Safety Goals Document
+        - Product Specification
+      entry_criteria:
+        - Project charter approved
+        - Stakeholders identified
+      exit_criteria:
+        - Requirements reviewed and approved
+        - Safety goals defined and classified
+        - Traceability matrix initialized
+
+    phase_2_system_requirements:
+      activities:
+        - Decompose system into subsystems
+        - Allocate requirements to subsystems
+        - Define system architecture
+        - Perform ASIL decomposition
+        - Create system design specification
+      deliverables:
+        - System Architecture Document
+        - System Design Specification (SDS)
+        - ASIL Decomposition Document
+        - Interface Control Document (ICD)
+        - System Safety Requirements
+      entry_criteria:
+        - Customer requirements approved
+      exit_criteria:
+        - System architecture reviewed
+        - Safety requirements allocated
+        - Interface specifications defined
+
+    phase_3_software_requirements:
+      activities:
+        - Derive software requirements from system requirements
+        - Define software architecture (AUTOSAR)
+        - Specify software components (SWCs)
+        - Define safety mechanisms
+        - Create software requirements specification
+      deliverables:
+        - Software Requirements Specification (SwRS)
+        - Software Architecture Document
+        - AUTOSAR Software Component Description
+        - Safety Mechanisms Specification
+        - Requirements Traceability Matrix (RTM)
+      entry_criteria:
+        - System requirements approved
+        - AUTOSAR platform selected
+      exit_criteria:
+        - Software requirements reviewed
+        - Architecture approved
+        - Traceability established
+
+    phase_4_software_design:
+      activities:
+        - Detailed design of software components
+        - Define algorithms and data structures
+        - Design safety-critical functions
+        - Create sequence diagrams
+        - Design unit test approach
+      deliverables:
+        - Detailed Software Design Document (DSDD)
+        - UML Class and Sequence Diagrams
+        - Algorithm Specifications
+        - Unit Test Plan
+        - Design Review Report
+      entry_criteria:
+        - Software requirements finalized
+      exit_criteria:
+        - Design reviewed and approved
+        - Unit test plan approved
+        - Code generation plan ready
+
+    phase_5_implementation:
+      activities:
+        - Implement software modules
+        - Generate code (manual or model-based)
+        - Conduct code reviews
+        - Apply coding standards (MISRA C/C++)
+        - Implement safety mechanisms
+      deliverables:
+        - Source Code
+        - Code Review Reports
+        - MISRA Compliance Report
+        - Unit Test Code
+        - Build Scripts
+      entry_criteria:
+        - Design approved
+        - Coding standards defined
+      exit_criteria:
+        - Code reviews passed
+        - MISRA compliance verified
+        - Build successful
+
+  right_side_verification:
+    phase_6_unit_testing:
+      activities:
+        - Test individual functions/modules
+        - Verify code against design
+        - Achieve structural coverage (MC/DC for ASIL C/D)
+        - Use white-box testing techniques
+      deliverables:
+        - Unit Test Reports
+        - Code Coverage Reports (MC/DC, branch, statement)
+        - Defect Reports
+        - Unit Test Automation Scripts
+      entry_criteria:
+        - Code implementation complete
+        - Unit test environment set up
+      exit_criteria:
+        - Required coverage achieved (80%+ or ASIL-specific)
+        - All critical defects resolved
+        - Test reports approved
+      tools:
+        - GoogleTest (C++)
+        - pytest (Python)
+        - VectorCAST / TESSY
+        - Cantata / Parasoft
+
+    phase_7_integration_testing:
+      activities:
+        - Test interaction between modules
+        - Verify interface specifications
+        - Test communication (CAN, Ethernet)
+        - Perform incremental integration
+      deliverables:
+        - Integration Test Plan
+        - Integration Test Reports
+        - Interface Test Results
+        - Defect Reports
+      entry_criteria:
+        - Unit testing complete
+        - Integration test environment ready
+      exit_criteria:
+        - All integration tests passed
+        - Interface specifications verified
+        - Communication protocols validated
+      tools:
+        - Vector CANoe
+        - Robot Framework
+        - Jenkins (CI/CD)
+
+    phase_8_sil_testing:
+      software_in_the_loop:
+        description: Test software in simulated environment (no hardware)
+        activities:
+          - Run software on PC with simulated ECU
+          - Test with simulated sensors/actuators
+          - Verify functional behavior
+          - Perform scenario-based testing
+        deliverables:
+          - SiL Test Plan
+          - SiL Test Reports
+          - Scenario Coverage Reports
+          - Performance Metrics
+        environment:
+          - MATLAB/Simulink models
+          - CARLA simulator (ADAS)
+          - Virtual ECU (dSPACE VEOS)
+        entry_criteria:
+          - Integration testing complete
+          - SiL environment configured
+        exit_criteria:
+          - Functional requirements verified
+          - Edge cases tested
+          - Performance benchmarks met
+
+    phase_9_hil_testing:
+      hardware_in_the_loop:
+        description: Test software on real ECU with simulated environment
+        activities:
+          - Flash software to target ECU
+          - Connect to HIL simulator
+          - Simulate vehicle dynamics
+          - Test fault injection
+          - Verify real-time behavior
+        deliverables:
+          - HIL Test Plan
+          - HIL Test Reports
+          - Real-Time Performance Reports
+          - Fault Injection Results
+        environment:
+          - dSPACE SCALEXIO / ETAS LABCAR
+          - Vector VT System
+          - National Instruments VeriStand
+        entry_criteria:
+          - SiL testing complete
+          - ECU hardware available
+          - HIL test bench set up
+        exit_criteria:
+          - Real-time constraints verified
+          - Fault scenarios tested
+          - Safety mechanisms validated
+
+    phase_10_vehicle_testing:
+      target_fleet_testing:
+        description: Test in real vehicles (test fleet)
+        activities:
+          - Deploy to test vehicles
+          - Conduct proving ground tests
+          - Perform road testing
+          - Collect telemetry data
+          - Analyze field performance
+        deliverables:
+          - Vehicle Test Plan
+          - Proving Ground Test Reports
+          - Road Test Reports
+          - Telemetry Analysis Reports
+          - Field Issue Tracker
+        cloud_integration:
+          - Telemetry upload to AWS IoT Core / Azure IoT Hub
+          - Real-time monitoring dashboards
+          - Over-the-Air (OTA) update capability
+          - Fleet-wide data analytics
+        entry_criteria:
+          - HIL testing complete
+          - Type approval preparations complete
+        exit_criteria:
+          - All test scenarios executed
+          - No critical issues outstanding
+          - Ready for validation
+
+    phase_11_validation:
+      verification_and_validation:
+        description: Final validation against customer requirements
+        activities:
+          - Validate against customer requirements (CRS)
+          - Conduct acceptance testing
+          - Verify safety goals achieved
+          - Perform final safety assessment
+          - Prepare release documentation
+        deliverables:
+          - Validation Test Plan
+          - Validation Test Reports
+          - Requirements Coverage Report
+          - Safety Case / Safety Argumentation
+          - Release Approval Document
+          - Final V&V Report
+        entry_criteria:
+          - Vehicle testing complete
+          - All defects resolved or accepted
+        exit_criteria:
+          - All customer requirements validated
+          - Safety goals achieved
+          - Release approved
+          - Product ready for production
+
+traceability_management:
+  requirements_traceability:
+    - Customer Requirement → System Requirement
+    - System Requirement → Software Requirement
+    - Software Requirement → Design Element
+    - Design Element → Code Module
+    - Code Module → Unit Test
+    - Unit Test → Integration Test
+    - Integration Test → SiL Test
+    - SiL Test → HIL Test
+    - HIL Test → Vehicle Test
+    - Vehicle Test → Validation Test
+
+  tools:
+    - IBM DOORS / Jama Connect (requirements management)
+    - PTC Integrity / Polarion
+    - Excel-based RTM (for small projects)
+
+safety_lifecycle_integration:
+  iso_26262_phases:
+    concept_phase:
+      - Hazard analysis and risk assessment
+      - Safety goals definition
+      - ASIL classification
+
+    product_development:
+      - Safety requirements specification
+      - Technical safety concept
+      - Safety mechanisms implementation
+
+    validation:
+      - Safety validation
+      - Functional safety assessment
+      - Safety case creation
+
+workflow_integration:
+  agile_scrum:
+    - V-Model phases mapped to sprints
+    - Requirements refinement per sprint
+    - Continuous integration and testing
+    - Sprint reviews aligned with phase exits
+
+  safe_scaled_agile:
+    - Program Increment (PI) planning
+    - Agile Release Trains (ARTs)
+    - System demos at PI boundaries
+    - Release on demand
+
+phase_gates:
+  gate_criteria:
+    - Deliverables complete and reviewed
+    - Exit criteria met
+    - Quality metrics achieved
+    - Stakeholder approval obtained
+    - Next phase entry criteria verified
+
+metrics_and_kpis:
+  development:
+    - Requirements stability (changes per week)
+    - Design review findings
+    - Code review defect density
+    - MISRA compliance percentage
+
+  testing:
+    - Test coverage (statement, branch, MC/DC)
+    - Defect detection rate
+    - Defect resolution time
+    - Test automation percentage
+
+  project:
+    - Schedule adherence
+    - Budget utilization
+    - Resource allocation efficiency
+    - Risk mitigation effectiveness
+
+automation_integration:
+  ci_cd_pipeline:
+    - Automated build on commit
+    - Unit tests on every build
+    - Integration tests nightly
+    - SiL tests on release candidates
+    - HIL tests on release candidates
+
+tools_ecosystem:
+  requirements: DOORS, Jama, Polarion
+  design: Enterprise Architect, Rhapsody, MagicDraw
+  coding: Vector MICROSAR, EB tresos, MATLAB
+  unit_test: VectorCAST, TESSY, GoogleTest
+  integration: Vector CANoe, Robot Framework
+  sil: MATLAB/Simulink, CARLA, VEOS
+  hil: SCALEXIO, LABCAR, VeriStand
+  vehicle: AWS IoT, Azure IoT Hub, Grafana
+  validation: Custom test management systems
+
+metadata:
+  version: "1.0.0"
+  standard: Automotive V-Model (ISO 26262, ASPICE)
+  applicable_to:
+    - ECU software development
+    - ADAS/autonomous driving
+    - Powertrain control
+    - Body electronics
+    - Infotainment systems

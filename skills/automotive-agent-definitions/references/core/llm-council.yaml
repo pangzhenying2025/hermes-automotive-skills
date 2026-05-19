@@ -1,0 +1,218 @@
+# LLM Council Orchestrator Agent
+# Multi-model collaboration framework for critical automotive decisions
+# Models: Claude Opus 4.6 (Anthropic) + GPT-5.4 (Azure OpenAI)
+
+name: llm-council
+version: "1.0.0"
+description: |
+  Orchestrates multi-round debates between Claude Opus 4.6 and GPT-5.4 to reach
+  consensus on complex engineering decisions, architecture reviews, and critical
+  code changes in automotive software development.
+
+capabilities:
+  - "Orchestrate multi-model debates for engineering decisions"
+  - "Synthesize consensus from divergent AI perspectives"
+  - "Route tasks to appropriate model strengths"
+  - "Evaluate architecture and code review decisions"
+  - "Resolve conflicts through structured deliberation"
+metadata:
+  author: Automotive Claude Code Team
+  license: MIT
+  domain: orchestration
+  keywords:
+    - multi-model
+    - consensus
+    - debate
+    - architecture
+    - code-review
+    - decision-making
+
+# Model Configuration
+models:
+  primary:
+    name: claude-opus-4-6
+    provider: anthropic
+    endpoint: ${ANTHROPIC_API_BASE:-https://api.anthropic.com}
+    api_key_env: ANTHROPIC_API_KEY
+    max_tokens: 8192
+    temperature: 0.7
+    strengths:
+      - system-coherence
+      - safety-validation
+      - edge-case-analysis
+      - interface-contracts
+      - architecture-preservation
+      - defense-in-depth
+
+  secondary:
+    name: gpt-5.4
+    provider: azure-openai
+    endpoint: ${AZURE_OPENAI_ENDPOINT}
+    api_key_env: AZURE_OPENAI_API_KEY
+    api_version: "2024-12-01-preview"
+    max_tokens: 8192
+    temperature: 0.7
+    strengths:
+      - pattern-recognition
+      - performance-tricks
+      - developer-ergonomics
+      - fast-symptom-analysis
+      - code-smell-detection
+      - micro-optimizations
+
+# Debate Configuration
+debate:
+  default_rounds: 3
+  max_rounds: 5
+  consensus_threshold: 0.8
+  timeout_per_round_ms: 120000
+
+  # Task-specific round recommendations
+  task_routing:
+    code_optimization:
+      rounds: 2
+      claude_focus: safety-validation
+      gpt_focus: performance-tricks
+
+    architecture_design:
+      rounds: 4
+      claude_focus: system-coherence
+      gpt_focus: practical-patterns
+
+    bug_diagnosis:
+      rounds: 2
+      claude_focus: root-cause-investigation
+      gpt_focus: fast-symptom-analysis
+
+    api_design:
+      rounds: 3
+      claude_focus: interface-contracts
+      gpt_focus: developer-ergonomics
+
+    refactoring:
+      rounds: 3
+      claude_focus: architecture-preservation
+      gpt_focus: code-smell-detection
+
+    security_review:
+      rounds: 4
+      claude_focus: defense-in-depth
+      gpt_focus: attack-patterns
+
+    performance_tuning:
+      rounds: 3
+      claude_focus: system-bottlenecks
+      gpt_focus: micro-optimizations
+
+    safety_critical:
+      rounds: 5
+      claude_focus: functional-safety
+      gpt_focus: failure-mode-analysis
+
+# System Prompts
+prompts:
+  debate_system: |
+    You are participating in an LLM Council debate for automotive software development.
+
+    ## Your Role
+    Provide expert analysis based on your designated strengths. Be willing to update
+    your position when presented with compelling arguments from the other model.
+
+    ## Automotive Context
+    - Safety is paramount (ISO 26262, ASIL levels)
+    - Performance matters for real-time systems
+    - Code must be maintainable for 10+ year lifecycles
+    - Regulatory compliance is non-negotiable
+
+    ## Debate Protocol
+    1. State your position clearly with rationale
+    2. Acknowledge valid points from other perspectives
+    3. Identify areas of agreement and disagreement
+    4. Propose concrete, actionable recommendations
+    5. Flag any safety or compliance concerns immediately
+
+  synthesis_system: |
+    You are synthesizing the results of a multi-model debate.
+
+    ## Output Structure
+    1. CONSENSUS POINTS - What both models agree on
+    2. DIVERGENT OPINIONS - Where they differ and why
+    3. TRADE-OFF ANALYSIS - Safety vs performance, simplicity vs features
+    4. FINAL RECOMMENDATION - Specific, implementable action
+    5. CONFIDENCE LEVEL - High/Medium/Low based on consensus strength
+    6. ACTION ITEMS - Numbered list of next steps
+
+  conflict_resolution: |
+    The models have significant disagreement. Please identify:
+    1. Root cause of disagreement (requirements, constraints, assumptions)
+    2. Information needed to resolve the conflict
+    3. Proposed experiments or tests to validate each position
+    4. Recommendation for user clarification
+
+# Output Configuration
+output:
+  format: markdown
+  include_debate_history: true
+  include_timestamps: true
+  artifact_directory: /tmp/llm-council-${PID}
+
+  files:
+    claude_rounds: claude/round{N}.txt
+    gpt_rounds: gpt/round{N}.txt
+    synthesis: consensus/SYNTHESIS.md
+    metrics: metrics/debate-stats.json
+
+# Integration Points
+integrations:
+  hooks:
+    pre_merge: true
+    pre_deploy: false
+
+  commands:
+    - council-debate
+    - council-review
+    - council-decide
+
+  workflows:
+    - architecture-review
+    - critical-code-review
+    - safety-assessment
+
+# Cost Management
+cost:
+  approximate_per_round_usd: 0.04
+  budget_warning_threshold_usd: 0.20
+  max_session_budget_usd: 1.00
+
+  optimization_strategies:
+    - use_1_round_for_well_defined_problems
+    - reserve_3plus_rounds_for_architecture
+    - cache_common_patterns
+
+# Health Checks
+health:
+  check_interval_ms: 30000
+  api_timeout_ms: 10000
+  retry_count: 3
+  retry_delay_ms: 1000
+
+  checks:
+    - name: anthropic_api
+      endpoint: ${ANTHROPIC_API_BASE:-https://api.anthropic.com}/v1/messages
+      method: OPTIONS
+
+    - name: azure_openai_api
+      endpoint: ${AZURE_OPENAI_ENDPOINT}/openai/deployments
+      method: GET
+
+# Permissions
+permissions:
+  required:
+    - network:anthropic-api
+    - network:azure-openai-api
+    - filesystem:read
+    - filesystem:write:/tmp/llm-council-*
+
+  optional:
+    - github:pr-comment
+    - slack:notify

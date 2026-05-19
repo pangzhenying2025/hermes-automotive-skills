@@ -1,0 +1,158 @@
+name: arxml-roundtrip
+version: 1.0.0
+description: "ARXML roundtrip engineering workflow ensuring consistency between system design models and ECU configurations"
+trigger: "When system design changes propagate to ECU level, or when ECU changes need to be reflected in system model"
+domain: "AUTOSAR"
+standard: "AUTOSAR R22-11 Schema"
+
+prerequisites:
+  - "AUTOSAR authoring tools for system and ECU levels"
+  - "Version-controlled ARXML repository"
+  - "Schema validation tools configured"
+  - "Diff and merge tooling for ARXML files"
+  - "Change management process defined between teams"
+
+phases:
+  - name: "Change Impact Analysis"
+    description: "Analyze the scope of changes and determine which ARXML artifacts are affected"
+    inputs:
+      - "Change request describing the modification"
+      - "Current ARXML baseline in version control"
+      - "Dependency map between ARXML packages"
+    steps:
+      - "Identify the source of change (system-level or ECU-level)"
+      - "Determine which ARXML packages are directly affected"
+      - "Trace dependencies to find indirectly affected packages"
+      - "Identify which ECU extracts need regeneration"
+      - "Assess impact on code generation outputs"
+      - "Estimate effort for propagating the change"
+      - "Identify potential conflicts with parallel changes"
+      - "Create change propagation plan with sequence"
+      - "Get approval for the change propagation scope"
+    outputs:
+      - "Impact analysis report"
+      - "Change propagation plan"
+      - "Affected artifact list"
+    tools:
+      - "ARXML dependency analyzer"
+      - "Version control diff tool"
+      - "Change management system"
+    quality_gates:
+      - "All affected artifacts identified"
+      - "No circular dependency conflicts detected"
+      - "Change propagation plan approved"
+
+  - name: "Model Update"
+    description: "Apply changes to the authoritative ARXML model at the appropriate design level"
+    inputs:
+      - "Change propagation plan"
+      - "Current ARXML model baseline"
+      - "Design constraints and conventions"
+    steps:
+      - "Create working branch from current baseline"
+      - "Apply changes to the source model in authoring tool"
+      - "Update data type definitions if interface changes are involved"
+      - "Update port interface definitions for affected SWCs"
+      - "Modify composition and connector definitions as needed"
+      - "Update system mapping for new or changed elements"
+      - "Run authoring tool internal consistency checks"
+      - "Validate modified ARXML against AUTOSAR schema"
+      - "Review changes with original change requester"
+    outputs:
+      - "Updated ARXML model on working branch"
+      - "Schema validation results"
+      - "Change review confirmation"
+    tools:
+      - "AUTOSAR authoring tool"
+      - "ARXML schema validator"
+      - "Model comparison tool"
+    quality_gates:
+      - "ARXML schema validation passes without errors"
+      - "Internal consistency checks pass"
+      - "Change requester confirms correctness"
+
+  - name: "Extract Regeneration"
+    description: "Regenerate ECU extracts from updated system model and distribute to ECU teams"
+    inputs:
+      - "Updated system-level ARXML model"
+      - "ECU extract configuration definitions"
+      - "Previous ECU extracts for comparison"
+    steps:
+      - "Generate ECU extract for each affected ECU"
+      - "Compare generated extracts against previous versions"
+      - "Identify all differences and classify as expected or unexpected"
+      - "Resolve any unexpected differences by adjusting model"
+      - "Validate each extract against ECU-level schema subset"
+      - "Package extracts with change documentation"
+      - "Distribute extracts to responsible ECU teams"
+      - "Track acknowledgment from each ECU team"
+    outputs:
+      - "Regenerated ECU extracts per affected ECU"
+      - "Extract comparison reports"
+      - "Distribution acknowledgment records"
+    tools:
+      - "ECU extract generator"
+      - "ARXML diff tool"
+      - "Distribution management system"
+    quality_gates:
+      - "All extracts pass schema validation"
+      - "All differences classified and documented"
+      - "All ECU teams acknowledged receipt"
+
+  - name: "ECU Integration"
+    description: "Integrate updated extracts into ECU configurations and resolve any conflicts"
+    inputs:
+      - "Updated ECU extracts"
+      - "Current ECU configuration baseline"
+      - "ECU-specific customization records"
+    steps:
+      - "Import updated extract into ECU authoring tool"
+      - "Merge with existing ECU-level customizations"
+      - "Resolve any merge conflicts following defined precedence rules"
+      - "Verify ECU-local BSW configurations remain valid"
+      - "Regenerate affected BSW module configurations"
+      - "Run ECU-level consistency validation"
+      - "Rebuild ECU software with updated configuration"
+      - "Execute smoke tests on updated build"
+      - "Document any ECU-level adaptations applied during merge"
+    outputs:
+      - "Updated ECU configuration"
+      - "Merge conflict resolution records"
+      - "Updated ECU software build"
+    tools:
+      - "ECU authoring tool"
+      - "ARXML merge tool"
+      - "BSW code generator"
+    quality_gates:
+      - "All merge conflicts resolved with documentation"
+      - "ECU consistency validation passes"
+      - "ECU software builds and passes smoke tests"
+
+  - name: "Roundtrip Validation"
+    description: "Validate consistency across all levels after the change propagation is complete"
+    inputs:
+      - "Updated system model"
+      - "Updated ECU configurations for all affected ECUs"
+      - "Original change request for verification"
+    steps:
+      - "Run cross-level consistency checker between system and ECU models"
+      - "Verify signal routing consistency end-to-end"
+      - "Validate data type definitions match across all levels"
+      - "Check port connection integrity across composition boundaries"
+      - "Verify the original change request is fully implemented"
+      - "Generate traceability report from requirement to implementation"
+      - "Merge working branch to main baseline"
+      - "Tag the new consistent baseline version"
+      - "Notify all stakeholders of updated baseline"
+    outputs:
+      - "Cross-level consistency report"
+      - "Traceability report"
+      - "Tagged baseline version"
+    tools:
+      - "Cross-level consistency checker"
+      - "Traceability generator"
+      - "Version control system"
+    quality_gates:
+      - "Zero cross-level inconsistencies"
+      - "Original change request verified as implemented"
+      - "All stakeholders notified of new baseline"

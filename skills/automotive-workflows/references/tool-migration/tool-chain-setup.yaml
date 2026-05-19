@@ -1,0 +1,638 @@
+name: automotive-toolchain-setup
+version: 1.0.0
+description: |
+  Automotive development toolchain setup and migration workflow.
+  Covers commercial and open-source tool installation, configuration, integration, and validation.
+
+domain: development_infrastructure
+scope: toolchain_migration
+estimated_duration: 8-12_weeks
+
+phases:
+  - phase: tool_assessment
+    name: Tool Assessment and Gap Analysis
+    description: Assess current toolchain, identify gaps, and evaluate alternatives
+    duration: 2-3_weeks
+    inputs:
+      - current_toolchain_inventory
+      - project_requirements (ASPICE, ISO 26262, AUTOSAR)
+      - budget_constraints
+      - team_skillsets
+    outputs:
+      - tool_gap_analysis_report
+      - tool_evaluation_matrix
+      - recommended_toolchain_architecture
+      - cost_benefit_analysis
+    tools:
+      - Spreadsheet tools (Excel, Google Sheets)
+      - Collaboration tools (Confluence, SharePoint)
+    skills_used:
+      - tool-evaluation
+      - requirements-analysis
+      - cost-analysis
+    agents_involved:
+      - tools-engineer
+      - project-manager
+      - system-architect
+    assessment_activities:
+      current_state_analysis:
+        - Inventory existing tools (version, license count, usage)
+        - Identify pain points (performance, compatibility, support)
+        - Analyze license costs and renewal dates
+        - Evaluate team proficiency with current tools
+      requirements_gathering:
+        - Functional requirements (AUTOSAR support, code generation, testing)
+        - Non-functional requirements (performance, scalability, integration)
+        - Compliance requirements (ASPICE, ISO 26262, cybersecurity)
+        - Platform requirements (Windows, Linux, cloud support)
+      tool_evaluation:
+        - Create evaluation criteria (features, cost, support, ecosystem)
+        - Shortlist candidate tools (commercial and open-source)
+        - Conduct proof-of-concept evaluations
+        - Score tools against criteria
+      recommendation:
+        - Propose primary and alternative options
+        - Justify selections based on evaluation
+        - Estimate migration effort and risks
+        - Present to stakeholders for approval
+    tool_categories_evaluated:
+      compiler_debugger:
+        - Commercial: IAR, Green Hills MULTI, Keil MDK
+        - Open-source: GCC ARM, LLVM/Clang
+      ide:
+        - Commercial: Vector DaVinci Developer, IAR Embedded Workbench
+        - Open-source: Eclipse, VS Code with extensions
+      autosar:
+        - Commercial: Vector DaVinci Configurator, EB tresos Studio
+        - Open-source: Arctic Core, OSEK-VDX
+      testing:
+        - Commercial: VectorCAST, Tessy, TPT
+        - Open-source: GoogleTest, CppUTest, pytest
+      static_analysis:
+        - Commercial: Polyspace, LDRA, CodeSonar
+        - Open-source: Cppcheck, clang-tidy, SonarQube
+      requirements:
+        - Commercial: IBM DOORS, Polarion
+        - Open-source: Jama (freemium), ReqIF tools
+      version_control:
+        - Commercial: Perforce Helix, Azure DevOps
+        - Open-source: Git + GitLab, Git + GitHub
+      calibration:
+        - Commercial: ETAS INCA, Vector CANape
+        - Open-source: pyXCP, FreeCANape
+    acceptance_criteria:
+      - All tool categories assessed
+      - Evaluation matrix complete with scores
+      - Recommendation approved by stakeholders
+      - Budget allocation confirmed
+
+  - phase: license_planning
+    name: License Planning and Procurement
+    description: Plan license acquisition, negotiate with vendors, and secure approvals
+    duration: 2-4_weeks
+    inputs:
+      - recommended_toolchain_architecture
+      - team_size_and_growth_projections
+      - budget_allocation
+    outputs:
+      - license_procurement_plan
+      - vendor_contracts_and_quotes
+      - license_management_strategy
+      - training_budget_allocation
+    tools:
+      - Procurement systems (SAP, Oracle)
+      - License management tools (FlexNet, RLM)
+    skills_used:
+      - procurement
+      - vendor-negotiation
+      - license-management
+    agents_involved:
+      - procurement-specialist
+      - tools-engineer
+      - finance-manager
+    license_planning_activities:
+      license_sizing:
+        - Estimate concurrent users vs named users
+        - Determine floating license pool sizes
+        - Plan for CI/CD automation licenses (node-locked)
+        - Account for growth and contractor access
+      vendor_engagement:
+        - Request quotes from vendors
+        - Negotiate volume discounts and multi-year agreements
+        - Clarify licensing terms (perpetual vs subscription)
+        - Evaluate support packages (8x5 vs 24x7)
+      license_management:
+        - Select license server platform (FlexNet, RLM, cloud-based)
+        - Plan license distribution (by site, by team, global pool)
+        - Implement license monitoring and usage analytics
+        - Define license reclamation policies
+      open_source_considerations:
+        - Evaluate open-source licenses (GPL, LGPL, MIT, Apache)
+        - Assess legal compliance (copyleft obligations)
+        - Plan for community support vs commercial support
+        - Allocate resources for tool customization
+    commercial_tool_licensing:
+      vector:
+        - DaVinci Developer: Named user or floating
+        - CANoe/CANalyzer: Floating license with hardware dongles
+        - Support package: Annual maintenance (20% of license cost)
+      etas:
+        - INCA: Floating license with USB dongle
+        - ASCET: Named user license
+        - Support: Gold/Silver/Bronze tiers
+      iar:
+        - IAR Embedded Workbench: Named user (perpetual or subscription)
+        - Build server license for CI/CD
+        - 1 year of support included, renewal optional
+      green_hills:
+        - MULTI IDE: Floating license
+        - Optimizing compiler: Per-target architecture
+        - Support: Annual subscription
+    acceptance_criteria:
+      - All required licenses procured
+      - Vendor contracts signed
+      - License servers configured
+      - Budget tracking in place
+
+  - phase: installation
+    name: Tool Installation and Environment Setup
+    description: Install tools on workstations, servers, and CI/CD infrastructure
+    duration: 2-3_weeks
+    inputs:
+      - license_keys_and_dongles
+      - it_infrastructure (workstations, servers, network)
+      - installation_guides
+    outputs:
+      - installed_toolchain (workstations and servers)
+      - license_server_configuration
+      - environment_setup_scripts
+      - installation_validation_report
+    tools:
+      - Deployment tools (Ansible, SCCM, Chocolatey)
+      - Virtualization (VMware, Docker)
+    skills_used:
+      - it-administration
+      - automation-scripting
+      - troubleshooting
+    agents_involved:
+      - it-administrator
+      - tools-engineer
+      - devops-engineer
+    installation_activities:
+      workstation_installation:
+        - Create standardized workstation image (Windows/Linux)
+        - Install compilers, IDEs, debuggers
+        - Install AUTOSAR tools (DaVinci, tresos)
+        - Install testing and static analysis tools
+        - Configure environment variables (PATH, compiler paths)
+        - Install license client software (FlexNet client, dongles)
+      server_installation:
+        - Set up license servers (redundancy for high availability)
+        - Install CI/CD tools (Jenkins, GitLab CI, Azure DevOps)
+        - Install build farm nodes (headless compiler, cross-compiler)
+        - Install artifact repositories (Artifactory, Nexus)
+        - Configure backup and monitoring
+      virtualization_and_containerization:
+        - Create Docker images for build environments
+        - Package compilers and toolchains in containers
+        - Set up virtual machines for HIL/SIL testing
+        - Configure cloud-based development environments
+      automation:
+        - Create Ansible playbooks for tool installation
+        - Script environment setup (bash, PowerShell)
+        - Automate license checkout verification
+        - Document manual installation steps (for exceptions)
+    installation_checklist:
+      compiler_toolchain:
+        - GCC ARM Embedded (open-source)
+        - IAR Embedded Workbench (commercial)
+        - Green Hills MULTI (commercial)
+        - Cross-compiler for target architecture (ARM Cortex-M, TriCore, RH850)
+      ide_and_debugger:
+        - Eclipse CDT with AUTOSAR plugin (open-source)
+        - Vector DaVinci Developer (commercial)
+        - Lauterbach TRACE32 (debugger, commercial)
+        - Segger J-Link (debugger, commercial with free version)
+      autosar_tools:
+        - Vector DaVinci Configurator Pro (commercial)
+        - EB tresos Studio (commercial)
+        - Arctic Core AUTOSAR (open-source alternative)
+      testing_tools:
+        - VectorCAST (commercial)
+        - GoogleTest (open-source)
+        - Robot Framework (open-source)
+      static_analysis:
+        - Polyspace Bug Finder (commercial)
+        - Cppcheck (open-source)
+        - clang-tidy (open-source)
+        - SonarQube (open-source with commercial plugins)
+      version_control:
+        - Git + GitLab (open-source)
+        - Git + GitHub (freemium)
+        - Perforce Helix Core (commercial alternative)
+    acceptance_criteria:
+      - All tools installed and functional
+      - License checkout successful
+      - Sample project builds without errors
+      - Environment documented
+
+  - phase: configuration
+    name: Tool Configuration and Customization
+    description: Configure tools for project-specific needs and integrate with existing systems
+    duration: 2-3_weeks
+    inputs:
+      - installed_toolchain
+      - project_coding_standards (MISRA C, HIS metrics)
+      - autosar_methodology
+      - ci_cd_requirements
+    outputs:
+      - tool_configuration_files
+      - build_scripts_and_makefiles
+      - ci_cd_pipeline_definitions
+      - custom_plugins_and_extensions
+    tools:
+      - Scripting languages (Python, Bash, PowerShell)
+      - CI/CD platforms (Jenkins, GitLab CI)
+      - Configuration management (Ansible, Terraform)
+    skills_used:
+      - tool-configuration
+      - scripting-automation
+      - ci-cd-integration
+    agents_involved:
+      - tools-engineer
+      - devops-engineer
+      - embedded-software-engineer
+    configuration_activities:
+      compiler_configuration:
+        - Set optimization levels (-O2, -O3, -Os)
+        - Configure MISRA C rule checking (enable mandatory rules)
+        - Set warning levels (-Wall, -Wextra, -Werror)
+        - Define compiler flags for target architecture
+        - Configure linker scripts (memory layout)
+      ide_configuration:
+        - Import project templates (AUTOSAR SWC, BSW module)
+        - Configure code formatting (clang-format, Eclipse formatter)
+        - Set up debugging configurations (OpenOCD, J-Link)
+        - Configure code completion and navigation
+        - Customize build configurations (Debug, Release, Safety)
+      autosar_tool_configuration:
+        - Import AUTOSAR standard (Classic 4.4 / Adaptive R21-11)
+        - Configure BSW modules (COM, DCM, DEM, NvM)
+        - Define RTE generation settings
+        - Set up consistency checks
+        - Configure code generation templates (if customizable)
+      static_analysis_configuration:
+        - Configure MISRA C 2012 ruleset
+        - Define project-specific deviations
+        - Set up SonarQube quality gates
+        - Configure false positive suppression
+      ci_cd_configuration:
+        - Create Jenkinsfile / GitLab CI YAML
+        - Define build stages (compile, test, analyze, package)
+        - Configure artifact archiving
+        - Set up test result reporting (JUnit XML)
+        - Integrate with notification systems (Slack, email)
+      custom_scripting:
+        - Automate A2L file generation from ELF
+        - Script requirements traceability checks
+        - Automate AUTOSAR configuration import/export
+        - Create custom linters and checkers
+    example_ci_cd_pipeline:
+      stages:
+        - checkout: Clone git repository
+        - build: Compile source code with GCC ARM / IAR
+        - static_analysis: Run Cppcheck, clang-tidy, SonarQube
+        - unit_test: Execute GoogleTest suites, generate coverage
+        - integration_test: Run HIL tests on dSPACE SCALEXIO
+        - package: Create hex file, generate release notes
+        - deploy: Upload to artifact repository, trigger OTA update
+    acceptance_criteria:
+      - All tools configured per standards
+      - Build scripts execute successfully
+      - CI/CD pipeline functional
+      - Configuration under version control
+
+  - phase: integration
+    name: Tool Integration and Workflow Orchestration
+    description: Integrate tools into cohesive workflows and automate data exchange
+    duration: 2-3_weeks
+    inputs:
+      - configured_toolchain
+      - workflow_requirements (ASPICE processes)
+      - data_exchange_formats (ARXML, A2L, DBC)
+    outputs:
+      - integrated_workflow_diagrams
+      - data_exchange_automation_scripts
+      - traceability_matrix_automation
+      - workflow_documentation
+    tools:
+      - Workflow automation (Apache Airflow, n8n)
+      - Data transformation (XSLT, Python scripts)
+      - API integration (REST, SOAP)
+    skills_used:
+      - workflow-orchestration
+      - data-integration
+      - api-development
+    agents_involved:
+      - tools-engineer
+      - process-engineer
+      - devops-engineer
+    integration_activities:
+      requirements_to_code:
+        - Export requirements from DOORS to CSV/ReqIF
+        - Tag source code with requirement IDs (comments, metadata)
+        - Automate traceability report generation
+        - Integrate with test management (link tests to requirements)
+      model_to_code:
+        - Export Simulink models to C code (Embedded Coder)
+        - Import generated code into AUTOSAR project
+        - Configure RTE for model integration
+        - Automate back-to-back testing (MIL vs SIL)
+      code_to_test:
+        - Extract test cases from code comments (Doxygen)
+        - Generate unit test stubs (VectorCAST, Tessy)
+        - Execute tests in CI/CD pipeline
+        - Publish coverage reports to dashboard
+      calibration_to_production:
+        - Export A2L file from build artifacts
+        - Import calibration parameters into INCA/CANape
+        - Export validated calibration to HEX
+        - Generate flash container (ODX-F)
+      data_format_conversions:
+        - ARXML (AUTOSAR) <-> DBC (CAN database)
+        - A2L (calibration) <-> HEX (flash file)
+        - ReqIF (requirements) <-> Excel/CSV
+        - MDF4 (measurement) <-> CSV/MAT
+    example_integrations:
+      doors_to_git:
+        - Export requirements from DOORS as ReqIF
+        - Parse ReqIF and generate markdown files
+        - Commit to Git repository for version control
+        - Trigger CI/CD on requirement changes
+      davinci_to_ci:
+        - Configure DaVinci project in Git repository
+        - Automate RTE generation in CI pipeline
+        - Build generated code with GCC ARM
+        - Run integration tests on generated RTE
+      gitlab_to_sonarqube:
+        - Trigger SonarQube scan on merge request
+        - Publish quality gate status to GitLab
+        - Block merge if quality gate fails
+        - Generate quality trend reports
+    acceptance_criteria:
+      - All critical integrations functional
+      - Data flows automated
+      - Traceability established
+      - Integration documented
+
+  - phase: validation
+    name: Toolchain Validation and Qualification
+    description: Validate toolchain functionality and qualify for safety-critical development
+    duration: 2-3_weeks
+    inputs:
+      - integrated_toolchain
+      - validation_test_plan
+      - safety_standards (ISO 26262 Part 8)
+    outputs:
+      - toolchain_validation_report
+      - tool_qualification_data (if required)
+      - known_issues_and_workarounds
+      - acceptance_test_results
+    tools:
+      - Test management (TestRail, Xray)
+      - Issue tracking (Jira, Redmine)
+    skills_used:
+      - toolchain-validation
+      - tool-qualification
+      - safety-compliance
+    agents_involved:
+      - validation-engineer
+      - safety-engineer
+      - tools-engineer
+    validation_activities:
+      functional_validation:
+        - Create sample AUTOSAR project (BSW + SWC)
+        - Build with all configured compilers
+        - Run on target hardware (STM32, Infineon TC3xx)
+        - Verify debugger functionality (breakpoints, watch, trace)
+        - Test code generation (RTE, BSW modules)
+      performance_validation:
+        - Measure build time (full build, incremental build)
+        - Measure test execution time (unit tests, integration tests)
+        - Measure static analysis scan time
+        - Verify CI/CD pipeline throughput
+      compliance_validation:
+        - Verify MISRA C checking (all mandatory rules)
+        - Verify code coverage metrics (statement, branch, MC/DC)
+        - Verify traceability (requirements to code to test)
+        - Verify ASPICE work product generation
+      tool_qualification:
+        - Identify safety-relevant tools per ISO 26262-8
+        - Determine Tool Confidence Level (TCL1, TCL2, TCL3)
+        - Select qualification method (increased confidence, proven in use, validation)
+        - Execute qualification activities (if TCL2 or TCL3)
+        - Document tool qualification data
+    iso26262_tool_classification:
+      tcl1:
+        - No impact on safety (version control, documentation)
+        - No qualification required
+      tcl2:
+        - Defect can prevent detection of errors (test tools, analysis tools)
+        - Qualification required: Validation or proven in use
+      tcl3:
+        - Defect can introduce errors (compilers, code generators)
+        - Qualification required: Validation, proven in use, or increased confidence
+    example_qualification:
+      compiler_qualification:
+        - Tool: GCC ARM Embedded (open-source compiler)
+        - TCL: TCL3 (can introduce errors)
+        - Method: Increased confidence from use and validation
+        - Activities: Compiler test suite (GCC testsuite), known bugs review, error detection probability
+      code_generator_qualification:
+        - Tool: MATLAB Embedded Coder
+        - TCL: TCL3 (can introduce errors)
+        - Method: Tool qualification per IEC Certification Kit
+        - Activities: Back-to-back testing (model vs code), vendor qualification data
+    acceptance_criteria:
+      - All validation tests passed
+      - Tool qualification complete (if required)
+      - Known issues documented with workarounds
+      - Toolchain approved for production use
+
+  - phase: training
+    name: Team Training and Knowledge Transfer
+    description: Train development team on new toolchain and best practices
+    duration: 2-4_weeks
+    inputs:
+      - validated_toolchain
+      - training_materials (vendor, internal)
+      - team_skill_assessment
+    outputs:
+      - trained_development_team
+      - training_completion_records
+      - internal_knowledge_base
+      - support_escalation_procedures
+    tools:
+      - Learning management systems (Moodle, Coursera)
+      - Documentation platforms (Confluence, GitBook)
+      - Screen recording (Loom, Camtasia)
+    skills_used:
+      - technical-training
+      - knowledge-management
+      - documentation
+    agents_involved:
+      - tools-engineer
+      - training-coordinator
+      - vendor-support
+    training_activities:
+      vendor_training:
+        - Schedule on-site or remote training from vendor
+        - Cover tool fundamentals (IDE, compiler, debugger)
+        - Advanced topics (AUTOSAR configuration, test automation)
+        - Hands-on labs with real projects
+        - Q&A and troubleshooting sessions
+      internal_training:
+        - Create internal training modules (videos, tutorials)
+        - Document common workflows (build, debug, test)
+        - Create quick reference guides (cheat sheets)
+        - Set up sandbox environments for practice
+      mentoring_and_pairing:
+        - Pair experienced users with novices
+        - Code reviews to demonstrate best practices
+        - Regular office hours for Q&A
+        - Internal champions for each tool
+      knowledge_base:
+        - Create wiki pages for each tool
+        - Document troubleshooting procedures
+        - Maintain FAQ and known issues
+        - Share lessons learned and tips
+      certification:
+        - Encourage vendor certifications (Vector, ETAS, IAR)
+        - Track training completion and skill levels
+        - Plan for continuous learning (new tool versions)
+    training_topics:
+      compiler_and_debugger:
+        - Compiler options and optimization
+        - Linker scripts and memory layout
+        - Debugging techniques (breakpoints, watchpoints, trace)
+        - Profiling and performance analysis
+      autosar_tools:
+        - AUTOSAR methodology overview
+        - BSW module configuration (COM, DCM, DEM)
+        - RTE generation and usage
+        - SWC development and integration
+      testing_tools:
+        - Unit test framework (GoogleTest, VectorCAST)
+        - Test case design and coverage
+        - Mocking and stubbing
+        - Test automation in CI/CD
+      static_analysis:
+        - MISRA C rules and deviations
+        - Running scans and interpreting results
+        - Configuring rulesets and suppressions
+        - Integrating into development workflow
+    acceptance_criteria:
+      - All team members trained on core tools
+      - Training completion tracked
+      - Knowledge base established
+      - Support processes in place
+
+open_source_alternatives:
+  compiler:
+    - Commercial: IAR Embedded Workbench ($3000-6000/license)
+    - Open-source: GCC ARM Embedded (free)
+    - Notes: GCC requires more manual setup, IAR has better optimization and support
+  ide:
+    - Commercial: Vector DaVinci Developer ($5000-10000/license)
+    - Open-source: Eclipse CDT with AUTOSAR plugins (free)
+    - Notes: Eclipse lacks polished UI and vendor support, DaVinci has tight integration
+  autosar:
+    - Commercial: EB tresos Studio ($8000-15000/license)
+    - Open-source: Arctic Core (free, limited features)
+    - Notes: Arctic Core covers basic AUTOSAR, tresos has full compliance and support
+  static_analysis:
+    - Commercial: Polyspace ($5000-10000/license)
+    - Open-source: Cppcheck + clang-tidy (free)
+    - Notes: Open-source tools lack deep semantic analysis, but cover common issues
+  testing:
+    - Commercial: VectorCAST ($4000-8000/license)
+    - Open-source: GoogleTest + Bullseye Coverage (free + $800/license)
+    - Notes: VectorCAST automates stub generation, GoogleTest requires manual setup
+  calibration:
+    - Commercial: ETAS INCA ($6000-12000/license + hardware)
+    - Open-source: pyXCP + custom GUI (free, DIY effort)
+    - Notes: Open-source lacks polish and A2L editor, but functional for basic needs
+  requirements:
+    - Commercial: IBM DOORS ($4000-8000/user)
+    - Open-source: ReqIF editor + Git (free)
+    - Notes: DOORS has mature workflow, Git-based approach requires discipline
+
+cost_comparison_example:
+  commercial_toolchain:
+    - IAR Embedded Workbench: $5000 x 20 users = $100,000
+    - Vector DaVinci Configurator: $10,000 x 10 users = $100,000
+    - VectorCAST: $6000 x 10 users = $60,000
+    - Polyspace: $8000 x 5 users = $40,000
+    - IBM DOORS: $6000 x 15 users = $90,000
+    - Total: $390,000 (first year) + 20% annual maintenance = $468,000/year
+  hybrid_toolchain:
+    - GCC ARM (free) + Eclipse (free): $0
+    - Arctic Core AUTOSAR: $0 (with internal customization effort)
+    - GoogleTest + Cppcheck: $0
+    - GitLab (self-hosted): $0
+    - Commercial add-ons: IAR for production builds ($20,000), Lauterbach debugger ($15,000)
+    - Total: $35,000 (first year) + internal effort for customization and support
+
+quality_gates:
+  - gate: tool_selection_approval
+    phase: tool_assessment
+    criteria:
+      - Evaluation complete
+      - Stakeholder buy-in
+      - Budget approved
+  - gate: license_procurement_complete
+    phase: license_planning
+    criteria:
+      - All licenses acquired
+      - Contracts signed
+  - gate: installation_validated
+    phase: installation
+    criteria:
+      - Tools installed
+      - Sample project builds
+  - gate: configuration_complete
+    phase: configuration
+    criteria:
+      - Tools configured
+      - CI/CD functional
+  - gate: integration_tested
+    phase: integration
+    criteria:
+      - Workflows automated
+      - Data exchange validated
+  - gate: toolchain_qualified
+    phase: validation
+    criteria:
+      - Validation passed
+      - Qualification complete (if required)
+  - gate: team_ready
+    phase: training
+    criteria:
+      - Training complete
+      - Knowledge base available
+
+metrics:
+  - Tool deployment time (weeks)
+  - License utilization rate (%)
+  - Build time (minutes for full build)
+  - CI/CD pipeline execution time (minutes)
+  - Training completion rate (%)
+  - Support ticket resolution time (hours)
+  - Tool qualification cost (if applicable)
+
+references:
+  - ISO 26262-8 (Supporting processes - Tool qualification)
+  - ASPICE VDA Scope (Tooling recommendations)
+  - AUTOSAR Methodology (Tool interoperability)
+  - MISRA C 2012 (Coding standards)
+  - ASAM standards (A2L, MDF, XCP for calibration)

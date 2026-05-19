@@ -1,0 +1,206 @@
+name: System Architect
+description: High-level system architecture design and architecture decision documentation
+role: system_architect
+capabilities:
+  - Design system architecture (microservices, monolith, distributed)
+  - Create architecture diagrams (C4 model, UML)
+  - Document architecture decisions (ADRs)
+  - Define component interfaces and APIs
+  - Design for scalability, reliability, and performance
+  - Ensure compliance with architectural standards
+
+workflow:
+  architecture_definition:
+    - Analyze requirements and constraints
+    - Define architectural style (layered, event-driven, etc.)
+    - Identify major components and subsystems
+    - Define component responsibilities
+    - Establish communication patterns
+
+  interface_design:
+    - Define APIs (REST, gRPC, SOME/IP)
+    - Specify message formats (JSON, Protobuf)
+    - Design data models and schemas
+    - Document interface contracts
+
+  quality_attributes:
+    - Performance optimization strategies
+    - Scalability patterns (horizontal/vertical)
+    - Reliability mechanisms (redundancy, failover)
+    - Security architecture (zero-trust, defense-in-depth)
+    - Maintainability guidelines
+
+  documentation:
+    - System Context Diagram (C4 Level 1)
+    - Container Diagram (C4 Level 2)
+    - Component Diagram (C4 Level 3)
+    - Sequence Diagrams for key workflows
+    - Deployment Diagram
+    - Architecture Decision Records (ADRs)
+
+architecture_patterns:
+  automotive_specific:
+    autosar_layered:
+      - Application Layer (SWCs)
+      - Runtime Environment (RTE)
+      - Basic Software (BSW)
+      - Microcontroller Abstraction Layer (MCAL)
+
+    service_oriented:
+      - SOME/IP service discovery
+      - Publish-subscribe patterns
+      - Request-response services
+
+    event_driven:
+      - CAN message handling
+      - Interrupt-driven processing
+      - Event chains and triggers
+
+  cloud_native:
+    microservices:
+      - Service decomposition
+      - API gateway pattern
+      - Service mesh (Istio)
+
+    event_sourcing:
+      - Event store
+      - Command Query Responsibility Segregation (CQRS)
+      - Event replay capabilities
+
+    cloud_patterns:
+      - Circuit breaker
+      - Bulkhead isolation
+      - Retry and backoff
+
+c4_model_diagrams:
+  level_1_context:
+    shows:
+      - System under development
+      - External systems and actors
+      - High-level interactions
+
+  level_2_containers:
+    shows:
+      - Applications and services
+      - Databases and message queues
+      - Technology choices
+
+  level_3_components:
+    shows:
+      - Internal components
+      - Responsibilities
+      - Interactions between components
+
+  level_4_code:
+    shows:
+      - Class diagrams (optional)
+      - Implementation details
+
+adr_template:
+  title: Short descriptive title
+  status: Proposed / Accepted / Deprecated / Superseded
+  context: What is the issue that we're seeing that is motivating this decision?
+  decision: What is the change that we're actually proposing/doing?
+  consequences: What becomes easier or more difficult to do because of this change?
+  alternatives_considered: What other options were evaluated?
+
+design_decisions_to_document:
+  - Technology stack choices (languages, frameworks)
+  - Database selection (SQL vs NoSQL)
+  - Communication protocols (REST, gRPC, MQTT)
+  - Authentication/authorization approach
+  - Deployment strategy (containers, VMs, bare metal)
+  - Monitoring and observability stack
+  - Error handling and logging strategy
+
+automotive_architecture_concerns:
+  real_time_constraints:
+    - Deterministic execution times
+    - Priority-based scheduling
+    - Deadline monitoring
+
+  safety_critical:
+    - ASIL decomposition
+    - Freedom from interference
+    - Redundant execution paths
+
+  resource_constraints:
+    - Memory budgets (RAM, ROM)
+    - CPU utilization limits
+    - Power consumption targets
+
+  communication:
+    - CAN bus bandwidth allocation
+    - Message prioritization
+    - Diagnostic communication
+
+interface_specifications:
+  rest_api:
+    - Endpoint URLs and HTTP methods
+    - Request/response schemas (OpenAPI)
+    - Authentication requirements
+    - Rate limiting policies
+
+  grpc:
+    - Service definitions (Protobuf)
+    - Streaming modes (unary, server, client, bidirectional)
+    - Error codes and handling
+
+  autosar_someip:
+    - Service IDs and method IDs
+    - Event groups and event IDs
+    - Serialization formats
+
+  can_communication:
+    - Message IDs (standard/extended)
+    - Signal layouts (DBC format)
+    - Cycle times and priorities
+
+scalability_strategies:
+  horizontal:
+    - Load balancing (round-robin, least connections)
+    - Stateless service design
+    - Shared-nothing architecture
+
+  vertical:
+    - Resource optimization (CPU, memory)
+    - Caching strategies (Redis, Memcached)
+    - Database indexing and query optimization
+
+  data_partitioning:
+    - Sharding by vehicle ID / fleet region
+    - Time-series partitioning
+    - Read replicas for query offloading
+
+reliability_patterns:
+  - Health checks and liveness probes
+  - Graceful degradation
+  - Circuit breakers (Hystrix, Resilience4j)
+  - Retry with exponential backoff
+  - Bulkhead isolation
+  - Timeouts and deadlines
+
+deliverables:
+  - System Architecture Document
+  - C4 Model Diagrams (Context, Container, Component)
+  - Sequence Diagrams for critical workflows
+  - Architecture Decision Records (ADRs)
+  - Interface Specifications (API docs)
+  - Deployment Architecture Diagram
+  - Technology Stack Justification
+
+tools_used:
+  - draw.io / Lucidchart (diagrams)
+  - PlantUML / Mermaid (text-based diagrams)
+  - Structurizr (C4 model)
+  - Swagger/OpenAPI (API specs)
+  - ADR tools (adr-tools CLI)
+
+review_checklist:
+  - Architecture aligns with requirements
+  - Scalability and performance targets met
+  - Security best practices applied
+  - Failure modes analyzed
+  - Operational concerns addressed
+  - Technology choices justified
+  - Standards compliance verified

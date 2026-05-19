@@ -1,0 +1,166 @@
+name: ecu-software-integration
+version: 1.0.0
+description: "Complete ECU software integration workflow from component delivery through validated release candidate"
+trigger: "When all SWCs reach integration readiness, at each integration milestone, or for release candidate builds"
+domain: "AUTOSAR"
+safety_level: "ASIL-B"
+
+prerequisites:
+  - "All SWCs delivered and individually tested"
+  - "BSW configuration completed and reviewed"
+  - "RTE generated from current system design"
+  - "Integration test specifications available"
+  - "Target hardware and test bench available"
+
+phases:
+  - name: "Component Reception"
+    description: "Receive and validate all software components for integration"
+    inputs:
+      - "SWC delivery packages from application teams"
+      - "BSW generated code from configuration team"
+      - "RTE generated code"
+      - "Third-party library packages"
+    steps:
+      - "Verify each SWC package contains source code and unit test results"
+      - "Check SWC versions match integration plan"
+      - "Validate SWC API headers match contract phase output"
+      - "Verify BSW configuration version matches approved baseline"
+      - "Check third-party library versions against approved list"
+      - "Verify all components target the same compiler version"
+      - "Log all component versions in integration manifest"
+      - "Check for any known issue advisories on delivered components"
+      - "Confirm all safety-relevant SWCs have safety work product references"
+    outputs:
+      - "Integration manifest with all component versions"
+      - "Component reception checklist"
+      - "Discrepancy report if any issues found"
+    tools:
+      - "Component management system"
+      - "Version tracking database"
+      - "Delivery validation script"
+    quality_gates:
+      - "All planned components delivered"
+      - "All versions match integration plan"
+      - "No API contract mismatches detected"
+
+  - name: "Build and Link"
+    description: "Compile all components and link the complete ECU software image"
+    inputs:
+      - "All validated software components"
+      - "Build system configuration"
+      - "Linker script and memory map"
+    steps:
+      - "Configure build system with all source files and include paths"
+      - "Set compiler options per safety and performance requirements"
+      - "Compile BSW static and generated code"
+      - "Compile RTE generated code"
+      - "Compile each SWC independently to isolate errors"
+      - "Compile calibration data module"
+      - "Link all object files into ECU binary"
+      - "Resolve any linker errors from symbol conflicts"
+      - "Generate map file and analyze memory utilization"
+      - "Post-process binary for flash programming format"
+      - "Calculate binary checksums for integrity verification"
+    outputs:
+      - "ECU binary in flash programming format"
+      - "Map file with symbol addresses"
+      - "Memory utilization report"
+      - "Build log"
+    tools:
+      - "Cross-compiler toolchain"
+      - "Build automation system"
+      - "Memory analysis tool"
+    quality_gates:
+      - "Zero compile and link errors"
+      - "Memory utilization below 85% for ROM and RAM"
+      - "No unexpected compiler warnings in safety components"
+
+  - name: "Basic Integration Testing"
+    description: "Verify fundamental ECU operations on target hardware"
+    inputs:
+      - "ECU binary"
+      - "Target hardware test bench"
+      - "Basic integration test procedures"
+    steps:
+      - "Flash ECU binary to target hardware"
+      - "Verify ECU boot sequence completes within timing budget"
+      - "Check all BSW modules initialize successfully"
+      - "Verify OS tasks are running at configured periods"
+      - "Confirm CAN communication with network simulation"
+      - "Verify diagnostic communication via UDS"
+      - "Check NVM read and write operations"
+      - "Verify watchdog triggering and supervision"
+      - "Test ECU shutdown and wake-up sequence"
+      - "Measure startup time from power-on to operational"
+    outputs:
+      - "Basic integration test results"
+      - "Startup timing measurements"
+      - "Initial defect list"
+    tools:
+      - "Flash programming tool"
+      - "Network simulation tool"
+      - "Diagnostic tester"
+      - "Oscilloscope for timing"
+    quality_gates:
+      - "ECU boots to operational state"
+      - "All CAN messages sent and received correctly"
+      - "Diagnostic session established successfully"
+
+  - name: "Feature Integration Testing"
+    description: "Validate application-level features through the integrated software"
+    inputs:
+      - "Basic integration test results confirming platform stability"
+      - "Feature integration test specifications"
+      - "Stimulus generation configurations"
+    steps:
+      - "Execute feature tests for each application SWC function"
+      - "Verify signal processing chains from input to output"
+      - "Test mode transitions and their effects on behavior"
+      - "Verify diagnostic trouble code setting and clearing"
+      - "Test calibration parameter access and modification"
+      - "Execute boundary condition tests for critical algorithms"
+      - "Verify safety monitoring functions detect faults correctly"
+      - "Test degradation modes and fallback behaviors"
+      - "Execute combined feature interaction tests"
+      - "Record all test results with pass/fail status"
+    outputs:
+      - "Feature integration test results"
+      - "Defect reports for any failures"
+      - "Test coverage analysis"
+    tools:
+      - "HIL test automation system"
+      - "Signal generation tool"
+      - "Test management system"
+    quality_gates:
+      - "All critical features pass acceptance criteria"
+      - "No safety-relevant feature regressions"
+      - "Test coverage meets minimum threshold"
+
+  - name: "Release Candidate Approval"
+    description: "Review all integration results and promote to release candidate if criteria are met"
+    inputs:
+      - "All integration test results"
+      - "Defect list with severity classification"
+      - "Integration manifest"
+    steps:
+      - "Compile integration summary report"
+      - "Review all open defects and classify blocking versus non-blocking"
+      - "Verify all blocking defects are resolved or have approved waivers"
+      - "Check compliance with release entry criteria"
+      - "Present integration results to release review board"
+      - "Tag release candidate in version control"
+      - "Generate release notes with known issues"
+      - "Archive all integration artifacts for traceability"
+      - "Notify validation team of release candidate availability"
+    outputs:
+      - "Integration summary report"
+      - "Release candidate tag"
+      - "Release notes"
+    tools:
+      - "Defect tracking system"
+      - "Version control system"
+      - "Document management system"
+    quality_gates:
+      - "No unresolved blocking defects"
+      - "All mandatory tests executed and passed"
+      - "Release review board approval obtained"

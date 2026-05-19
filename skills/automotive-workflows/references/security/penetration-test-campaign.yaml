@@ -1,0 +1,165 @@
+name: penetration-test-campaign
+version: 1.0.0
+description: "Automotive cybersecurity penetration testing campaign workflow for vehicle and component-level testing"
+trigger: "Before vehicle type approval, after major system changes, or as part of annual security assessment"
+domain: "Cybersecurity"
+standard: "ISO/SAE 21434"
+
+prerequisites:
+  - "TARA results defining test scope and priorities"
+  - "Test vehicle or component test bench available"
+  - "Penetration testing tools and equipment prepared"
+  - "Legal authorization and scope agreement signed"
+  - "Safety precautions defined for physical testing"
+
+phases:
+  - name: "Scope and Planning"
+    description: "Define the penetration test scope, objectives, and rules of engagement"
+    inputs:
+      - "TARA results with prioritized threat list"
+      - "System architecture and interface documentation"
+      - "Previous penetration test reports"
+    steps:
+      - "Define test objectives aligned with TARA threat priorities"
+      - "Identify target interfaces and attack surfaces"
+      - "Define rules of engagement including boundaries and constraints"
+      - "Establish safety stop criteria for physical testing"
+      - "Select test methods: black-box, grey-box, or white-box per target"
+      - "Plan test schedule accounting for vehicle availability"
+      - "Prepare test equipment and tool configurations"
+      - "Define communication protocol for critical findings"
+      - "Create test plan document and obtain approval"
+      - "Brief all team members on safety procedures"
+    outputs:
+      - "Approved penetration test plan"
+      - "Rules of engagement document"
+      - "Test schedule and resource allocation"
+    tools:
+      - "Test planning tool"
+      - "Asset management system"
+      - "Communication system for findings"
+    quality_gates:
+      - "Test scope covers all TARA high-priority threats"
+      - "Safety stop criteria clearly defined"
+      - "Test plan approved by security and safety teams"
+
+  - name: "Reconnaissance and Discovery"
+    description: "Gather information about target systems and discover potential entry points"
+    inputs:
+      - "System documentation for grey/white box testing"
+      - "Physical access to test vehicle or bench"
+      - "Network scanning and discovery tools"
+    steps:
+      - "Perform passive network reconnaissance on vehicle buses"
+      - "Enumerate all active CAN, LIN, and Ethernet nodes"
+      - "Identify open ports and services on Ethernet-connected ECUs"
+      - "Fingerprint operating systems and software versions"
+      - "Analyze OBD-II interface for available diagnostic services"
+      - "Scan wireless interfaces including WiFi, Bluetooth, and cellular"
+      - "Map physical debug interfaces (JTAG, UART, SWD)"
+      - "Analyze firmware images if available for white-box testing"
+      - "Document all discovered attack surfaces"
+      - "Prioritize targets based on accessibility and TARA risk"
+    outputs:
+      - "Attack surface map"
+      - "Service enumeration results"
+      - "Prioritized target list"
+    tools:
+      - "CAN bus analyzer"
+      - "Network scanner"
+      - "Wireless analysis tools"
+      - "Firmware analysis tool"
+    quality_gates:
+      - "All communication interfaces scanned"
+      - "All discovered services documented"
+      - "Target prioritization reviewed with team lead"
+
+  - name: "Exploitation Testing"
+    description: "Attempt to exploit identified vulnerabilities across all target interfaces"
+    inputs:
+      - "Attack surface map with prioritized targets"
+      - "Exploitation tools and custom scripts"
+      - "Known vulnerability databases"
+    steps:
+      - "Test CAN bus for message injection and replay attacks"
+      - "Test UDS services for authentication bypass"
+      - "Attempt firmware extraction through debug interfaces"
+      - "Test Bluetooth pairing and connection vulnerabilities"
+      - "Test WiFi access point security and client connections"
+      - "Attempt cellular modem exploitation if in scope"
+      - "Test OTA update mechanism for tampering vulnerabilities"
+      - "Attempt privilege escalation on Linux-based ECUs"
+      - "Test secure boot bypass on target ECUs"
+      - "Attempt key extraction from secure storage"
+      - "Document all successful and unsuccessful exploitation attempts"
+    outputs:
+      - "Exploitation results per target and attack vector"
+      - "Proof of concept for successful exploits"
+      - "Evidence artifacts including logs and captures"
+    tools:
+      - "CAN injection tool"
+      - "UDS fuzzer"
+      - "Wireless exploitation framework"
+      - "Binary analysis tools"
+    quality_gates:
+      - "All prioritized targets tested"
+      - "All successful exploits documented with proof of concept"
+      - "Critical findings reported immediately per protocol"
+
+  - name: "Analysis and Reporting"
+    description: "Analyze test results, classify findings by severity, and create comprehensive report"
+    inputs:
+      - "Exploitation results and evidence"
+      - "TARA risk context"
+      - "Industry severity classification criteria"
+    steps:
+      - "Classify each finding using CVSS scoring methodology"
+      - "Map findings back to TARA threats for validation"
+      - "Identify any new threats not covered in original TARA"
+      - "Assess real-world exploitability and impact"
+      - "Develop remediation recommendations per finding"
+      - "Estimate remediation effort and priority"
+      - "Create executive summary for management audience"
+      - "Create technical detail appendix for engineering teams"
+      - "Compile complete penetration test report"
+      - "Conduct findings walkthrough with development team"
+    outputs:
+      - "Penetration test report with all findings"
+      - "Remediation recommendations"
+      - "Executive summary"
+    tools:
+      - "CVSS calculator"
+      - "Report generation tool"
+      - "Finding management system"
+    quality_gates:
+      - "All findings classified with CVSS scores"
+      - "All critical findings have remediation recommendations"
+      - "Report reviewed by penetration test lead"
+
+  - name: "Remediation Verification"
+    description: "Verify that critical findings have been remediated through retesting"
+    inputs:
+      - "Remediation implementations from development team"
+      - "Original finding details and exploitation methods"
+      - "Updated system for retesting"
+    steps:
+      - "Confirm development team has implemented remediations"
+      - "Retest each critical and high-severity finding"
+      - "Verify exploits no longer succeed with remediations in place"
+      - "Check that remediations do not introduce new vulnerabilities"
+      - "Test for regression in previously passing areas"
+      - "Update finding status in tracking system"
+      - "Generate remediation verification report"
+      - "Obtain sign-off that residual risk is acceptable"
+    outputs:
+      - "Remediation verification results"
+      - "Updated finding status report"
+      - "Final sign-off document"
+    tools:
+      - "Same exploitation tools as testing phase"
+      - "Finding tracking system"
+      - "Verification report template"
+    quality_gates:
+      - "All critical findings verified as remediated"
+      - "No new vulnerabilities introduced by remediations"
+      - "Residual risk accepted by cybersecurity manager"

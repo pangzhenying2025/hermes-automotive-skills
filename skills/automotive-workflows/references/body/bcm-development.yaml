@@ -1,0 +1,164 @@
+name: bcm-development
+version: 1.0.0
+description: "Body Control Module software development workflow for managing vehicle body electrical functions"
+trigger: "During new vehicle platform development, adding body features, or BCM platform migration"
+domain: "Body Electronics"
+safety_level: "ASIL-A"
+
+prerequisites:
+  - "BCM hardware platform selected and BSP available"
+  - "Body electrical architecture specification"
+  - "Feature requirements from vehicle integration"
+  - "CAN/LIN communication matrix for body network"
+  - "Development and test tools configured"
+
+phases:
+  - name: "Feature Requirements Analysis"
+    description: "Analyze and decompose body control feature requirements into BCM software functions"
+    inputs:
+      - "Vehicle body feature list"
+      - "Customer-facing feature descriptions"
+      - "Electrical architecture with I/O assignments"
+    steps:
+      - "Catalog all body functions managed by BCM"
+      - "Map functions to BCM input and output pins"
+      - "Define state machines for each controllable feature"
+      - "Specify timing requirements for each function"
+      - "Define priority and arbitration between competing functions"
+      - "Specify diagnostic requirements per body function"
+      - "Define network dependencies for each function"
+      - "Specify low-power behavior per body function"
+      - "Define variant coding requirements for trim levels"
+      - "Create software requirements specification"
+    outputs:
+      - "BCM software requirements specification"
+      - "I/O mapping table"
+      - "Feature state machine definitions"
+    tools:
+      - "Requirements management tool"
+      - "State machine design tool"
+      - "I/O mapping database"
+    quality_gates:
+      - "All body features covered in requirements"
+      - "I/O mapping verified against hardware schematic"
+      - "Requirements reviewed and approved"
+
+  - name: "Software Architecture and Design"
+    description: "Design the BCM software architecture for maintainability and configurability"
+    inputs:
+      - "Software requirements specification"
+      - "BCM hardware platform capabilities"
+      - "AUTOSAR or platform framework"
+    steps:
+      - "Define software component architecture per feature domain"
+      - "Design hardware abstraction layer for I/O access"
+      - "Design feature manager components for each body function"
+      - "Design power management component for sleep/wake control"
+      - "Design variant coding interface for feature configuration"
+      - "Define inter-component communication interfaces"
+      - "Design diagnostic service handlers for body functions"
+      - "Specify OS task allocation per timing requirement"
+      - "Design anti-pinch safety functions for windows and sunroof"
+      - "Review architecture with development team"
+    outputs:
+      - "Software architecture document"
+      - "Component interface specifications"
+      - "Task allocation plan"
+    tools:
+      - "Architecture modeling tool"
+      - "AUTOSAR authoring tool"
+      - "Design review system"
+    quality_gates:
+      - "Architecture supports all required features"
+      - "Anti-pinch safety design reviewed by safety team"
+      - "Architecture review approved"
+
+  - name: "Feature Implementation and Unit Testing"
+    description: "Implement BCM features and validate through unit testing"
+    inputs:
+      - "Software architecture and component designs"
+      - "Development environment and coding standards"
+      - "Unit test framework"
+    steps:
+      - "Implement exterior lighting control: headlamps, turn signals, DRL"
+      - "Implement interior lighting control: dome, ambient, footwell"
+      - "Implement power window control with anti-pinch detection"
+      - "Implement central locking and trunk release control"
+      - "Implement wiper and washer control state machine"
+      - "Implement horn and alarm system control"
+      - "Implement power mirror control and fold"
+      - "Implement power management and sleep/wake control"
+      - "Write unit tests for each feature module"
+      - "Achieve minimum code coverage targets"
+    outputs:
+      - "Implemented BCM feature code"
+      - "Unit test results"
+      - "Code coverage report"
+    tools:
+      - "Development IDE"
+      - "Unit test framework"
+      - "Code coverage tool"
+    quality_gates:
+      - "All unit tests pass"
+      - "Code coverage above 80%"
+      - "Anti-pinch unit tests cover all safety scenarios"
+
+  - name: "Integration and System Testing"
+    description: "Integrate BCM with vehicle network and test complete feature behavior"
+    inputs:
+      - "Implemented BCM software"
+      - "Vehicle network simulation or test bench"
+      - "System test specifications"
+    steps:
+      - "Deploy BCM software to target hardware"
+      - "Verify all I/O assignments function correctly"
+      - "Test exterior lighting sequences per regulation"
+      - "Test interior lighting scenarios: door open, key on, dimming"
+      - "Test power window operation with anti-pinch verification"
+      - "Test central locking sequence with all lock points"
+      - "Test wiper intermittent timing and rain sensor input"
+      - "Test sleep/wake transitions and quiescent current"
+      - "Test variant coding for different trim configurations"
+      - "Execute network integration tests with body bus"
+    outputs:
+      - "System test results per feature"
+      - "Quiescent current measurement"
+      - "Network integration test results"
+    tools:
+      - "BCM test bench"
+      - "I/O simulation box"
+      - "Network simulation tool"
+    quality_gates:
+      - "All features function per specification"
+      - "Quiescent current within vehicle power budget"
+      - "Network communication verified"
+
+  - name: "Vehicle Validation and Release"
+    description: "Validate BCM on the target vehicle and release for production"
+    inputs:
+      - "System-tested BCM software"
+      - "Target vehicle for validation"
+      - "Vehicle validation procedures"
+    steps:
+      - "Install BCM on target vehicle"
+      - "Validate all lighting functions per regulatory requirements"
+      - "Test comfort features: one-touch windows, follow-me-home"
+      - "Validate anti-pinch safety on vehicle doors"
+      - "Test BCM behavior during vehicle key lifecycle"
+      - "Validate sleep/wake on vehicle with full network"
+      - "Execute cold climate testing for all body functions"
+      - "Execute hot climate testing for all body functions"
+      - "Verify diagnostic access to all BCM functions"
+      - "Release BCM software for production"
+    outputs:
+      - "Vehicle validation test results"
+      - "Climate test results"
+      - "BCM production release"
+    tools:
+      - "Target vehicle"
+      - "Climate test facilities"
+      - "Release management system"
+    quality_gates:
+      - "All lighting meets regulatory requirements"
+      - "Anti-pinch safety verified on vehicle"
+      - "All features work at temperature extremes"

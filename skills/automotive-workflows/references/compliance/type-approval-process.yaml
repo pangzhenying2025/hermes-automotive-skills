@@ -1,0 +1,164 @@
+name: type-approval-process
+version: 1.0.0
+description: "Vehicle type approval process workflow for obtaining regulatory certification in target markets"
+trigger: "During new vehicle development, model year changes requiring re-approval, or market expansion"
+domain: "Compliance"
+standard: "EU Type Approval Framework, FMVSS, GB Standards"
+
+prerequisites:
+  - "Vehicle prototype meeting production specifications"
+  - "Technical documentation package prepared"
+  - "Accredited test laboratory engaged"
+  - "Type approval authority contacts established"
+  - "Previous approvals for carryover systems documented"
+
+phases:
+  - name: "Regulatory Mapping and Planning"
+    description: "Map all applicable regulations and plan the type approval program"
+    inputs:
+      - "Target market list for vehicle sales"
+      - "Vehicle technical specifications"
+      - "Previous generation approval status"
+    steps:
+      - "Identify all EU type approval regulations per category"
+      - "Identify US FMVSS and EPA requirements"
+      - "Identify Chinese GB standards if applicable"
+      - "Map carryover approvals from previous model"
+      - "Identify new tests required for design changes"
+      - "List all component E-marks and approvals needed"
+      - "Identify emissions and fuel economy testing requirements"
+      - "Plan test sequence considering dependencies and lead times"
+      - "Estimate total testing timeline and costs"
+      - "Create type approval master plan"
+    outputs:
+      - "Regulatory requirements matrix"
+      - "Test plan with schedule"
+      - "Type approval master plan"
+    tools:
+      - "Regulatory database"
+      - "Approval planning tool"
+      - "Test scheduling system"
+    quality_gates:
+      - "All target market regulations identified"
+      - "Carryover strategy validated with authority"
+      - "Master plan reviewed and approved by program"
+
+  - name: "Documentation Preparation"
+    description: "Prepare the complete technical documentation package for type approval submission"
+    inputs:
+      - "Vehicle technical specifications"
+      - "Component supplier certifications"
+      - "Test reports from component approvals"
+    steps:
+      - "Compile vehicle description document per regulation format"
+      - "Prepare information document with technical data"
+      - "Collect all component E-mark approval certificates"
+      - "Compile material composition documentation"
+      - "Prepare conformity of production documentation"
+      - "Document vehicle identification number format"
+      - "Prepare statutory plate information"
+      - "Compile exhaust emission type approval documentation"
+      - "Prepare noise level test documentation"
+      - "Create document package index and submission checklist"
+    outputs:
+      - "Complete documentation package"
+      - "Submission checklist"
+      - "Document package index"
+    tools:
+      - "Document management system"
+      - "Type approval documentation template"
+      - "Submission checklist tool"
+    quality_gates:
+      - "All required documents present per checklist"
+      - "Document format compliant with authority requirements"
+      - "All component approvals current and valid"
+
+  - name: "Testing Campaign"
+    description: "Execute all required type approval tests at accredited laboratories"
+    inputs:
+      - "Test plan from regulatory mapping"
+      - "Test vehicles prepared to specification"
+      - "Accredited laboratory bookings"
+    steps:
+      - "Execute braking performance tests per ECE R13H"
+      - "Execute steering effort tests per ECE R79"
+      - "Execute exterior lighting tests per ECE R48"
+      - "Execute EMC tests per ECE R10"
+      - "Execute exhaust emission tests per Euro regulation"
+      - "Execute noise level tests per ECE R51"
+      - "Execute crash safety tests per ECE R94, R95, R137"
+      - "Execute pedestrian protection tests per ECE R127"
+      - "Execute ADAS function tests for type approval"
+      - "Collect all test reports from laboratories"
+    outputs:
+      - "Test reports per regulation"
+      - "Test result summary"
+      - "Any deviations or retest needs"
+    tools:
+      - "Accredited test laboratories"
+      - "Test vehicle preparation"
+      - "Test result tracking system"
+    quality_gates:
+      - "All tests pass regulatory requirements"
+      - "Test reports issued by accredited laboratories"
+      - "Any deviations addressed before submission"
+
+  - name: "Authority Submission and Review"
+    description: "Submit documentation and test results to type approval authority for review"
+    inputs:
+      - "Complete documentation package"
+      - "All test reports"
+      - "Submission forms and fees"
+    steps:
+      - "Submit documentation package to type approval authority"
+      - "Pay type approval fees per authority schedule"
+      - "Support authority during document review"
+      - "Respond to authority technical questions"
+      - "Arrange authority witness testing if required"
+      - "Submit additional evidence if requested"
+      - "Review draft type approval certificate"
+      - "Confirm vehicle identification and specification details"
+      - "Receive final type approval certificate"
+      - "Register approved vehicle types in regulatory database"
+    outputs:
+      - "Type approval certificate"
+      - "Approved technical specification"
+      - "Registration in regulatory database"
+    tools:
+      - "Authority submission portal"
+      - "Communication tracking system"
+      - "Certificate management system"
+    quality_gates:
+      - "Type approval certificate received"
+      - "All vehicle variants covered by approval"
+      - "Certificate details accurate and complete"
+
+  - name: "Conformity of Production"
+    description: "Establish and maintain conformity of production to ensure ongoing compliance"
+    inputs:
+      - "Type approval specifications"
+      - "Production quality management system"
+      - "COP test requirements"
+    steps:
+      - "Define COP test plan per approved specifications"
+      - "Establish COP testing frequency per regulation"
+      - "Integrate COP checks into production end-of-line testing"
+      - "Implement COP data recording and trending"
+      - "Prepare for authority COP audit"
+      - "Conduct internal COP compliance review"
+      - "Maintain COP documentation for authority inspection"
+      - "Report any production changes affecting type approval"
+      - "Apply for extension of approval if changes occur"
+      - "Maintain type approval validity through annual COP"
+    outputs:
+      - "COP test plan and procedures"
+      - "COP test records"
+      - "Ongoing compliance evidence"
+    tools:
+      - "COP test equipment"
+      - "Quality management system"
+      - "Compliance tracking system"
+    quality_gates:
+      - "COP test results within approved tolerances"
+      - "COP documentation current and complete"
+      - "Authority COP audit passed"

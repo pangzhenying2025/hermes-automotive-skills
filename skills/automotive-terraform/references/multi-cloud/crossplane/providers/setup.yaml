@@ -1,0 +1,235 @@
+# Crossplane Provider Setup for Multi-Cloud
+# Install and configure AWS, Azure, and GCP providers
+
+---
+# Install Crossplane Providers
+apiVersion: pkg.crossplane.io/v1
+kind: Provider
+metadata:
+  name: provider-aws
+spec:
+  package: xpkg.upbound.io/upbound/provider-aws:v0.45.0
+  packagePullPolicy: IfNotPresent
+
+---
+apiVersion: pkg.crossplane.io/v1
+kind: Provider
+metadata:
+  name: provider-azure
+spec:
+  package: xpkg.upbound.io/upbound/provider-azure:v0.40.0
+  packagePullPolicy: IfNotPresent
+
+---
+apiVersion: pkg.crossplane.io/v1
+kind: Provider
+metadata:
+  name: provider-gcp
+spec:
+  package: xpkg.upbound.io/upbound/provider-gcp:v0.42.0
+  packagePullPolicy: IfNotPresent
+
+---
+# AWS Provider Configuration
+apiVersion: aws.upbound.io/v1beta1
+kind: ProviderConfig
+metadata:
+  name: default
+spec:
+  credentials:
+    source: Secret
+    secretRef:
+      namespace: crossplane-system
+      name: aws-credentials
+      key: credentials
+  # Alternative: Use IAM roles for service accounts (IRSA)
+  # assumeRoleARN: arn:aws:iam::123456789012:role/crossplane-provider-aws
+
+---
+# Azure Provider Configuration
+apiVersion: azure.upbound.io/v1beta1
+kind: ProviderConfig
+metadata:
+  name: default
+spec:
+  credentials:
+    source: Secret
+    secretRef:
+      namespace: crossplane-system
+      name: azure-credentials
+      key: credentials
+  # Alternative: Use workload identity
+  # clientID: <managed-identity-client-id>
+
+---
+# GCP Provider Configuration
+apiVersion: gcp.upbound.io/v1beta1
+kind: ProviderConfig
+metadata:
+  name: default
+spec:
+  projectID: your-gcp-project-id
+  credentials:
+    source: Secret
+    secretRef:
+      namespace: crossplane-system
+      name: gcp-credentials
+      key: credentials
+  # Alternative: Use workload identity
+  # serviceAccountImpersonation:
+  #   email: crossplane@project.iam.gserviceaccount.com
+
+---
+# Create AWS Credentials Secret
+# kubectl create secret generic aws-credentials \
+#   -n crossplane-system \
+#   --from-file=credentials=~/.aws/credentials
+
+# Example AWS credentials file format:
+# [default]
+# aws_access_key_id = AKIAIOSFODNN7EXAMPLE
+# aws_secret_access_key = wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+
+---
+# Create Azure Credentials Secret
+# kubectl create secret generic azure-credentials \
+#   -n crossplane-system \
+#   --from-literal=credentials="$(cat <<EOF
+# {
+#   "clientId": "<service-principal-client-id>",
+#   "clientSecret": "<service-principal-client-secret>",
+#   "subscriptionId": "<azure-subscription-id>",
+#   "tenantId": "<azure-tenant-id>",
+#   "activeDirectoryEndpointUrl": "https://login.microsoftonline.com",
+#   "resourceManagerEndpointUrl": "https://management.azure.com/",
+#   "activeDirectoryGraphResourceId": "https://graph.windows.net/",
+#   "sqlManagementEndpointUrl": "https://management.core.windows.net:8443/",
+#   "galleryEndpointUrl": "https://gallery.azure.com/",
+#   "managementEndpointUrl": "https://management.core.windows.net/"
+# }
+# EOF
+# )"
+
+---
+# Create GCP Credentials Secret
+# kubectl create secret generic gcp-credentials \
+#   -n crossplane-system \
+#   --from-file=credentials=<path-to-service-account-key.json>
+
+# Service account should have these roles:
+# - Compute Admin
+# - Kubernetes Engine Admin
+# - Service Account User
+# - Cloud SQL Admin
+# - Storage Admin
+# - Pub/Sub Editor
+
+---
+# Role-Based Access Control (RBAC)
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: crossplane-admin
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - secrets
+      - configmaps
+      - events
+    verbs:
+      - get
+      - list
+      - watch
+      - create
+      - update
+      - patch
+      - delete
+  - apiGroups:
+      - apiextensions.crossplane.io
+    resources:
+      - compositeresourcedefinitions
+      - compositions
+    verbs:
+      - get
+      - list
+      - watch
+      - create
+      - update
+      - patch
+      - delete
+  - apiGroups:
+      - pkg.crossplane.io
+    resources:
+      - providers
+      - providerrevisions
+      - configurations
+      - configurationrevisions
+    verbs:
+      - get
+      - list
+      - watch
+      - create
+      - update
+      - patch
+      - delete
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: crossplane-admin-binding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: crossplane-admin
+subjects:
+  - kind: ServiceAccount
+    name: crossplane
+    namespace: crossplane-system
+
+---
+# Monitoring: ServiceMonitor for Prometheus
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: crossplane-metrics
+  namespace: crossplane-system
+  labels:
+    app: crossplane
+spec:
+  selector:
+    matchLabels:
+      app: crossplane
+  endpoints:
+    - port: metrics
+      interval: 30s
+      path: /metrics
+
+---
+# Policy: Prevent deletion of critical resources
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: prevent-crossplane-deletion
+spec:
+  validationFailureAction: enforce
+  background: false
+  rules:
+    - name: prevent-prod-deletion
+      match:
+        any:
+          - resources:
+              kinds:
+                - VehicleCluster
+                - VehicleDatabase
+              namespaces:
+                - production
+      validate:
+        message: "Deleting production resources requires approval via GitOps PR"
+        deny:
+          conditions:
+            any:
+              - key: "{{ request.operation }}"
+                operator: Equals
+                value: DELETE

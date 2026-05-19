@@ -1,0 +1,165 @@
+name: ota-campaign-management
+version: 1.0.0
+description: "Over-the-air software update campaign management workflow for fleet-wide vehicle updates"
+trigger: "When deploying software updates, recalls requiring software fixes, or feature enablement campaigns"
+domain: "Cloud"
+safety_level: "ASIL-A"
+standard: "UNECE R156"
+
+prerequisites:
+  - "OTA update platform deployed and operational"
+  - "Vehicle update client tested and deployed on fleet"
+  - "Signed software packages ready for deployment"
+  - "Campaign management tooling configured"
+  - "Vehicle status monitoring operational"
+
+phases:
+  - name: "Campaign Planning"
+    description: "Plan the OTA update campaign including scope, schedule, and risk mitigation"
+    inputs:
+      - "Software update package and release notes"
+      - "Target vehicle population and eligibility criteria"
+      - "Update urgency classification"
+    steps:
+      - "Define campaign scope: which ECUs and software versions"
+      - "Identify eligible vehicle population by model, region, and config"
+      - "Calculate total campaign size and resource requirements"
+      - "Define rollout phases: pilot, early access, general availability"
+      - "Set phase gate criteria for expanding rollout"
+      - "Define rollback criteria and trigger conditions"
+      - "Plan server capacity for download peak load"
+      - "Define customer notification strategy and timing"
+      - "Establish support escalation path for update issues"
+      - "Create campaign plan document and obtain approval"
+    outputs:
+      - "Campaign plan document"
+      - "Vehicle eligibility list"
+      - "Rollout phase schedule"
+    tools:
+      - "Campaign management platform"
+      - "Fleet database query tool"
+      - "Capacity planning tool"
+    quality_gates:
+      - "Vehicle eligibility criteria validated"
+      - "Server capacity sufficient for planned load"
+      - "Campaign plan approved by release manager"
+
+  - name: "Package Staging and Validation"
+    description: "Stage update packages on distribution infrastructure and validate delivery"
+    inputs:
+      - "Signed software update packages"
+      - "Distribution infrastructure"
+      - "Package validation requirements"
+    steps:
+      - "Upload signed packages to distribution CDN"
+      - "Verify package integrity after upload using checksums"
+      - "Configure package metadata: version, compatibility, size"
+      - "Set package availability rules per region and time zone"
+      - "Configure download bandwidth throttling per vehicle"
+      - "Test package download from multiple geographic locations"
+      - "Verify end-to-end download integrity on test vehicle"
+      - "Test package installation on representative vehicle"
+      - "Verify rollback package is also staged and accessible"
+      - "Confirm staging complete and packages available"
+    outputs:
+      - "Staged packages on distribution infrastructure"
+      - "Download validation results"
+      - "Installation validation on reference vehicle"
+    tools:
+      - "CDN management console"
+      - "Package integrity tool"
+      - "Reference test vehicle"
+    quality_gates:
+      - "Package checksums verified at all CDN locations"
+      - "Download speed acceptable from all regions"
+      - "Installation verified on reference vehicle"
+
+  - name: "Pilot Deployment"
+    description: "Deploy update to internal and early adopter fleet for initial validation"
+    inputs:
+      - "Staged packages"
+      - "Pilot fleet vehicle list"
+      - "Monitoring setup"
+    steps:
+      - "Deploy campaign to internal test fleet of 50 vehicles"
+      - "Monitor download completion rates"
+      - "Monitor installation success rates"
+      - "Verify ECU software versions updated correctly"
+      - "Check for any diagnostic fault codes after update"
+      - "Monitor vehicle operational data for anomalies"
+      - "Collect feedback from internal fleet drivers"
+      - "Analyze update timing: download, install, activation"
+      - "Evaluate pilot results against phase gate criteria"
+      - "Decision: proceed, modify, or halt campaign"
+    outputs:
+      - "Pilot deployment results"
+      - "Pilot fleet monitoring data"
+      - "Phase gate decision record"
+    tools:
+      - "Campaign monitoring dashboard"
+      - "Vehicle diagnostic monitoring"
+      - "Driver feedback collection"
+    quality_gates:
+      - "Installation success rate above 99% on pilot fleet"
+      - "No safety-relevant issues reported"
+      - "Phase gate criteria met for expansion"
+
+  - name: "General Deployment"
+    description: "Expand update campaign to the full eligible fleet with graduated rollout"
+    inputs:
+      - "Pilot deployment approval"
+      - "Full eligible vehicle list"
+      - "Graduated rollout schedule"
+    steps:
+      - "Expand to 10% of eligible fleet"
+      - "Monitor metrics for 48 hours before next expansion"
+      - "Expand to 25% of eligible fleet"
+      - "Monitor and evaluate before next expansion"
+      - "Expand to 50% of eligible fleet"
+      - "Expand to 100% of eligible fleet"
+      - "Send customer notifications per communication plan"
+      - "Monitor download and installation rates daily"
+      - "Handle individual vehicle update failures"
+      - "Track campaign completion percentage"
+    outputs:
+      - "Campaign progress metrics"
+      - "Daily monitoring reports"
+      - "Individual failure case resolutions"
+    tools:
+      - "Campaign orchestration platform"
+      - "Customer notification system"
+      - "Support ticket system"
+    quality_gates:
+      - "Success rate above 98% at each expansion phase"
+      - "Failure root causes identified and addressed"
+      - "Customer complaint rate below threshold"
+
+  - name: "Campaign Closure and Reporting"
+    description: "Close the OTA campaign, generate reports, and archive results"
+    inputs:
+      - "Campaign completion data"
+      - "Remaining non-updated vehicles"
+      - "Campaign performance metrics"
+    steps:
+      - "Identify vehicles that did not receive update"
+      - "Classify reasons for non-update: offline, declined, failed"
+      - "Plan remediation for failed update vehicles"
+      - "Plan dealer visit campaign for persistently offline vehicles"
+      - "Calculate final campaign metrics: reach, success, time"
+      - "Generate campaign completion report"
+      - "Document lessons learned for future campaigns"
+      - "Archive campaign data per regulatory retention requirements"
+      - "Update fleet software version registry"
+      - "Close campaign in management platform"
+    outputs:
+      - "Campaign completion report"
+      - "Non-updated vehicle remediation plan"
+      - "Lessons learned document"
+    tools:
+      - "Campaign management platform"
+      - "Fleet management system"
+      - "Report generation tool"
+    quality_gates:
+      - "Campaign reach above 95% of eligible fleet"
+      - "Remediation plan for all non-updated vehicles"
+      - "Regulatory retention requirements met"

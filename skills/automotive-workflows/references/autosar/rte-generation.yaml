@@ -1,0 +1,166 @@
+name: rte-generation
+version: 1.0.0
+description: "AUTOSAR Runtime Environment generation workflow for creating the middleware layer connecting SWCs to BSW"
+trigger: "When SWC interfaces change, new SWCs are added, or BSW configuration is updated"
+domain: "AUTOSAR"
+standard: "AUTOSAR Classic Platform R22-11"
+
+prerequisites:
+  - "All SWC descriptions available in ARXML format"
+  - "ECU extract with SWC-to-ECU mapping complete"
+  - "BSW module configurations finalized"
+  - "RTE generator tool configured for target platform"
+  - "OS task allocation for runnables defined"
+
+phases:
+  - name: "Input Validation"
+    description: "Validate all RTE generation inputs for consistency and completeness"
+    inputs:
+      - "SWC description ARXML files"
+      - "ECU extract with component mapping"
+      - "BSW scheduler configuration"
+      - "OS task definitions"
+    steps:
+      - "Validate all SWC descriptions against AUTOSAR schema"
+      - "Verify all port interfaces have matching data types defined"
+      - "Check sender-receiver port compatibility between connected SWCs"
+      - "Verify client-server port operation signatures match"
+      - "Validate runnable-to-task mapping covers all runnables"
+      - "Check timing event periods are consistent with OS tick"
+      - "Verify data element initial values are defined"
+      - "Validate mode switch port connections"
+      - "Check inter-runnable variable definitions for consistency"
+      - "Generate input validation report"
+    outputs:
+      - "Input validation report with findings"
+      - "Corrected ARXML files if issues found"
+      - "Validation pass confirmation"
+    tools:
+      - "ARXML schema validator"
+      - "Port compatibility checker"
+      - "AUTOSAR authoring tool"
+    quality_gates:
+      - "Zero schema validation errors"
+      - "All port connections type-compatible"
+      - "All runnables mapped to OS tasks"
+
+  - name: "RTE Configuration"
+    description: "Configure RTE generation options and optimization parameters"
+    inputs:
+      - "Validated input ARXML files"
+      - "Target platform constraints"
+      - "Performance optimization requirements"
+    steps:
+      - "Select RTE generation mode for each communication paradigm"
+      - "Configure data consistency mechanism for sender-receiver ports"
+      - "Choose between direct and queued communication per port"
+      - "Configure buffer allocation strategy for queued communication"
+      - "Set up RTE event mapping to OS events and alarms"
+      - "Configure inter-ECU communication buffers"
+      - "Define RTE optimization level based on resource constraints"
+      - "Configure measurement and calibration access points"
+      - "Set up exclusive area implementation strategy"
+      - "Configure RTE error handling and notification"
+    outputs:
+      - "RTE generation configuration file"
+      - "Buffer allocation plan"
+      - "Optimization parameter set"
+    tools:
+      - "RTE configurator"
+      - "Buffer sizing calculator"
+      - "Resource estimation tool"
+    quality_gates:
+      - "Buffer sizes sufficient for all queued ports"
+      - "Data consistency mechanisms appropriate for safety level"
+      - "Resource estimates within available RAM and ROM"
+
+  - name: "Code Generation"
+    description: "Execute RTE code generation and collect generated artifacts"
+    inputs:
+      - "Validated ARXML inputs"
+      - "RTE generation configuration"
+      - "Target compiler specifications"
+    steps:
+      - "Execute RTE generator in full generation mode"
+      - "Collect generated RTE header files for SWC contract phase"
+      - "Collect generated RTE implementation files"
+      - "Collect generated SWC API header files"
+      - "Review generation log for warnings and informational messages"
+      - "Verify all expected output files were generated"
+      - "Compare generated code against previous version for review"
+      - "Check generated code size against resource budget"
+      - "Verify no deprecated API patterns in generated code"
+      - "Archive generation log and configuration for traceability"
+    outputs:
+      - "Generated RTE source and header files"
+      - "SWC contract header files"
+      - "Generation log and diff report"
+    tools:
+      - "RTE generator tool"
+      - "Code diff tool"
+      - "Code size analyzer"
+    quality_gates:
+      - "Zero generation errors"
+      - "All expected artifacts generated"
+      - "Code size within resource budget"
+
+  - name: "Integration Build"
+    description: "Integrate generated RTE with SWC code and BSW, then build the complete ECU software"
+    inputs:
+      - "Generated RTE files"
+      - "SWC source code"
+      - "BSW generated code"
+      - "Linker configuration"
+    steps:
+      - "Copy generated RTE files to build tree"
+      - "Distribute SWC contract headers to application teams"
+      - "Compile RTE source files with target cross-compiler"
+      - "Compile SWC source files against contract headers"
+      - "Compile BSW generated and static code"
+      - "Link complete ECU binary"
+      - "Verify no unresolved symbols in final binary"
+      - "Check memory map for section placement"
+      - "Verify total ROM and RAM usage against limits"
+      - "Generate build report with warnings summary"
+    outputs:
+      - "Complete ECU binary"
+      - "Memory map report"
+      - "Build report"
+    tools:
+      - "Cross-compiler toolchain"
+      - "Linker"
+      - "Memory analysis tool"
+    quality_gates:
+      - "Build completes with zero errors"
+      - "No unresolved symbols"
+      - "ROM and RAM within hardware limits"
+
+  - name: "RTE Verification"
+    description: "Verify the generated RTE functions correctly through targeted testing"
+    inputs:
+      - "Compiled ECU binary"
+      - "RTE verification test suite"
+      - "Test harness or target hardware"
+    steps:
+      - "Execute unit tests for RTE data access APIs"
+      - "Verify sender-receiver data transfer correctness"
+      - "Verify client-server call routing"
+      - "Test mode switch notification delivery"
+      - "Verify exclusive area mutual exclusion behavior"
+      - "Test runnable activation at correct timing events"
+      - "Verify inter-runnable variable access patterns"
+      - "Measure RTE overhead for critical communication paths"
+      - "Verify RTE status reporting and error detection"
+      - "Document verification results and update test report"
+    outputs:
+      - "RTE verification test results"
+      - "Performance measurement data"
+      - "Verification report"
+    tools:
+      - "Unit test framework"
+      - "Timing measurement tool"
+      - "Test result management system"
+    quality_gates:
+      - "All RTE verification tests pass"
+      - "RTE overhead within performance budget"
+      - "All communication paths verified"

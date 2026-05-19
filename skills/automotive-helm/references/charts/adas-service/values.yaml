@@ -1,0 +1,336 @@
+# Default values for adas-service Helm chart
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# Number of replicas
+replicaCount: 2
+
+# Container image configuration
+image:
+  repository: automotive/adas-processing-service
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion
+  tag: "2.5.0"
+
+# Image pull secrets for private registries
+imagePullSecrets: []
+# - name: automotive-registry-secret
+
+# Override chart name
+nameOverride: ""
+fullnameOverride: ""
+
+# Service account configuration
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+# Pod annotations
+podAnnotations:
+  prometheus.io/scrape: "true"
+  prometheus.io/port: "9090"
+  prometheus.io/path: "/metrics"
+
+# Pod security context
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 1000
+  fsGroup: 1000
+  seccompProfile:
+    type: RuntimeDefault
+
+# Container security context
+securityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+    - ALL
+  readOnlyRootFilesystem: true
+
+# Service configuration
+service:
+  type: ClusterIP
+  port: 8080
+  targetPort: 8080
+  metricsPort: 9090
+  grpcPort: 50051
+  annotations: {}
+
+# Ingress configuration
+ingress:
+  enabled: true
+  className: "nginx"
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+  hosts:
+    - host: adas.automotive.example.com
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: adas-service-tls
+      hosts:
+        - adas.automotive.example.com
+
+# Resource limits and requests
+resources:
+  limits:
+    cpu: 2000m
+    memory: 4Gi
+  requests:
+    cpu: 500m
+    memory: 1Gi
+
+# Horizontal Pod Autoscaling
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 20
+  targetCPUUtilizationPercentage: 70
+  targetMemoryUtilizationPercentage: 80
+  # Custom metrics (requires metrics-server and custom metrics API)
+  customMetrics: []
+  # - type: Pods
+  #   pods:
+  #     metric:
+  #       name: adas_processing_queue_depth
+  #     target:
+  #       type: AverageValue
+  #       averageValue: "100"
+
+# Pod Disruption Budget
+podDisruptionBudget:
+  enabled: true
+  minAvailable: 1
+  # maxUnavailable: 1
+
+# Node selector
+nodeSelector: {}
+# nodeType: compute-optimized
+
+# Tolerations
+tolerations: []
+# - key: "node-role.kubernetes.io/edge"
+#   operator: "Exists"
+#   effect: "NoSchedule"
+
+# Affinity rules
+affinity:
+  podAntiAffinity:
+    preferredDuringSchedulingIgnoredDuringExecution:
+    - weight: 100
+      podAffinityTerm:
+        labelSelector:
+          matchExpressions:
+          - key: app.kubernetes.io/name
+            operator: In
+            values:
+            - adas-service
+        topologyKey: kubernetes.io/hostname
+
+# Automotive-specific configuration
+automotive:
+  # Deployment region
+  region: "us-west-2"
+
+  # Environment (development, staging, production)
+  environment: "production"
+
+  # Safety level (ASIL-A, ASIL-B, ASIL-C, ASIL-D)
+  safetyLevel: "ASIL-B"
+
+  # ASPICE level
+  aspiceLevel: "AL2"
+
+  # Compliance flags
+  compliance:
+    iso26262: true
+    aspice: true
+    gdpr: true
+
+# Application configuration
+config:
+  # Logging configuration
+  logLevel: info
+  logFormat: json
+  logOutput: stdout
+
+  # HTTP server configuration
+  serverPort: 8080
+  metricsPort: 9090
+  healthCheckPath: /health/live
+  readinessCheckPath: /health/ready
+
+  # gRPC server configuration
+  grpcPort: 50051
+  grpcMaxConnections: 1000
+
+  # ADAS processing configuration
+  processing:
+    threads: 4
+    queueSize: 1000
+    timeoutMs: 100
+    batchSize: 32
+
+  # Sensor configuration
+  sensors:
+    cameraFps: 30
+    radarRateHz: 20
+    lidarRateHz: 10
+
+  # Safety configuration
+  safety:
+    watchdogTimeoutMs: 500
+    emergencyStopEnabled: true
+    asilLevel: "B"
+
+# Environment variables
+env: []
+# - name: CUSTOM_VAR
+#   value: "custom-value"
+
+# Environment variables from ConfigMaps
+envFrom: []
+# - configMapRef:
+#     name: adas-service-config
+
+# Persistent storage
+persistence:
+  enabled: false
+  storageClass: "local-path"
+  accessMode: ReadWriteOnce
+  size: 10Gi
+  mountPath: /data
+
+# Volume mounts
+volumeMounts:
+  - name: tmp
+    mountPath: /tmp
+  - name: config
+    mountPath: /etc/adas
+    readOnly: true
+
+# Volumes
+volumes:
+  - name: tmp
+    emptyDir: {}
+  - name: config
+    configMap:
+      name: adas-processing-config
+
+# ConfigMap data
+configMapData:
+  config.yaml: |
+    processing:
+      threads: 4
+      queue_size: 1000
+      timeout_ms: 100
+
+    sensors:
+      camera_fps: 30
+      radar_rate_hz: 20
+      lidar_rate_hz: 10
+
+    safety:
+      watchdog_timeout_ms: 500
+      emergency_stop_enabled: true
+      asil_level: "B"
+
+    logging:
+      level: info
+      format: json
+      output: stdout
+
+# Liveness probe configuration
+livenessProbe:
+  httpGet:
+    path: /health/live
+    port: 8080
+  initialDelaySeconds: 30
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 3
+  successThreshold: 1
+
+# Readiness probe configuration
+readinessProbe:
+  httpGet:
+    path: /health/ready
+    port: 8080
+  initialDelaySeconds: 10
+  periodSeconds: 5
+  timeoutSeconds: 3
+  failureThreshold: 3
+  successThreshold: 1
+
+# Startup probe configuration (for slow-starting containers)
+startupProbe:
+  httpGet:
+    path: /health/live
+    port: 8080
+  initialDelaySeconds: 0
+  periodSeconds: 5
+  timeoutSeconds: 3
+  failureThreshold: 30
+  successThreshold: 1
+
+# Network policy
+networkPolicy:
+  enabled: true
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - from:
+      - namespaceSelector:
+          matchLabels:
+            environment: production
+      - podSelector:
+          matchLabels:
+            automotive.io/access-adas: "true"
+      ports:
+      - protocol: TCP
+        port: 8080
+      - protocol: TCP
+        port: 50051
+  egress:
+    - to:
+      - namespaceSelector:
+          matchLabels:
+            environment: production
+      ports:
+      - protocol: TCP
+        port: 8080
+    - to:
+      - namespaceSelector: {}
+      ports:
+      - protocol: TCP
+        port: 53
+      - protocol: UDP
+        port: 53
+
+# Service Monitor for Prometheus Operator
+monitoring:
+  serviceMonitor:
+    enabled: true
+    interval: 30s
+    scrapeTimeout: 10s
+    additionalLabels:
+      monitoring: automotive
+    relabelings: []
+    metricRelabelings: []
+
+# Tests
+tests:
+  enabled: true
+  image:
+    repository: busybox
+    tag: latest
+    pullPolicy: IfNotPresent

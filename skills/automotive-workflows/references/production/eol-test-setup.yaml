@@ -1,0 +1,39 @@
+name: eol-test-setup
+version: 1.0.0
+description: |
+  End-of-Line test station setup for ECU manufacturing validation.
+
+domain: manufacturing
+safety_standard: IATF_16949
+estimated_duration: 4-6_weeks
+
+phases:
+  - phase: station_design
+    name: Test Station Design and Equipment Selection
+    duration: 2_weeks
+    outputs:
+      - test_station_layout
+      - equipment_specifications
+  - phase: programming
+    name: Flash Programming and Calibration
+    duration: 1-2_weeks
+    outputs:
+      - flash_programming_scripts
+      - calibration_dataset
+  - phase: functional_test
+    name: Functional Test Sequence Development
+    duration: 2_weeks
+    outputs:
+      - test_sequence
+      - pass_fail_criteria
+  - phase: validation
+    name: EOL Station Validation and Runoff
+    duration: 1_week
+    outputs:
+      - gage_rr_study
+      - ppk_cpk_analysis
+      - production_approval
+
+references:
+  - IATF 16949 (Automotive quality management)
+  - AIAG MSA (Measurement Systems Analysis)

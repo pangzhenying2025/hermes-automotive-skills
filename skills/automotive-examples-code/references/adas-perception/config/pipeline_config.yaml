@@ -1,0 +1,218 @@
+# ADAS Perception Pipeline Configuration
+# Author: Automotive Agents Team
+# Date: 2026-03-19
+
+# Camera Detection Settings
+camera:
+  model_path: "models/yolov8n.pt"
+  model_type: "yolov8n"  # yolov8n, yolov8s, yolov8m, yolov8l, yolov8x
+  confidence_threshold: 0.5
+  nms_threshold: 0.4
+  input_size: [640, 640]  # [width, height]
+  device: "cuda"  # cuda or cpu
+
+  # Class filtering (COCO indices)
+  classes_of_interest:
+    - 0   # person
+    - 1   # bicycle
+    - 2   # car
+    - 3   # motorcycle
+    - 5   # bus
+    - 7   # truck
+    - 9   # traffic_light
+    - 11  # stop_sign
+
+  # Image preprocessing
+  preprocessing:
+    enabled: true
+    method: "none"  # none, clahe, gamma
+    clahe_clip_limit: 2.0
+    gamma_value: 1.5
+
+# LiDAR Segmentation Settings
+lidar:
+  model_path: "models/pointnet_seg.pth"
+  model_type: "pointnet++"  # pointnet, pointnet++, pointpillars
+
+  # Point cloud range [x_min, x_max, y_min, y_max, z_min, z_max]
+  point_cloud_range: [-50.0, 50.0, -50.0, 50.0, -3.0, 5.0]
+
+  # Voxelization
+  voxel_size: 0.1  # meters
+  max_points_per_voxel: 32
+  max_voxels: 40000
+
+  # Ground removal
+  ground_removal:
+    enabled: true
+    method: "ransac"  # ransac, morphological
+    distance_threshold: 0.2
+    num_iterations: 100
+
+  # Clustering
+  clustering:
+    method: "dbscan"  # dbscan, euclidean
+    eps: 0.5  # meters
+    min_samples: 10
+    max_cluster_size: 10000
+
+  # Classification
+  min_points_per_object: 10
+  confidence_threshold: 0.6
+
+# Sensor Fusion Settings
+fusion:
+  mode: "late"  # early, late, both
+
+  # Late fusion parameters
+  late_fusion:
+    association_method: "iou"  # iou, distance, mahalanobis
+    iou_threshold: 0.3
+    distance_threshold: 2.0  # meters
+
+    # Confidence fusion weights
+    camera_weight: 0.6
+    lidar_weight: 0.4
+
+    # Class agreement
+    require_class_agreement: false
+    class_override_priority: "camera"  # camera or lidar
+
+  # Early fusion parameters (if mode=early or both)
+  early_fusion:
+    feature_fusion_method: "concatenation"  # concatenation, attention
+    fusion_network_path: "models/fusion_net.pth"
+
+# Multi-Object Tracking Settings
+tracking:
+  tracker_type: "kalman"  # kalman, particle, deep_sort
+
+  # Kalman filter parameters
+  kalman:
+    state_dim: 7  # [x, y, z, vx, vy, vz, yaw]
+    measurement_dim: 4  # [x, y, z, yaw]
+    process_noise: 0.1
+    measurement_noise: 0.5
+    initial_covariance: 1.0
+
+  # Track management
+  max_age: 5  # frames before track is deleted
+  min_hits: 3  # frames before track is confirmed
+  iou_threshold: 0.3  # for data association
+
+  # Velocity estimation
+  velocity_smoothing: true
+  velocity_alpha: 0.3  # exponential smoothing factor
+
+# Coordinate Transformations
+calibration:
+  # Camera intrinsic parameters
+  camera_intrinsics:
+    fx: 1000.0  # focal length x (pixels)
+    fy: 1000.0  # focal length y (pixels)
+    cx: 960.0   # principal point x
+    cy: 540.0   # principal point y
+    image_width: 1920
+    image_height: 1080
+
+  # Camera distortion coefficients [k1, k2, p1, p2, k3]
+  camera_distortion: [0.0, 0.0, 0.0, 0.0, 0.0]
+
+  # LiDAR to camera extrinsic transformation
+  # [x, y, z, roll, pitch, yaw] in meters and radians
+  lidar_to_camera:
+    translation: [0.0, 0.0, 1.5]  # meters
+    rotation: [0.0, 0.0, 0.0]     # radians (roll, pitch, yaw)
+
+  # Camera to vehicle transformation
+  camera_to_vehicle:
+    translation: [1.5, 0.0, 1.2]  # meters (forward, left, up)
+    rotation: [0.0, 0.0, 0.0]     # radians
+
+# Performance Optimization
+performance:
+  # Multi-threading
+  use_threading: true
+  num_threads: 2  # camera + lidar
+
+  # Batch processing
+  batch_size: 1  # for video processing
+
+  # GPU memory management
+  gpu_memory_fraction: 0.8
+
+  # Frame skipping (for high-fps inputs)
+  frame_skip: 0  # 0 = process every frame
+
+  # TensorRT optimization
+  use_tensorrt: false
+  tensorrt_precision: "fp16"  # fp32, fp16, int8
+
+# Logging and Debugging
+logging:
+  level: "INFO"  # DEBUG, INFO, WARNING, ERROR
+  log_to_file: true
+  log_file_path: "logs/perception.log"
+
+  # Performance logging
+  log_performance: true
+  performance_log_interval: 10  # frames
+
+  # Debug visualization
+  debug_mode: false
+  save_debug_images: false
+  debug_output_dir: "debug/"
+
+# Output Settings
+output:
+  format: "json"  # json, protobuf, ros2
+
+  # JSON output
+  json:
+    pretty_print: true
+    include_raw_detections: false
+
+  # Protobuf output
+  protobuf:
+    message_type: "PerceptionObjects"
+    output_topic: "/perception/objects"
+
+  # ROS2 output
+  ros2:
+    node_name: "perception_pipeline"
+    topic_name: "/perception/objects"
+    queue_size: 10
+
+# CARLA Integration (for testing)
+carla:
+  host: "localhost"
+  port: 2000
+  timeout: 10.0
+
+  # Scenario settings
+  town: "Town04"
+  weather: "ClearNoon"  # ClearNoon, CloudyNoon, WetNoon, HardRainNoon, etc.
+
+  # Traffic
+  num_vehicles: 50
+  num_pedestrians: 30
+
+  # Sensor spawn offsets (from vehicle center)
+  camera_offset: [1.5, 0.0, 1.2]  # [x, y, z] meters
+  lidar_offset: [0.0, 0.0, 2.0]
+
+# Safety and Validation
+safety:
+  # Sanity checks
+  enable_sanity_checks: true
+  max_detection_distance: 100.0  # meters
+  min_object_size: 0.1  # meters
+  max_object_size: 20.0  # meters
+
+  # Fault detection
+  detect_sensor_failures: true
+  max_consecutive_failures: 5
+
+  # Performance bounds
+  max_latency_ms: 100
+  min_fps: 10

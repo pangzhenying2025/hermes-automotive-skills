@@ -1,0 +1,164 @@
+name: keyless-entry-development
+version: 1.0.0
+description: "Passive keyless entry and start system development workflow including security and convenience features"
+trigger: "When developing PKES system for new platform, updating security protocols, or adding digital key support"
+domain: "Body Electronics"
+safety_level: "QM"
+
+prerequisites:
+  - "PKES transceiver hardware selected and prototyped"
+  - "Key fob hardware with LF and RF capability"
+  - "BCM with PKES control module integrated"
+  - "Immobilizer transponder system available"
+  - "Security protocol specification defined"
+
+phases:
+  - name: "System Architecture Design"
+    description: "Design the PKES system architecture including antenna placement and communication protocols"
+    inputs:
+      - "Vehicle geometry for antenna coverage planning"
+      - "PKES feature requirements"
+      - "Security and relay attack mitigation requirements"
+    steps:
+      - "Design LF antenna placement for exterior approach detection"
+      - "Design LF antenna placement for interior presence detection"
+      - "Define RF communication protocol for key-to-vehicle"
+      - "Design UWB ranging for relay attack prevention"
+      - "Define authentication protocol with rolling code security"
+      - "Design key fob power management for battery longevity"
+      - "Define backup entry method for dead key fob battery"
+      - "Design engine start authorization handshake"
+      - "Plan BLE integration for digital key support"
+      - "Document system architecture with security analysis"
+    outputs:
+      - "PKES system architecture document"
+      - "Antenna placement specification"
+      - "Security protocol specification"
+    tools:
+      - "RF simulation tool"
+      - "Antenna design software"
+      - "Security protocol analyzer"
+    quality_gates:
+      - "Antenna coverage provides reliable detection zones"
+      - "Security protocol reviewed by cybersecurity team"
+      - "UWB ranging prevents known relay attack methods"
+
+  - name: "RF and Antenna Development"
+    description: "Develop and tune the RF communication system and antenna arrays"
+    inputs:
+      - "Antenna placement specification"
+      - "Vehicle body CAD for RF simulation"
+      - "RF regulatory requirements per market"
+    steps:
+      - "Design LF antenna coils for each mounting location"
+      - "Simulate LF field coverage around vehicle"
+      - "Tune LF antenna matching for optimal range"
+      - "Design RF antenna for key fob UHF communication"
+      - "Tune UWB antenna for time-of-flight ranging"
+      - "Measure actual LF detection zones on vehicle"
+      - "Calibrate approach detection zones: welcome, unlock, presence"
+      - "Verify RF communication range meets specification"
+      - "Test UWB ranging accuracy at various positions"
+      - "Verify RF regulatory compliance per FCC and CE"
+    outputs:
+      - "Tuned antenna specifications"
+      - "Detection zone measurements"
+      - "RF compliance pre-test results"
+    tools:
+      - "Network analyzer"
+      - "LF field strength meter"
+      - "UWB ranging measurement tool"
+    quality_gates:
+      - "Detection zones match specification"
+      - "UWB ranging accuracy within 10cm"
+      - "RF emissions within regulatory limits"
+
+  - name: "Security Implementation and Testing"
+    description: "Implement and validate the cryptographic security of the PKES system"
+    inputs:
+      - "Security protocol specification"
+      - "Cryptographic library for embedded implementation"
+      - "Attack scenario catalog"
+    steps:
+      - "Implement AES-128 encryption for key-vehicle communication"
+      - "Implement rolling code algorithm with synchronization"
+      - "Implement UWB secure ranging protocol"
+      - "Implement key pairing and registration procedure"
+      - "Implement maximum key count and key deletion"
+      - "Test replay attack resistance"
+      - "Test relay attack prevention with UWB verification"
+      - "Test jamming detection and response"
+      - "Test brute force resistance of authentication"
+      - "Conduct penetration test of PKES system"
+    outputs:
+      - "Security implementation"
+      - "Attack resistance test results"
+      - "Penetration test report"
+    tools:
+      - "RF signal capture tool"
+      - "Relay attack simulation equipment"
+      - "Cryptographic analysis tools"
+    quality_gates:
+      - "Replay attacks detected and rejected"
+      - "Relay attacks prevented by UWB ranging"
+      - "Penetration test shows no exploitable vulnerabilities"
+
+  - name: "Feature Integration Testing"
+    description: "Test all PKES convenience features on the vehicle"
+    inputs:
+      - "Security-tested PKES system"
+      - "Vehicle with door locks and engine start"
+      - "Feature test specifications"
+    steps:
+      - "Test approach detection and welcome lighting activation"
+      - "Test passive unlock by door handle touch"
+      - "Test passive lock by walking away from vehicle"
+      - "Test interior presence detection for engine start"
+      - "Test engine start button authorization"
+      - "Test key-in-vehicle warning when exiting"
+      - "Test multiple key priority and arbitration"
+      - "Test dead battery backup: mechanical key and NFC start"
+      - "Test key locator function"
+      - "Test digital key via smartphone BLE"
+    outputs:
+      - "Feature integration test results"
+      - "User scenario test results"
+      - "Multi-key test results"
+    tools:
+      - "PKES diagnostic tool"
+      - "Key management tool"
+      - "Feature test checklist"
+    quality_gates:
+      - "All convenience features function reliably"
+      - "No false unlocks or false locks"
+      - "Backup entry method verified"
+
+  - name: "Validation and Production Release"
+    description: "Validate PKES across conditions and release for production"
+    inputs:
+      - "Feature-tested PKES system"
+      - "Validation test procedures"
+      - "Environmental test requirements"
+    steps:
+      - "Test PKES in electromagnetic interference environment"
+      - "Test PKES at temperature extremes for key fob and vehicle"
+      - "Test key fob battery life under typical usage simulation"
+      - "Verify PKES works with all vehicle option configurations"
+      - "Test PKES near other vehicles with same system"
+      - "Test PKES in underground parking and metal structures"
+      - "Verify production key pairing process"
+      - "Test key replacement and registration procedure"
+      - "Obtain RF regulatory certification per market"
+      - "Release PKES system for production"
+    outputs:
+      - "Validation test results"
+      - "RF regulatory certifications"
+      - "Production release approval"
+    tools:
+      - "EMC test facility"
+      - "Environmental test chambers"
+      - "RF certification test lab"
+    quality_gates:
+      - "PKES reliable in EMI environments"
+      - "Key fob battery life meets minimum specification"
+      - "RF certifications obtained for all markets"

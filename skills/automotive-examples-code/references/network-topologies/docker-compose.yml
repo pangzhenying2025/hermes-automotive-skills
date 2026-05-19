@@ -1,0 +1,153 @@
+version: '3.8'
+
+# Multi-ECU Automotive Network Topology
+# 3-ECU setup with gateway connecting CAN and Ethernet domains
+
+services:
+  # Gateway ECU - Connects CAN and Ethernet domains
+  gateway-ecu:
+    image: alpine:latest
+    container_name: gateway-ecu
+    hostname: gateway-ecu
+    networks:
+      can-domain:
+        ipv4_address: 172.20.0.10
+      eth-domain:
+        ipv4_address: 192.168.100.10
+    privileged: true
+    cap_add:
+      - NET_ADMIN
+      - SYS_ADMIN
+    volumes:
+      - ./ecu-scripts:/scripts:ro
+      - /dev/vcan0:/dev/vcan0
+    command: >
+      sh -c "
+        apk add --no-cache iproute2 tcpdump iputils &&
+        echo 'Gateway ECU started' &&
+        echo 'CAN Domain IP: 172.20.0.10' &&
+        echo 'Eth Domain IP: 192.168.100.10' &&
+        sysctl -w net.ipv4.ip_forward=1 &&
+        tail -f /dev/null
+      "
+
+  # Powertrain ECU - CAN domain (BMS, Motor Controller)
+  powertrain-ecu:
+    image: alpine:latest
+    container_name: powertrain-ecu
+    hostname: powertrain-ecu
+    networks:
+      can-domain:
+        ipv4_address: 172.20.0.20
+    privileged: true
+    cap_add:
+      - NET_ADMIN
+      - SYS_ADMIN
+    volumes:
+      - ./ecu-scripts:/scripts:ro
+      - /dev/vcan0:/dev/vcan0
+    command: >
+      sh -c "
+        apk add --no-cache iproute2 tcpdump iputils &&
+        echo 'Powertrain ECU started' &&
+        echo 'IP: 172.20.0.20' &&
+        echo 'Gateway: 172.20.0.10' &&
+        ip route add default via 172.20.0.10 &&
+        tail -f /dev/null
+      "
+
+  # ADAS ECU - Ethernet domain (Cameras, Radar)
+  adas-ecu:
+    image: alpine:latest
+    container_name: adas-ecu
+    hostname: adas-ecu
+    networks:
+      eth-domain:
+        ipv4_address: 192.168.100.20
+    privileged: true
+    cap_add:
+      - NET_ADMIN
+      - SYS_ADMIN
+    volumes:
+      - ./ecu-scripts:/scripts:ro
+    command: >
+      sh -c "
+        apk add --no-cache iproute2 tcpdump iputils &&
+        echo 'ADAS ECU started' &&
+        echo 'IP: 192.168.100.20' &&
+        echo 'Gateway: 192.168.100.10' &&
+        ip route add default via 192.168.100.10 &&
+        tail -f /dev/null
+      "
+
+  # Body ECU - CAN domain (Lighting, HVAC, Doors)
+  body-ecu:
+    image: alpine:latest
+    container_name: body-ecu
+    hostname: body-ecu
+    networks:
+      can-domain:
+        ipv4_address: 172.20.0.30
+    privileged: true
+    cap_add:
+      - NET_ADMIN
+      - SYS_ADMIN
+    volumes:
+      - ./ecu-scripts:/scripts:ro
+      - /dev/vcan1:/dev/vcan1
+    command: >
+      sh -c "
+        apk add --no-cache iproute2 tcpdump iputils &&
+        echo 'Body ECU started' &&
+        echo 'IP: 172.20.0.30' &&
+        echo 'Gateway: 172.20.0.10' &&
+        ip route add default via 172.20.0.10 &&
+        tail -f /dev/null
+      "
+
+  # Infotainment ECU - Ethernet domain (HMI, Audio, Connectivity)
+  infotainment-ecu:
+    image: alpine:latest
+    container_name: infotainment-ecu
+    hostname: infotainment-ecu
+    networks:
+      eth-domain:
+        ipv4_address: 192.168.100.30
+    privileged: true
+    cap_add:
+      - NET_ADMIN
+      - SYS_ADMIN
+    volumes:
+      - ./ecu-scripts:/scripts:ro
+    command: >
+      sh -c "
+        apk add --no-cache iproute2 tcpdump iputils curl wget &&
+        echo 'Infotainment ECU started' &&
+        echo 'IP: 192.168.100.30' &&
+        echo 'Gateway: 192.168.100.10' &&
+        ip route add default via 192.168.100.10 &&
+        tail -f /dev/null
+      "
+
+networks:
+  # CAN domain network (high-speed CAN bus connected ECUs)
+  can-domain:
+    driver: bridge
+    driver_opts:
+      com.docker.network.bridge.name: br-can
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.20.0.0/16
+          gateway: 172.20.0.1
+
+  # Ethernet domain network (Automotive Ethernet connected ECUs)
+  eth-domain:
+    driver: bridge
+    driver_opts:
+      com.docker.network.bridge.name: br-eth
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.100.0/24
+          gateway: 192.168.100.1

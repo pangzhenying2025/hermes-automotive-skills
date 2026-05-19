@@ -1,0 +1,620 @@
+name: iso26262-safety-lifecycle
+version: 1.0.0
+description: |
+  ISO 26262 Functional Safety V-Model workflow for automotive E/E systems.
+  Covers all phases from item definition to production release with ASIL-dependent activities.
+
+domain: functional_safety
+safety_standard: ISO_26262_2018
+v_model: complete_lifecycle
+estimated_duration: 36-52_weeks
+
+phases:
+  - phase: item_definition
+    name: Item Definition
+    description: Define the item (system or function) and its dependencies
+    duration: 2-3_weeks
+    iso26262_part: Part_3_Clause_5
+    inputs:
+      - vehicle_concept
+      - preliminary_architecture
+      - stakeholder_requirements
+    outputs:
+      - item_definition_document
+      - item_boundary_description
+      - preliminary_assumptions
+      - operational_description
+    tools:
+      - Enterprise Architect (system modeling)
+      - PREEvision (E/E architecture)
+      - Confluence (documentation)
+    skills_used:
+      - system-architecture
+      - requirements-engineering
+    agents_involved:
+      - system-architect
+      - safety-manager
+    item_definition_elements:
+      - Item name and description
+      - Item functionality and behavior
+      - Interfaces and dependencies with other items
+      - Environmental conditions (temperature, vibration, EMC)
+      - Operational modes and states
+      - Legal and regulatory requirements
+      - Preliminary architectural assumptions
+    acceptance_criteria:
+      - Item scope clearly defined
+      - Interfaces identified
+      - Stakeholder review completed
+      - Document released to configuration management
+    iso26262_work_products:
+      - Item definition [5-1]
+
+  - phase: hara
+    name: Hazard Analysis and Risk Assessment
+    description: Identify hazards, analyze risk, and determine ASIL levels
+    duration: 4-6_weeks
+    iso26262_part: Part_3_Clause_6
+    inputs:
+      - item_definition_document
+      - vehicle_operational_scenarios
+      - accident_statistics
+    outputs:
+      - hazard_analysis_document
+      - safety_goals (with ASIL ratings)
+      - safe_states_definition
+    tools:
+      - Medini Analyze (HARA tool)
+      - IBM DOORS (requirements management)
+      - Excel/specialized HARA tools
+    skills_used:
+      - hazard-analysis
+      - risk-assessment
+      - asil-determination
+    agents_involved:
+      - safety-engineer
+      - system-architect
+      - domain-expert
+    hara_process:
+      hazard_identification:
+        - Brainstorming sessions with cross-functional team
+        - Review historical field data and recalls
+        - Analyze item malfunction modes
+        - Consider environmental and operational scenarios
+      situation_analysis:
+        - Identify operational situations (highway, urban, parking)
+        - Determine controllability by driver
+        - Assess exposure (frequency of occurrence)
+      asil_determination:
+        - Severity classification (S0-S3)
+        - Exposure classification (E0-E4)
+        - Controllability classification (C0-C3)
+        - ASIL determination (QM, A, B, C, D)
+      safety_goal_definition:
+        - Derive safety goals from hazards
+        - Specify safe states for each safety goal
+        - Allocate ASIL to safety goals
+    example_safety_goals:
+      - "Unintended acceleration shall be prevented (ASIL-D)"
+      - "Loss of braking function shall be avoided (ASIL-D)"
+      - "Unintended steering shall be prevented (ASIL-C)"
+      - "False collision warning shall be minimized (ASIL-A)"
+    acceptance_criteria:
+      - All relevant hazards identified
+      - ASIL ratings justified and documented
+      - Safety goals traceable to hazards
+      - Independent review completed
+    iso26262_work_products:
+      - Hazard and risk assessment [6-1]
+      - Safety goals [6-2]
+
+  - phase: functional_safety_concept
+    name: Functional Safety Concept
+    description: Derive functional safety requirements to achieve safety goals
+    duration: 4-6_weeks
+    iso26262_part: Part_3_Clause_8
+    inputs:
+      - safety_goals
+      - preliminary_architecture
+      - operational_scenarios
+    outputs:
+      - functional_safety_concept_document
+      - functional_safety_requirements (FSR)
+      - safety_mechanisms (high-level)
+      - asil_decomposition_rationale
+    tools:
+      - Medini Analyze (safety concept tool)
+      - IBM DOORS (requirements management)
+      - Enterprise Architect (modeling)
+    skills_used:
+      - safety-concept-design
+      - requirements-engineering
+      - asil-decomposition
+    agents_involved:
+      - safety-engineer
+      - system-architect
+    functional_safety_concept_activities:
+      fsr_derivation:
+        - Derive functional safety requirements from safety goals
+        - Specify operational modes (normal, degraded, emergency)
+        - Define fault detection and reaction mechanisms
+        - Specify warning and degradation strategies
+      asil_decomposition:
+        - ASIL D -> ASIL B(D) + ASIL B(D) with independence
+        - ASIL C -> ASIL B(C) + ASIL A(C) with independence
+        - Document decomposition rationale
+        - Ensure sufficient independence between elements
+      safety_mechanisms:
+        - Redundancy (dual-channel, voting)
+        - Plausibility checks (range, gradient, cross-checks)
+        - Monitoring (watchdog, alive counter, CRC)
+        - Fault detection and handling (DTC, safe state transition)
+    acceptance_criteria:
+      - All safety goals allocated to FSRs
+      - ASIL decomposition justified
+      - Safety mechanisms specified
+      - Verification criteria defined
+      - Safety concept review approved
+    iso26262_work_products:
+      - Functional safety concept [8-1]
+
+  - phase: technical_safety_concept
+    name: Technical Safety Concept
+    description: Allocate FSRs to system architecture and specify technical safety requirements
+    duration: 5-7_weeks
+    iso26262_part: Part_4_Clause_6
+    inputs:
+      - functional_safety_concept
+      - system_architecture_design
+      - hardware_technology_decisions
+    outputs:
+      - technical_safety_concept_document
+      - technical_safety_requirements (TSR)
+      - hardware_software_interface_specification
+      - safety_architecture_design
+    tools:
+      - PREEvision (E/E architecture)
+      - Medini Analyze (safety analysis)
+      - Vector DaVinci (AUTOSAR architecture)
+    skills_used:
+      - safety-architecture
+      - hardware-software-partitioning
+      - fault-tree-analysis
+    agents_involved:
+      - safety-engineer
+      - system-architect
+      - hardware-designer
+      - software-architect
+    technical_safety_concept_activities:
+      allocation:
+        - Allocate FSRs to hardware and software elements
+        - Define redundancy architecture (dual-core, dual-ECU)
+        - Specify sensor and actuator safety mechanisms
+        - Define diagnostic coverage targets
+      safety_analysis:
+        - Fault Tree Analysis (FTA) for safety goals
+        - Failure Mode and Effects Analysis (FMEA)
+        - Dependent Failure Analysis (DFA)
+        - Quantitative safety analysis (FIT rates, PMHF)
+      diagnostic_concept:
+        - Specify diagnostic coverage (DC) targets per ASIL
+        - Define online and offline diagnostics
+        - Specify fault detection time intervals
+        - Define safe state and warning strategies
+    asil_dependent_dc_targets:
+      - ASIL A: DC > 60%
+      - ASIL B: DC > 90%
+      - ASIL C: DC > 97%
+      - ASIL D: DC > 99%
+    acceptance_criteria:
+      - TSRs traceable to FSRs
+      - Safety architecture complete
+      - FTA, FMEA, DFA completed
+      - DC targets allocated
+      - TSC review approved
+    iso26262_work_products:
+      - Technical safety concept [6-1 Part 4]
+      - System design specification [6-2 Part 4]
+
+  - phase: hw_development
+    name: Hardware Development
+    description: Design, implement, and verify hardware per ISO 26262 Part 5
+    duration: 12-16_weeks
+    iso26262_part: Part_5
+    inputs:
+      - technical_safety_requirements (hardware-related)
+      - hardware_architectural_design
+      - component_datasheets
+    outputs:
+      - hardware_design_specification
+      - hardware_safety_analysis (FMEDA)
+      - hardware_test_specification
+      - hardware_qualification_report
+    tools:
+      - OrCAD / Altium (PCB design)
+      - ANSYS (simulation)
+      - Medini Analyze (FMEDA tool)
+      - Oscilloscope, logic analyzer (testing)
+    skills_used:
+      - hardware-design
+      - fmeda-analysis
+      - hardware-testing
+    agents_involved:
+      - hardware-engineer
+      - safety-engineer
+      - test-engineer
+    hw_development_phases:
+      hw_design:
+        - Schematic design (microcontroller, power, communication)
+        - PCB layout (signal integrity, EMC considerations)
+        - Component selection (automotive-grade, AEC-Q100)
+        - Safety mechanism implementation (dual-core lockstep, ECC memory)
+      hw_safety_analysis:
+        - FMEDA (Failure Modes, Effects, and Diagnostic Analysis)
+        - Calculate hardware metrics (SPFM, LFM, PMHF)
+        - Verify diagnostic coverage targets
+        - Identify residual faults
+      hw_integration_test:
+        - Functional testing (all I/O, communication)
+        - Environmental testing (temperature, vibration, EMC)
+        - Fault injection testing (stuck-at, shorts, opens)
+        - Diagnostic coverage verification
+    asil_dependent_hw_metrics:
+      asil_b:
+        - SPFM > 90%
+        - LFM < 10%
+      asil_c:
+        - SPFM > 97%
+        - LFM < 10%
+      asil_d:
+        - SPFM > 99%
+        - LFM < 10%
+        - PMHF < 10 FIT
+    acceptance_criteria:
+      - Hardware design complete and reviewed
+      - FMEDA completed, metrics meet targets
+      - Hardware tests passed
+      - Safety mechanisms validated
+    iso26262_work_products:
+      - Hardware design specification [7-1]
+      - Hardware safety analysis [8-1]
+      - Hardware integration and test report [9-1]
+
+  - phase: sw_development
+    name: Software Development
+    description: Design, implement, and verify software per ISO 26262 Part 6
+    duration: 16-24_weeks
+    iso26262_part: Part_6
+    inputs:
+      - technical_safety_requirements (software-related)
+      - software_architectural_design
+      - coding_guidelines (MISRA C)
+    outputs:
+      - software_design_specification
+      - source_code (MISRA compliant)
+      - software_safety_analysis
+      - software_qualification_report
+    tools:
+      - Vector DaVinci Developer (AUTOSAR)
+      - IAR Embedded Workbench (compiler)
+      - Polyspace (static analysis)
+      - VectorCAST (unit testing, coverage)
+    skills_used:
+      - embedded-software-development
+      - software-safety-analysis
+      - misra-compliance
+      - sw-testing
+    agents_involved:
+      - software-engineer
+      - safety-engineer
+      - test-engineer
+    sw_development_phases:
+      sw_architectural_design:
+        - Define software components and interfaces
+        - Specify AUTOSAR SWCs and RTE configuration
+        - Allocate TSRs to software modules
+        - Design safety mechanisms (redundancy, plausibility checks)
+      sw_detailed_design:
+        - Design algorithms and state machines
+        - Specify data structures
+        - Define unit interfaces
+        - Design for testability
+      sw_implementation:
+        - Code in C per MISRA C 2012
+        - Implement safety mechanisms (watchdog, CRC, E2E protection)
+        - Static analysis (Polyspace, LDRA)
+        - Code review (peer review, tool-assisted)
+      sw_unit_testing:
+        - Coverage targets per ASIL (statement, branch, MC/DC)
+        - Test case design (equivalence partitioning, boundary values)
+        - Automated test execution (VectorCAST)
+      sw_integration_testing:
+        - Test component interactions
+        - Verify AUTOSAR RTE communication
+        - Test diagnostic functions
+      sw_safety_analysis:
+        - Software FMEA
+        - Control flow and data flow analysis
+        - Determine software architectural metrics
+    asil_dependent_sw_coverage:
+      asil_a:
+        - Statement coverage: 100%
+        - Branch coverage: 100%
+      asil_b:
+        - Statement coverage: 100%
+        - Branch coverage: 100%
+      asil_c:
+        - Statement coverage: 100%
+        - Branch coverage: 100%
+        - MC/DC coverage: 100%
+      asil_d:
+        - Statement coverage: 100%
+        - Branch coverage: 100%
+        - MC/DC coverage: 100%
+    acceptance_criteria:
+      - Software design traceable to TSRs
+      - MISRA compliance achieved
+      - Coverage targets met per ASIL
+      - Software safety analysis complete
+      - All tests passed
+    iso26262_work_products:
+      - Software architectural design [7-1]
+      - Software unit design and implementation [8-1]
+      - Software unit test report [9-1]
+      - Software integration test report [10-1]
+
+  - phase: integration_testing
+    name: System Integration and Testing
+    description: Integrate HW/SW and verify system-level safety requirements
+    duration: 6-8_weeks
+    iso26262_part: Part_4_Clause_7
+    inputs:
+      - integrated_hardware_software
+      - technical_safety_requirements
+      - system_test_plan
+    outputs:
+      - system_integration_test_report
+      - safety_validation_results
+      - residual_risk_assessment
+    tools:
+      - dSPACE SCALEXIO (HIL)
+      - CANoe (system testing)
+      - Lauterbach TRACE32 (debugging, tracing)
+      - Vector vTESTstudio (test automation)
+    skills_used:
+      - system-integration
+      - hil-testing
+      - safety-validation
+    agents_involved:
+      - integration-engineer
+      - safety-engineer
+      - validation-engineer
+    integration_testing_activities:
+      system_integration:
+        - Integrate hardware and software
+        - Verify hardware-software interface
+        - Commission safety mechanisms (watchdog, monitoring)
+      functional_testing:
+        - Verify all system functions
+        - Test normal operation modes
+        - Test degraded and emergency modes
+      safety_validation:
+        - Verify all TSRs
+        - Fault injection testing (single and dual faults)
+        - Verify diagnostic coverage
+        - Validate safe state transitions
+        - Test warning and degradation strategies
+      back_to_back_testing:
+        - Compare HIL results with model-in-the-loop (MIL)
+        - Verify code generation (if model-based)
+    acceptance_criteria:
+      - All TSRs verified
+      - Fault injection tests passed
+      - Diagnostic coverage validated
+      - Safety goals achieved
+      - Integration test report approved
+    iso26262_work_products:
+      - Item integration and test report [7-1 Part 4]
+      - Safety validation report [8-1 Part 4]
+
+  - phase: safety_validation
+    name: Safety Validation
+    description: Validate that safety goals are achieved at vehicle level
+    duration: 6-10_weeks
+    iso26262_part: Part_4_Clause_8
+    inputs:
+      - safety_goals
+      - integrated_item_in_vehicle
+      - validation_plan
+    outputs:
+      - safety_validation_report
+      - evidence_of_safety_goal_achievement
+      - residual_risk_evaluation
+    tools:
+      - Test vehicles with instrumentation
+      - Data logging and analysis tools
+      - Proving grounds and test tracks
+    skills_used:
+      - vehicle-testing
+      - safety-validation
+      - risk-evaluation
+    agents_involved:
+      - validation-engineer
+      - safety-manager
+      - vehicle-test-driver
+    safety_validation_activities:
+      test_planning:
+        - Define validation test scenarios per safety goal
+        - Identify acceptance criteria
+        - Plan for test execution (proving ground, public road)
+      test_execution:
+        - Execute validation tests in vehicle
+        - Perform fault injection in vehicle context
+        - Measure and record system behavior
+        - Validate warning and degradation strategies
+      results_analysis:
+        - Analyze test results against safety goals
+        - Evaluate residual risks
+        - Determine if safety goals are achieved
+        - Document deviations and corrective actions
+    acceptance_criteria:
+      - All safety goals validated
+      - Residual risk acceptable
+      - Independent safety assessment completed
+      - Safety validation report approved
+    iso26262_work_products:
+      - Safety validation report [8-1 Part 4]
+
+  - phase: production_release
+    name: Production Release and Functional Safety Assessment
+    description: Complete functional safety assessment and release for production
+    duration: 3-4_weeks
+    iso26262_part: Part_2_Clause_6_and_Part_8
+    inputs:
+      - all_safety_work_products
+      - production_readiness_checklist
+      - functional_safety_audit_findings
+    outputs:
+      - functional_safety_assessment_report
+      - safety_case
+      - production_release_approval
+      - functional_safety_manual
+    tools:
+      - Polarion (work product management)
+      - IBM DOORS (traceability verification)
+      - Document management systems
+    skills_used:
+      - safety-assessment
+      - safety-audit
+      - documentation-management
+    agents_involved:
+      - safety-manager
+      - functional-safety-auditor
+      - project-manager
+    functional_safety_assessment:
+      assessment_activities:
+        - Review all safety work products for completeness
+        - Verify traceability from safety goals to validation
+        - Check compliance with ISO 26262 requirements
+        - Evaluate safety culture and processes
+        - Review residual risks
+        - Confirm ASIL-dependent activities performed
+      safety_case:
+        - Compile evidence of safety goal achievement
+        - Document assumptions and constraints
+        - Justify any deviations from standard
+        - Present argument for safety
+      production_release:
+        - Safety manager approval
+        - Functional safety auditor sign-off
+        - Release for production manufacturing
+        - Handover to production and field monitoring
+    acceptance_criteria:
+      - All work products complete and approved
+      - Traceability verified end-to-end
+      - Functional safety assessment passed
+      - Safety case accepted
+      - Production release authorized
+    iso26262_work_products:
+      - Functional safety assessment report [6-1 Part 2]
+      - Safety case [various]
+
+quality_gates:
+  - gate: item_definition_release
+    phase: item_definition
+    criteria:
+      - Item scope approved
+      - Stakeholder consensus
+  - gate: hara_approval
+    phase: hara
+    criteria:
+      - All hazards identified
+      - ASIL ratings justified
+      - Independent review passed
+  - gate: functional_safety_concept_approval
+    phase: functional_safety_concept
+    criteria:
+      - FSRs complete
+      - ASIL decomposition justified
+      - Safety concept review passed
+  - gate: technical_safety_concept_approval
+    phase: technical_safety_concept
+    criteria:
+      - TSRs allocated
+      - Safety architecture complete
+      - FTA, FMEA, DFA completed
+  - gate: hw_qualification
+    phase: hw_development
+    criteria:
+      - HW design complete
+      - FMEDA metrics achieved
+      - HW tests passed
+  - gate: sw_qualification
+    phase: sw_development
+    criteria:
+      - SW design complete
+      - Coverage targets met
+      - SW tests passed
+  - gate: system_qualification
+    phase: integration_testing
+    criteria:
+      - TSRs verified
+      - Fault injection passed
+      - Integration tests passed
+  - gate: safety_validation_approval
+    phase: safety_validation
+    criteria:
+      - Safety goals validated
+      - Residual risk acceptable
+  - gate: production_release_approval
+    phase: production_release
+    criteria:
+      - Functional safety assessment passed
+      - Safety case accepted
+      - All gate criteria met
+
+asil_tailoring:
+  asil_qm:
+    - No specific safety requirements
+    - Standard engineering practices
+  asil_a:
+    - Basic safety mechanisms
+    - Single-point fault detection > 60%
+    - Statement and branch coverage
+  asil_b:
+    - Enhanced safety mechanisms
+    - Single-point fault detection > 90%
+    - Dual-point fault detection
+    - Statement and branch coverage
+  asil_c:
+    - Advanced safety mechanisms
+    - Single-point fault detection > 97%
+    - Dual-point fault detection
+    - MC/DC coverage
+    - Hardware architectural metrics
+  asil_d:
+    - Maximum safety mechanisms
+    - Single-point fault detection > 99%
+    - Dual-point fault detection
+    - MC/DC coverage
+    - Hardware architectural metrics (PMHF < 10 FIT)
+    - Independent safety element
+
+metrics:
+  - Safety goal achievement (%)
+  - ASIL coverage (QM, A, B, C, D distribution)
+  - Diagnostic coverage (%)
+  - Hardware metrics (SPFM, LFM, PMHF)
+  - Software coverage (statement, branch, MC/DC)
+  - Traceability completeness (%)
+  - Work product completion (%)
+
+references:
+  - ISO 26262-1:2018 (Vocabulary)
+  - ISO 26262-2:2018 (Management of functional safety)
+  - ISO 26262-3:2018 (Concept phase)
+  - ISO 26262-4:2018 (Product development at system level)
+  - ISO 26262-5:2018 (Product development at hardware level)
+  - ISO 26262-6:2018 (Product development at software level)
+  - ISO 26262-8:2018 (Supporting processes)
+  - ISO 26262-9:2018 (ASIL-oriented and safety-oriented analyses)

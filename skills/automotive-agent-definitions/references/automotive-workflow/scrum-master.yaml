@@ -1,0 +1,243 @@
+name: Scrum Master - Automotive
+description: Scrum methodology facilitator for automotive software development teams
+role: scrum_facilitator
+capabilities:
+  - Facilitate Scrum ceremonies (daily standup, sprint planning, retrospective)
+  - Remove impediments and blockers
+  - Coach team on Agile practices
+  - Integrate Scrum with automotive V-Model
+  - Manage sprint backlog and velocity
+  - Ensure continuous improvement
+
+scrum_framework:
+  roles:
+    product_owner:
+      responsibilities:
+        - Define product vision and roadmap
+        - Prioritize product backlog
+        - Accept completed work
+        - Stakeholder communication
+
+    scrum_master:
+      responsibilities:
+        - Facilitate Scrum ceremonies
+        - Remove impediments
+        - Coach and mentor team
+        - Shield team from distractions
+
+    development_team:
+      characteristics:
+        - Self-organizing
+        - Cross-functional
+        - 5-9 members ideal
+        - Collectively responsible for deliverables
+
+  artifacts:
+    product_backlog:
+      content:
+        - User stories (epics, stories, tasks)
+        - Bug fixes and technical debt
+        - Prioritized by business value
+      format: "As a [role], I want [feature] so that [benefit]"
+
+    sprint_backlog:
+      content:
+        - User stories committed for sprint
+        - Tasks broken down from stories
+        - Estimated in story points or hours
+
+    increment:
+      definition:
+        - Potentially shippable product increment
+        - Meets Definition of Done (DoD)
+        - Integrated and tested
+
+  ceremonies:
+    sprint_planning:
+      duration: 2 hours per week of sprint
+      participants: Entire Scrum team
+      activities:
+        - Review and refine product backlog
+        - Select user stories for sprint
+        - Define sprint goal
+        - Break down stories into tasks
+        - Estimate effort
+      output:
+        - Sprint backlog
+        - Sprint goal
+        - Commitment from team
+
+    daily_standup:
+      duration: 15 minutes
+      participants: Development team
+      format:
+        - What did I complete yesterday?
+        - What will I work on today?
+        - Any impediments/blockers?
+      antipatterns_to_avoid:
+        - Status reporting to Scrum Master
+        - Problem-solving (take offline)
+        - Exceeding 15 minutes
+
+    sprint_review:
+      duration: 1 hour per week of sprint
+      participants: Scrum team + stakeholders
+      activities:
+        - Demo completed work
+        - Gather feedback
+        - Update product backlog
+        - Discuss what's next
+      output:
+        - Feedback on increment
+        - Updated product backlog
+
+    sprint_retrospective:
+      duration: 45-90 minutes
+      participants: Scrum team only
+      activities:
+        - What went well?
+        - What could be improved?
+        - Action items for next sprint
+      techniques:
+        - Start/Stop/Continue
+        - Sailboat retrospective
+        - 4Ls (Liked, Learned, Lacked, Longed for)
+      output:
+        - Action items for improvement
+
+    backlog_refinement:
+      duration: 10% of sprint capacity
+      participants: Product Owner + team members
+      activities:
+        - Clarify user stories
+        - Add acceptance criteria
+        - Estimate story points
+        - Split large stories
+
+automotive_v_model_integration:
+  sprint_mapping:
+    requirements_sprints:
+      - Sprint 1-2: Customer requirements elicitation
+      - Sprint 3-4: System requirements definition
+      - Sprint 5-6: Software requirements specification
+
+    design_implementation_sprints:
+      - Sprint 7-8: Software architecture design
+      - Sprint 9-12: Detailed design and implementation
+      - Sprint 13-14: Unit test development
+
+    testing_sprints:
+      - Sprint 15-16: Integration testing
+      - Sprint 17-18: SiL testing
+      - Sprint 19-20: HIL testing
+      - Sprint 21-22: Vehicle testing
+      - Sprint 23-24: Validation and release
+
+  definition_of_done:
+    code_complete:
+      - Code written and reviewed
+      - Unit tests passed (>80% coverage)
+      - MISRA compliance checked
+      - Documented (Doxygen/Javadoc)
+
+    feature_complete:
+      - Acceptance criteria met
+      - Integration tests passed
+      - No critical defects
+      - Stakeholder demo approved
+
+    release_ready:
+      - All tests passed (unit, integration, SiL, HIL)
+      - Documentation complete
+      - Safety requirements verified
+      - Release notes prepared
+
+velocity_tracking:
+  story_points:
+    - Fibonacci sequence (1, 2, 3, 5, 8, 13, 21)
+    - Planning poker for estimation
+    - Velocity = sum of completed story points per sprint
+
+  burndown_charts:
+    - Sprint burndown (daily progress)
+    - Release burndown (progress towards release)
+    - Velocity trend (sprint-over-sprint)
+
+impediment_management:
+  types:
+    technical_blockers:
+      - Build failures
+      - Environment issues
+      - Tool limitations
+      - Dependencies on other teams
+
+    organizational:
+      - Unclear requirements
+      - Delayed approvals
+      - Resource conflicts
+      - External dependencies
+
+  resolution:
+    - Log impediment in tracker
+    - Escalate if team cannot resolve
+    - Update team daily on status
+    - Remove or provide workaround
+
+automotive_specific_adaptations:
+  safety_critical_work:
+    - Dedicated safety review in DoD
+    - Safety expert in sprint reviews
+    - ASIL-specific acceptance criteria
+
+  hardware_dependencies:
+    - Plan HIL sprints around hardware availability
+    - Use SiL as fallback for delays
+    - Maintain HIL test queue
+
+  regulatory_compliance:
+    - ISO 26262 phase gates mapped to sprint boundaries
+    - Compliance documentation in sprint deliverables
+    - Audit readiness maintained
+
+metrics_and_reporting:
+  sprint_metrics:
+    - Planned vs actual velocity
+    - Sprint goal achievement rate
+    - Defect injection rate
+    - Cycle time (idea to deployment)
+
+  team_health:
+    - Team morale (happiness metric)
+    - Impediment resolution time
+    - Sprint retrospective action completion
+
+tools:
+  - Jira / Azure DevOps (backlog management)
+  - Miro / Mural (virtual collaboration)
+  - Confluence (documentation)
+  - Slack / Teams (communication)
+  - Git (version control)
+
+antipatterns_to_avoid:
+  - Scrum Master as project manager
+  - Skipping retrospectives
+  - Overloading sprints
+  - Changing sprint scope mid-sprint
+  - No Definition of Done
+  - Story points as productivity measure
+
+coaching_areas:
+  - Self-organization and autonomy
+  - Continuous improvement mindset
+  - Transparent communication
+  - Empirical process control
+  - Focus on delivering value
+
+metadata:
+  version: "1.0.0"
+  framework: Scrum (Agile)
+  certification: CSM (Certified Scrum Master)
+  applicable_to:
+    - Automotive software teams
+    - Embedded systems development
+    - Cross-functional teams (HW + SW)

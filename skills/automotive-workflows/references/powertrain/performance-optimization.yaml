@@ -1,0 +1,164 @@
+name: performance-optimization
+version: 1.0.0
+description: "Powertrain performance optimization workflow for maximizing vehicle acceleration, top speed, and efficiency"
+trigger: "During performance variant development, competition benchmarking, or customer performance complaint resolution"
+domain: "Powertrain"
+safety_level: "ASIL-A"
+
+prerequisites:
+  - "Vehicle with instrumented powertrain on test track or dynamometer"
+  - "Data acquisition system with high-speed sampling"
+  - "Baseline performance measurements established"
+  - "Component specification limits documented"
+  - "Performance target sheet defined"
+
+phases:
+  - name: "Baseline Performance Assessment"
+    description: "Measure and document current vehicle performance metrics"
+    inputs:
+      - "Test vehicle in production specification"
+      - "Test track or chassis dynamometer"
+      - "Performance measurement equipment"
+    steps:
+      - "Measure 0-100 km/h acceleration time"
+      - "Measure quarter mile time and trap speed"
+      - "Measure 80-120 km/h in-gear acceleration times"
+      - "Measure maximum speed on high-speed track"
+      - "Record engine power and torque at wheels on dynamometer"
+      - "Measure drivetrain losses from engine to wheels"
+      - "Record shift times for all gear transitions"
+      - "Measure launch control performance"
+      - "Profile thermal limitations during sustained performance"
+      - "Document baseline performance data with ambient conditions"
+    outputs:
+      - "Baseline performance metrics"
+      - "Wheel power and torque curves"
+      - "Thermal limitation profile"
+    tools:
+      - "GPS-based performance measurement"
+      - "Chassis dynamometer"
+      - "Data acquisition system"
+    quality_gates:
+      - "Measurements repeatable within 0.3 seconds for acceleration"
+      - "All test conditions documented"
+      - "Baseline established under controlled conditions"
+
+  - name: "Loss Analysis"
+    description: "Identify and quantify all losses in the powertrain chain"
+    inputs:
+      - "Baseline performance data"
+      - "Component-level efficiency data"
+      - "Vehicle coast-down test data"
+    steps:
+      - "Perform coast-down test for aerodynamic and rolling resistance"
+      - "Calculate road load coefficients from coast-down data"
+      - "Measure engine friction losses through motoring test"
+      - "Quantify transmission efficiency at each gear ratio"
+      - "Measure parasitic loads from accessories: pump, alternator"
+      - "Calculate exhaust system backpressure losses"
+      - "Measure intake restriction losses"
+      - "Quantify cooling system energy consumption"
+      - "Identify the largest loss contributors"
+      - "Prioritize optimization opportunities by impact"
+    outputs:
+      - "Loss breakdown by component"
+      - "Prioritized optimization opportunity list"
+      - "Coast-down analysis results"
+    tools:
+      - "Coast-down measurement system"
+      - "Friction measurement equipment"
+      - "Parasitic load measurement"
+    quality_gates:
+      - "Loss breakdown accounts for measured performance gap"
+      - "All significant loss sources quantified"
+      - "Optimization priorities validated by engineering team"
+
+  - name: "Engine Performance Optimization"
+    description: "Optimize engine calibration for maximum performance output"
+    inputs:
+      - "Engine on dynamometer"
+      - "Current calibration dataset"
+      - "Component limit specifications"
+    steps:
+      - "Optimize ignition timing to MBT at all performance points"
+      - "Increase boost pressure targets within turbo and engine limits"
+      - "Optimize cam timing for peak power and torque"
+      - "Reduce exhaust backpressure where possible"
+      - "Optimize intake air temperature management"
+      - "Reduce friction through oil temperature optimization"
+      - "Optimize fuel enrichment strategy at high loads"
+      - "Implement overboost function for transient performance"
+      - "Verify all component temperatures within safe limits"
+      - "Measure improved power and torque curves"
+    outputs:
+      - "Performance-optimized engine calibration"
+      - "Updated power and torque curves"
+      - "Component temperature verification data"
+    tools:
+      - "Engine dynamometer"
+      - "Calibration tool"
+      - "Component temperature monitoring"
+    quality_gates:
+      - "Power and torque targets achieved"
+      - "All component temperatures within specification"
+      - "Emission compliance maintained"
+
+  - name: "Driveline and Launch Optimization"
+    description: "Optimize transmission, launch control, and driveline for best performance delivery"
+    inputs:
+      - "Optimized engine calibration"
+      - "Transmission control access"
+      - "Launch control system"
+    steps:
+      - "Optimize shift speed for performance mode"
+      - "Reduce torque interruption during upshifts"
+      - "Optimize torque converter lockup for minimal slip"
+      - "Calibrate launch control RPM and torque targets"
+      - "Optimize traction control intervention for fastest launch"
+      - "Reduce shift response time to minimum"
+      - "Optimize part-throttle downshift responsiveness"
+      - "Calibrate sport mode throttle mapping for immediacy"
+      - "Implement flat-shift capability if hardware supports"
+      - "Validate driveline component loads within ratings"
+    outputs:
+      - "Optimized transmission calibration"
+      - "Launch control calibration"
+      - "Driveline load analysis"
+    tools:
+      - "Transmission calibration tool"
+      - "Launch test equipment"
+      - "Driveline load measurement"
+    quality_gates:
+      - "Shift times meet performance targets"
+      - "Launch performance repeatable and consistent"
+      - "Driveline loads within component ratings"
+
+  - name: "Performance Validation and Sign-off"
+    description: "Validate the complete optimized performance package and sign off for release"
+    inputs:
+      - "All optimized calibrations loaded on vehicle"
+      - "Performance test track"
+      - "Validation test procedures"
+    steps:
+      - "Execute acceleration tests: 0-100, 0-200, quarter mile"
+      - "Measure top speed on high-speed track"
+      - "Execute continuous high-speed endurance test"
+      - "Verify thermal management under sustained performance"
+      - "Verify emission compliance with performance calibration"
+      - "Conduct subjective driving evaluation by test drivers"
+      - "Verify fuel economy is acceptable for performance variant"
+      - "Test performance in hot and cold ambient conditions"
+      - "Compile performance validation report"
+      - "Obtain sign-off for performance calibration release"
+    outputs:
+      - "Performance validation results"
+      - "Subjective evaluation reports"
+      - "Signed performance calibration release"
+    tools:
+      - "GPS performance measurement"
+      - "Emission test equipment"
+      - "Driver evaluation system"
+    quality_gates:
+      - "All performance targets met or exceeded"
+      - "Thermal endurance test passed"
+      - "Emission compliance maintained"

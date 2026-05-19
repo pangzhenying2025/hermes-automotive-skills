@@ -1,0 +1,38 @@
+name: iso21434-cybersecurity-audit
+version: 1.0.0
+description: |
+  ISO 21434 cybersecurity audit workflow covering CSMS, TARA, security testing.
+
+domain: cybersecurity
+safety_standard: ISO_21434
+estimated_duration: 6-8_weeks
+
+phases:
+  - phase: csms_review
+    name: Cybersecurity Management System Review
+    duration: 1-2_weeks
+    outputs:
+      - csms_audit_report
+      - policy_compliance_matrix
+  - phase: tara_validation
+    name: Threat Analysis and Risk Assessment Validation
+    duration: 2-3_weeks
+    outputs:
+      - tara_review_report
+      - risk_treatment_validation
+  - phase: penetration_testing
+    name: Security Penetration Testing
+    duration: 2-3_weeks
+    outputs:
+      - pentest_report
+      - vulnerability_remediation_plan
+  - phase: audit_reporting
+    name: Audit Report and Certification
+    duration: 1_week
+    outputs:
+      - iso21434_audit_report
+      - certification_recommendation
+
+references:
+  - ISO 21434:2021 (Cybersecurity engineering)
+  - UNECE WP.29 R155 (Cyber security)

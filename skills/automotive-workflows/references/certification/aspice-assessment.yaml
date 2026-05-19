@@ -1,0 +1,227 @@
+name: aspice-assessment
+version: 1.0.0
+description: |
+  ASPICE (Automotive SPICE) assessment workflow for process capability evaluation.
+  Covers preparation, documentation review, interviews, rating, and improvement planning
+  for capability levels 0-5 across all 31 ASPICE 4.0 processes.
+
+domain: process_compliance
+safety_standard: ASPICE_4_0
+estimated_duration: 8-12_weeks
+
+phases:
+  - phase: preparation
+    name: Assessment Preparation and Scope Definition
+    description: Define assessment scope, schedule, and prepare evidence
+    duration: 2-3_weeks
+    inputs:
+      - process_reference_model (ASPICE 4.0)
+      - organizational_scope
+      - target_capability_level (typically Level 2 or 3)
+      - previous_assessment_results
+    outputs:
+      - assessment_plan
+      - evidence_collection_checklist
+      - interview_schedule
+      - assessor_team_assignment
+    tools:
+      - ASPICE assessment tool (Kugler Maag, intacs)
+      - Document management system
+      - Confluence/SharePoint
+    skills_used:
+      - aspice-process-management
+      - assessment-coordination
+    agents_involved:
+      - process-manager
+      - aspice-assessor (certified)
+    tasks:
+      - Define scope (processes: ACQ, SPL, SYS, SWE, HWE, SUP)
+      - Select projects for evidence review (2-3 representative projects)
+      - Assign process owners
+      - Collect work products per process
+      - Schedule interviews with engineers
+    acceptance_criteria:
+      - Scope approved by management
+      - All 31 processes mapped to organizational practices
+      - Evidence collection >80% complete
+
+  - phase: documentation_review
+    name: Work Product Review and Gap Analysis
+    description: Review work products against ASPICE base practices and work product characteristics
+    duration: 2-3_weeks
+    inputs:
+      - work_products_repository
+      - aspice_process_templates
+      - base_practice_checklist
+    outputs:
+      - documentation_gap_analysis
+      - process_compliance_matrix
+      - missing_evidence_list
+    tools:
+      - ASPICE checklist tools
+      - DOORS (requirements traceability)
+      - ALM tools (Polarion, Codebeamer)
+    skills_used:
+      - aspice-compliance
+      - document-review
+    agents_involved:
+      - aspice-assessor
+      - quality-manager
+    processes_assessed:
+      acquisition:
+        - ACQ.3: Contract agreement
+        - ACQ.4: Supplier monitoring
+      supply:
+        - SPL.1: Supplier tendering
+        - SPL.2: Product release
+      systems_engineering:
+        - SYS.1: Requirements elicitation
+        - SYS.2: System requirements analysis
+        - SYS.3: System architectural design
+        - SYS.4: System integration and test
+        - SYS.5: System qualification test
+      software_engineering:
+        - SWE.1: Software requirements analysis
+        - SWE.2: Software architectural design
+        - SWE.3: Software detailed design and unit construction
+        - SWE.4: Software unit verification
+        - SWE.5: Software integration and test
+        - SWE.6: Software qualification test
+      supporting_processes:
+        - SUP.1: Quality assurance
+        - SUP.8: Configuration management
+        - SUP.9: Problem resolution management
+        - SUP.10: Change request management
+    acceptance_criteria:
+      - All base practices reviewed
+      - Work product characteristics assessed
+      - Gap analysis documented
+
+  - phase: interviews
+    name: Process Interviews and Evidence Validation
+    description: Interview process owners and practitioners to validate implementation
+    duration: 1-2_weeks
+    inputs:
+      - interview_schedule
+      - interview_questionnaires
+      - documentation_gap_analysis
+    outputs:
+      - interview_protocols
+      - implementation_evidence
+      - process_adherence_notes
+    tools:
+      - Video conferencing (Teams, Zoom)
+      - Interview recording (with consent)
+    skills_used:
+      - interviewing
+      - evidence-validation
+    agents_involved:
+      - aspice-assessor
+      - process-practitioners
+    tasks:
+      - Interview process owners (1-2 hours per process)
+      - Validate documented processes match actual practice
+      - Clarify ambiguities from document review
+      - Collect anecdotal evidence of process adherence
+      - Assess process institutionalization
+    acceptance_criteria:
+      - All key processes interviewed
+      - Evidence gaps addressed
+      - Process implementation validated
+
+  - phase: rating
+    name: Capability Rating and Report Generation
+    description: Rate process capability levels and generate assessment report
+    duration: 1-2_weeks
+    inputs:
+      - all_collected_evidence
+      - interview_protocols
+      - aspice_rating_guidance
+    outputs:
+      - capability_rating (0-5 per process)
+      - assessment_report
+      - findings_and_gaps
+      - improvement_recommendations
+    tools:
+      - ASPICE rating spreadsheet
+      - Report generation tools
+    skills_used:
+      - aspice-rating
+      - technical-writing
+    agents_involved:
+      - lead-assessor
+      - assessment-team
+    capability_levels:
+      - Level 0: Incomplete process
+      - Level 1: Performed process (base practices achieved)
+      - Level 2: Managed process (performance management + work product management)
+      - Level 3: Established process (process definition + process deployment)
+      - Level 4: Predictable process (process measurement + process control)
+      - Level 5: Innovating process (process innovation + process optimization)
+    tasks:
+      - Rate each base practice (Fully/Largely/Partially/Not achieved)
+      - Aggregate to process capability level
+      - Document rationale for each rating
+      - Generate findings report
+      - Present to management
+    acceptance_criteria:
+      - All processes rated with evidence-based rationale
+      - Report reviewed and approved by lead assessor
+      - Findings documented with improvement actions
+
+  - phase: improvement_planning
+    name: Process Improvement Action Planning
+    description: Develop action plan to close gaps and achieve target capability level
+    duration: 2_weeks
+    inputs:
+      - assessment_report
+      - findings_and_gaps
+      - target_capability_level
+    outputs:
+      - improvement_action_plan
+      - timeline_and_milestones
+      - resource_allocation
+    tools:
+      - MS Project (planning)
+      - JIRA (action tracking)
+    skills_used:
+      - process-improvement
+      - project-management
+    agents_involved:
+      - process-manager
+      - quality-manager
+    tasks:
+      - Prioritize gaps by impact and effort
+      - Define improvement actions per process
+      - Assign owners and deadlines
+      - Allocate resources (training, tools, headcount)
+      - Schedule follow-up assessment
+    acceptance_criteria:
+      - Action plan approved by management
+      - Owners assigned to all actions
+      - Timeline realistic and achievable
+
+quality_gates:
+  - gate: evidence_sufficiency
+    phase: documentation_review
+    criteria:
+      - 80% work products collected
+  - gate: rating_consensus
+    phase: rating
+    criteria:
+      - Assessment team agrees on ratings
+  - gate: improvement_commitment
+    phase: improvement_planning
+    criteria:
+      - Management commits to improvement plan
+
+metrics:
+  - Capability level per process
+  - Percentage of base practices achieved
+  - Number of improvement actions
+  - Time to target capability level
+
+references:
+  - ASPICE PAM 4.0 (Process Assessment Model)
+  - ISO/IEC 33020 (Process measurement framework)
+  - VDA Automotive SPICE Guidelines

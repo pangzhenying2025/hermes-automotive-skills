@@ -1,0 +1,164 @@
+name: aspice-assessment
+version: 1.0.0
+description: "Automotive SPICE process assessment workflow for evaluating software development process maturity"
+trigger: "For supplier qualification, internal process improvement, or customer-required assessment"
+domain: "Compliance"
+standard: "Automotive SPICE 4.0, ISO/IEC 33002"
+
+prerequisites:
+  - "Assessment scope and objectives agreed with sponsor"
+  - "Qualified ASPICE assessor team assembled"
+  - "Project team availability confirmed for assessment"
+  - "Project documentation accessible to assessors"
+  - "Assessment planning complete"
+
+phases:
+  - name: "Assessment Planning"
+    description: "Plan the ASPICE assessment including scope, schedule, and resource allocation"
+    inputs:
+      - "Assessment request from sponsor"
+      - "Organization structure and project portfolio"
+      - "Previous assessment results if available"
+    steps:
+      - "Define assessment purpose: improvement, capability determination, or both"
+      - "Select processes to be assessed per sponsor requirements"
+      - "Identify organizational units and projects in scope"
+      - "Select assessment model: Automotive SPICE 4.0"
+      - "Determine target capability levels per process"
+      - "Assign lead assessor and assessment team"
+      - "Verify assessor qualifications meet standard requirements"
+      - "Create assessment schedule with interview slots"
+      - "Define documentation required from project team"
+      - "Conduct assessment briefing with project team"
+    outputs:
+      - "Assessment plan document"
+      - "Assessment schedule"
+      - "Documentation request list"
+    tools:
+      - "ASPICE assessment planning template"
+      - "Scheduling tool"
+      - "Assessment management system"
+    quality_gates:
+      - "Assessment scope agreed with sponsor"
+      - "Assessor qualifications verified"
+      - "Project team briefed and prepared"
+
+  - name: "Document Review"
+    description: "Review project documentation prior to on-site assessment for initial evidence"
+    inputs:
+      - "Requested project documentation"
+      - "ASPICE process reference model"
+      - "Assessment indicator mapping"
+    steps:
+      - "Review requirements specification for SYS.2 and SWE.1 evidence"
+      - "Review architecture documents for SYS.3 and SWE.2 evidence"
+      - "Review design documents for SWE.3 evidence"
+      - "Review test specifications for SWE.4, SWE.5, SYS.4, SYS.5"
+      - "Review configuration management practices for SUP.8"
+      - "Review change management records for SUP.10"
+      - "Review project management artifacts for MAN.3"
+      - "Review quality assurance records for SUP.1"
+      - "Map evidence to process attributes and generic practices"
+      - "Identify gaps requiring clarification during on-site"
+    outputs:
+      - "Document review findings"
+      - "Preliminary evidence mapping"
+      - "Clarification questions for on-site"
+    tools:
+      - "ASPICE indicator mapping tool"
+      - "Document review checklist"
+      - "Evidence tracking spreadsheet"
+    quality_gates:
+      - "All requested documents reviewed"
+      - "Preliminary evidence mapped to process attributes"
+      - "Gap areas identified for on-site investigation"
+
+  - name: "On-Site Assessment"
+    description: "Conduct on-site assessment through interviews, presentations, and evidence verification"
+    inputs:
+      - "Document review findings"
+      - "On-site schedule"
+      - "Assessment indicator templates"
+    steps:
+      - "Conduct opening meeting with management and project team"
+      - "Interview project manager on MAN.3 practices"
+      - "Interview requirements engineers on SYS.2 and SWE.1 practices"
+      - "Interview architects on SYS.3 and SWE.2 practices"
+      - "Interview developers on SWE.3 coding and design practices"
+      - "Interview test engineers on SWE.4 through SYS.5 practices"
+      - "Interview configuration manager on SUP.8 practices"
+      - "Verify tool usage and automation evidence"
+      - "Verify traceability across development artifacts"
+      - "Record findings against ASPICE indicators"
+    outputs:
+      - "Interview notes and evidence records"
+      - "Indicator ratings per process attribute"
+      - "Strength and weakness observations"
+    tools:
+      - "Assessment recording tool"
+      - "Indicator rating template"
+      - "Evidence verification checklist"
+    quality_gates:
+      - "All scheduled interviews completed"
+      - "Sufficient evidence collected per process"
+      - "Ratings supported by documented evidence"
+
+  - name: "Rating and Consolidation"
+    description: "Rate process attributes and determine capability levels"
+    inputs:
+      - "All evidence from document review and on-site"
+      - "ASPICE rating framework"
+      - "Assessment team expertise"
+    steps:
+      - "Rate each process attribute per ASPICE scale: N, P, L, F"
+      - "Determine capability level per process based on attribute ratings"
+      - "Verify rating consistency across assessment team"
+      - "Identify strengths to be maintained"
+      - "Identify weaknesses requiring improvement"
+      - "Identify improvement opportunities"
+      - "Prepare process profile showing all ratings"
+      - "Compare against target capability levels"
+      - "Prepare findings presentation for project team"
+      - "Review ratings with assessment team for consensus"
+    outputs:
+      - "Process attribute ratings"
+      - "Capability level determinations"
+      - "Strength and weakness findings"
+    tools:
+      - "ASPICE rating tool"
+      - "Process profile visualization"
+      - "Consensus building framework"
+    quality_gates:
+      - "All ratings supported by evidence"
+      - "Assessment team consensus achieved"
+      - "Ratings consistent with ASPICE framework rules"
+
+  - name: "Reporting and Improvement Planning"
+    description: "Generate the assessment report and support improvement planning"
+    inputs:
+      - "Final ratings and findings"
+      - "Assessment report template"
+      - "Improvement planning framework"
+    steps:
+      - "Generate formal assessment report per ISO 33002"
+      - "Document process profile with capability levels"
+      - "Document key strengths per process"
+      - "Document key weaknesses with evidence references"
+      - "Provide improvement recommendations per finding"
+      - "Present final results to sponsor and project team"
+      - "Support creation of improvement action plan"
+      - "Prioritize improvements by impact and feasibility"
+      - "Define reassessment timeline if improvement is objective"
+      - "Submit assessment report to ASPICE assessment database"
+    outputs:
+      - "Formal ASPICE assessment report"
+      - "Process capability profile"
+      - "Improvement recommendation report"
+    tools:
+      - "Assessment report generator"
+      - "Improvement planning tool"
+      - "Assessment database submission"
+    quality_gates:
+      - "Report compliant with ISO 33002 requirements"
+      - "All findings traceable to evidence"
+      - "Improvement plan created with timelines and owners"

@@ -1,0 +1,167 @@
+name: incident-response
+version: 1.0.0
+description: "Automotive cybersecurity incident response workflow for detecting, analyzing, and recovering from security incidents"
+trigger: "When a cybersecurity incident is detected, reported, or suspected in vehicle or backend systems"
+domain: "Cybersecurity"
+standard: "ISO/SAE 21434, UNECE R155"
+
+prerequisites:
+  - "Cybersecurity incident response team (CSIRT) established"
+  - "Incident classification criteria defined"
+  - "Communication channels and escalation paths documented"
+  - "Forensic analysis tools and isolated analysis environment ready"
+  - "Legal counsel and regulatory contacts identified"
+
+phases:
+  - name: "Detection and Triage"
+    description: "Detect, classify, and perform initial triage of the cybersecurity incident"
+    inputs:
+      - "Alert from intrusion detection system, SOC, or external report"
+      - "Incident classification criteria"
+      - "Known threat intelligence"
+    steps:
+      - "Receive and log the initial incident report or alert"
+      - "Assign incident unique identifier and timestamp"
+      - "Gather initial information about affected systems and symptoms"
+      - "Classify incident severity using predefined criteria"
+      - "Determine if the incident affects vehicle safety functions"
+      - "Assess the scope of potentially affected vehicles or systems"
+      - "Activate incident response team based on severity level"
+      - "Establish secure communication channel for incident team"
+      - "Notify management chain per escalation policy"
+      - "Begin incident timeline documentation"
+    outputs:
+      - "Incident record with classification"
+      - "Initial scope assessment"
+      - "Activated response team roster"
+    tools:
+      - "Incident management system"
+      - "Security information and event management (SIEM)"
+      - "Secure communication platform"
+    quality_gates:
+      - "Incident classified within 30 minutes of detection"
+      - "Safety impact assessment completed"
+      - "Appropriate response team activated"
+
+  - name: "Containment"
+    description: "Implement immediate measures to contain the incident and prevent spread"
+    inputs:
+      - "Incident classification and scope assessment"
+      - "System architecture and network diagrams"
+      - "Available containment actions per system type"
+    steps:
+      - "Identify all affected and potentially affected systems"
+      - "Implement short-term containment measures"
+      - "Isolate affected backend systems from network if needed"
+      - "Disable compromised credentials and certificates"
+      - "Block malicious network traffic at firewall level"
+      - "Assess whether OTA update channel needs to be suspended"
+      - "Evaluate need for vehicle-level containment actions"
+      - "Preserve forensic evidence before any system changes"
+      - "Create forensic images of affected systems"
+      - "Monitor for continued attacker activity"
+      - "Document all containment actions taken with timestamps"
+    outputs:
+      - "Containment action log"
+      - "Forensic evidence preserved"
+      - "Monitoring status for ongoing activity"
+    tools:
+      - "Network management tools"
+      - "Forensic imaging tools"
+      - "Log collection system"
+    quality_gates:
+      - "Spread of incident halted"
+      - "Forensic evidence preserved before system changes"
+      - "All containment actions documented"
+
+  - name: "Investigation and Analysis"
+    description: "Conduct thorough forensic analysis to understand the incident root cause and full impact"
+    inputs:
+      - "Forensic images and preserved evidence"
+      - "System logs and network captures"
+      - "Threat intelligence context"
+    steps:
+      - "Analyze system logs for indicators of compromise"
+      - "Perform malware analysis if malicious code discovered"
+      - "Trace attack vector from initial entry to current state"
+      - "Identify all data accessed or exfiltrated"
+      - "Determine timeline of attacker activities"
+      - "Identify vulnerabilities exploited by the attacker"
+      - "Assess whether attack is ongoing or concluded"
+      - "Determine if supply chain compromise is involved"
+      - "Evaluate impact on vehicle safety and user privacy"
+      - "Prepare technical findings summary"
+    outputs:
+      - "Forensic analysis report"
+      - "Attack timeline reconstruction"
+      - "Root cause identification"
+      - "Impact assessment"
+    tools:
+      - "Forensic analysis platform"
+      - "Malware analysis sandbox"
+      - "Network traffic analyzer"
+    quality_gates:
+      - "Root cause identified with evidence"
+      - "Full scope of compromise determined"
+      - "Attack timeline documented"
+
+  - name: "Recovery and Remediation"
+    description: "Restore affected systems to secure operational state and implement fixes"
+    inputs:
+      - "Root cause analysis results"
+      - "Identified vulnerabilities"
+      - "System restoration procedures"
+    steps:
+      - "Develop remediation plan addressing root cause vulnerability"
+      - "Prepare security patches for affected software"
+      - "Test patches in isolated environment before deployment"
+      - "Restore affected backend systems from verified clean backups"
+      - "Reissue compromised credentials and certificates"
+      - "Plan and execute OTA update for affected vehicles if needed"
+      - "Verify system integrity after restoration"
+      - "Re-enable monitoring with updated detection rules"
+      - "Implement additional security controls to prevent recurrence"
+      - "Gradually restore normal operations with enhanced monitoring"
+    outputs:
+      - "Remediation patches deployed"
+      - "Systems restored to secure state"
+      - "Enhanced monitoring in place"
+    tools:
+      - "Patch management system"
+      - "OTA deployment platform"
+      - "System integrity verification tool"
+    quality_gates:
+      - "Root cause vulnerability patched"
+      - "All compromised credentials replaced"
+      - "System integrity verified before returning to production"
+
+  - name: "Post-Incident Review"
+    description: "Conduct lessons learned review and update security posture based on incident findings"
+    inputs:
+      - "Complete incident documentation"
+      - "Forensic analysis results"
+      - "Remediation effectiveness data"
+    steps:
+      - "Conduct post-incident review meeting with all stakeholders"
+      - "Document lessons learned and improvement actions"
+      - "Update TARA with newly identified threats"
+      - "Update detection rules based on observed indicators of compromise"
+      - "Review and update incident response procedures"
+      - "Assess need for regulatory notification"
+      - "Prepare external communication if customer impact occurred"
+      - "Update security training materials with incident learnings"
+      - "Track improvement actions to completion"
+      - "Archive incident documentation per retention policy"
+    outputs:
+      - "Post-incident review report"
+      - "Updated TARA and detection rules"
+      - "Improvement action plan"
+      - "Regulatory notification if required"
+    tools:
+      - "Lessons learned template"
+      - "TARA analysis tool"
+      - "Action tracking system"
+    quality_gates:
+      - "All lessons learned documented"
+      - "Improvement actions assigned with deadlines"
+      - "Regulatory notification obligations assessed"

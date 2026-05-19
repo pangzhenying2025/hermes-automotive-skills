@@ -1,0 +1,164 @@
+name: eps-tuning
+version: 1.0.0
+description: "Electric Power Steering tuning and calibration workflow for optimizing steering feel and performance"
+trigger: "During new vehicle development, after suspension changes, or for steering feel customer complaints"
+domain: "Chassis"
+safety_level: "ASIL-D"
+
+prerequisites:
+  - "EPS system installed and functional on target vehicle"
+  - "Steering test equipment including force and angle sensors"
+  - "Test track with variety of surface and maneuver areas"
+  - "Calibration tool with EPS parameter access"
+  - "Reference vehicles for competitive benchmarking"
+
+phases:
+  - name: "Baseline Characterization"
+    description: "Measure and document the current EPS performance baseline"
+    inputs:
+      - "Vehicle with production-intent EPS hardware"
+      - "Steering measurement equipment"
+      - "Baseline test procedures"
+    steps:
+      - "Measure steering torque at parking: full lock left and right"
+      - "Measure on-center steering torque gradient"
+      - "Record steering effort versus speed from 0 to 200 km/h"
+      - "Measure steering return to center behavior"
+      - "Record steering torque during sinusoidal input at various frequencies"
+      - "Measure steering column friction and breakaway torque"
+      - "Record EPS motor current draw at various assist levels"
+      - "Measure steering angle deadband around center"
+      - "Document baseline subjective steering feel assessment"
+      - "Benchmark against reference vehicles"
+    outputs:
+      - "Baseline steering measurements"
+      - "Subjective feel assessment scores"
+      - "Benchmark comparison data"
+    tools:
+      - "Steering torque sensor"
+      - "Steering angle sensor"
+      - "Steering robot"
+    quality_gates:
+      - "Measurements repeatable within 5%"
+      - "All speed ranges measured"
+      - "Benchmark vehicles evaluated by same driver"
+
+  - name: "Assist Map Calibration"
+    description: "Calibrate the speed-dependent steering assist maps for effort progression"
+    inputs:
+      - "Baseline measurements"
+      - "Target steering effort curves"
+      - "EPS control parameter access"
+    steps:
+      - "Calibrate parking assist level for easy maneuverability"
+      - "Set low-speed assist curve for urban driving comfort"
+      - "Calibrate mid-speed assist transition zone"
+      - "Set highway-speed assist for stability and confidence"
+      - "Tune assist map breakpoints for smooth progression"
+      - "Calibrate sport mode with reduced assist for direct feel"
+      - "Calibrate comfort mode with increased assist for ease"
+      - "Verify assist symmetry between left and right steering"
+      - "Test assist level during rapid speed changes"
+      - "Measure updated effort curves at all reference speeds"
+    outputs:
+      - "Calibrated assist maps per driving mode"
+      - "Updated effort measurements"
+      - "Mode comparison data"
+    tools:
+      - "EPS calibration tool"
+      - "Steering measurement system"
+      - "Test track"
+    quality_gates:
+      - "Steering effort within target band at all speeds"
+      - "Smooth effort transition across speed range"
+      - "Left-right symmetry within specification"
+
+  - name: "Dynamic Feel Tuning"
+    description: "Tune the dynamic steering response characteristics for natural feel"
+    inputs:
+      - "Assist maps calibrated"
+      - "Dynamic response requirements"
+      - "EPS filter and damping parameters"
+    steps:
+      - "Tune steering torque damping for road feel transmission"
+      - "Calibrate active return to center behavior and speed"
+      - "Tune on-center dead band for straight-line stability feel"
+      - "Calibrate torque feedback during cornering: self-aligning torque"
+      - "Tune friction compensation for smooth low-speed feel"
+      - "Calibrate inertia compensation for responsive transient feel"
+      - "Tune torque disturbance rejection for road roughness"
+      - "Calibrate pull compensation for crosswind resistance"
+      - "Tune end-stop softening for smooth limit feel"
+      - "Evaluate dynamic feel with sinusoidal steering inputs"
+    outputs:
+      - "Tuned dynamic steering parameters"
+      - "Dynamic response measurements"
+      - "Road feel assessment"
+    tools:
+      - "Steering robot for repeatable inputs"
+      - "Dynamic measurement system"
+      - "Various road surfaces"
+    quality_gates:
+      - "Return to center smooth and complete"
+      - "Road feel present but not harsh"
+      - "No torque discontinuities during dynamic inputs"
+
+  - name: "Subjective Evaluation"
+    description: "Conduct expert driver subjective evaluation of steering feel quality"
+    inputs:
+      - "Tuned EPS calibration on vehicle"
+      - "Evaluation route with diverse driving scenarios"
+      - "Expert evaluation team"
+    steps:
+      - "Conduct parking lot maneuver evaluation"
+      - "Evaluate urban driving feel: intersections and roundabouts"
+      - "Evaluate highway straight-line tracking"
+      - "Evaluate highway lane change feel"
+      - "Evaluate mountain road winding feel"
+      - "Evaluate rough road steering disturbance filtering"
+      - "Compare steering feel across driving modes"
+      - "Compare against benchmark vehicles"
+      - "Score each attribute on standardized rating scale"
+      - "Identify any remaining feel issues and iterate"
+    outputs:
+      - "Subjective evaluation score cards"
+      - "Comparison against target and benchmarks"
+      - "Remaining issue list for iteration"
+    tools:
+      - "Standardized evaluation form"
+      - "Evaluation route"
+      - "Benchmark vehicles"
+    quality_gates:
+      - "All subjective attributes meet minimum target score"
+      - "No attribute significantly worse than benchmark"
+      - "No driver reports uncomfortable or unsafe behavior"
+
+  - name: "Validation and Release"
+    description: "Validate final EPS tuning across vehicle variants and release for production"
+    inputs:
+      - "Final EPS calibration"
+      - "Vehicle variant specifications"
+      - "Production validation procedures"
+    steps:
+      - "Validate tuning on vehicle with different tire options"
+      - "Validate tuning across weight variants"
+      - "Test EPS behavior during ABS and ESC interventions"
+      - "Verify EPS degradation modes: reduced assist, manual revert"
+      - "Execute EPS endurance test per component specification"
+      - "Verify EPS diagnostic monitoring functions correctly"
+      - "Test EPS behavior at temperature extremes"
+      - "Freeze EPS calibration parameters"
+      - "Document all calibration values with rationale"
+      - "Release EPS calibration for production programming"
+    outputs:
+      - "Variant validation results"
+      - "Frozen EPS calibration"
+      - "Production release documentation"
+    tools:
+      - "Variant test vehicles"
+      - "Environmental test chamber"
+      - "Calibration release system"
+    quality_gates:
+      - "Tuning acceptable across all variants"
+      - "Degradation modes safe and functional"
+      - "EPS calibration release approved"

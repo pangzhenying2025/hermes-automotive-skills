@@ -1,0 +1,165 @@
+name: driver-development
+version: 1.0.0
+description: "Embedded device driver development workflow for automotive ECU peripherals and external components"
+trigger: "When new hardware components are added, existing drivers need modification, or porting to new platforms"
+domain: "Embedded"
+safety_level: "ASIL-B"
+
+prerequisites:
+  - "Component datasheet and reference manual available"
+  - "Hardware evaluation board or target ECU available"
+  - "Debug tools including JTAG probe and logic analyzer"
+  - "Driver architecture framework and coding standards"
+  - "GoogleTest or equivalent framework for unit testing"
+
+phases:
+  - name: "Requirements and Interface Analysis"
+    description: "Analyze hardware interface requirements and define the driver API"
+    inputs:
+      - "Component datasheet and application notes"
+      - "System architecture showing driver dependencies"
+      - "Performance requirements from application layer"
+    steps:
+      - "Study component registers, protocols, and timing diagrams"
+      - "Identify all configuration options and operating modes"
+      - "Define driver API based on application requirements"
+      - "Specify function signatures for init, read, write, and control"
+      - "Define error codes and error handling strategy"
+      - "Specify interrupt handling requirements"
+      - "Define DMA usage for high-throughput operations"
+      - "Document timing constraints and performance targets"
+      - "Define power management interfaces"
+      - "Review API design with application team"
+    outputs:
+      - "Driver API specification"
+      - "Interface timing requirements"
+      - "API design review approval"
+    tools:
+      - "API documentation tool"
+      - "Timing diagram viewer"
+      - "Review tracking system"
+    quality_gates:
+      - "API covers all required functionality"
+      - "Timing requirements documented for all critical paths"
+      - "API review approved by application team"
+
+  - name: "Driver Implementation"
+    description: "Implement the driver following automotive embedded coding standards"
+    inputs:
+      - "Driver API specification"
+      - "Component datasheet for register definitions"
+      - "Coding standards and driver framework"
+    steps:
+      - "Create register definition header from datasheet"
+      - "Implement hardware abstraction layer for register access"
+      - "Implement initialization sequence per datasheet"
+      - "Implement read operations with proper synchronization"
+      - "Implement write operations with error checking"
+      - "Implement interrupt service routine with minimal processing"
+      - "Implement DMA transfer setup and completion handling"
+      - "Implement error detection and recovery mechanisms"
+      - "Implement power mode transitions"
+      - "Add diagnostic counters and status reporting"
+      - "Run static analysis and fix all findings"
+    outputs:
+      - "Driver source code"
+      - "Register definition header"
+      - "Static analysis results"
+    tools:
+      - "Development IDE"
+      - "Static analysis tool"
+      - "Code review platform"
+    quality_gates:
+      - "Code passes static analysis with no critical findings"
+      - "MISRA-C compliance verified for safety-relevant code"
+      - "Peer code review completed"
+
+  - name: "Unit Testing"
+    description: "Create and execute unit tests for driver logic using hardware abstraction mocks"
+    inputs:
+      - "Driver source code"
+      - "Driver API specification for expected behavior"
+      - "Unit test framework configuration"
+    steps:
+      - "Create mock layer for hardware register access"
+      - "Write unit tests for initialization sequence"
+      - "Write unit tests for normal read and write operations"
+      - "Write unit tests for error conditions and recovery"
+      - "Write unit tests for interrupt handling logic"
+      - "Write unit tests for boundary conditions"
+      - "Write unit tests for concurrent access scenarios"
+      - "Execute all unit tests and verify results"
+      - "Measure code coverage and add tests for uncovered paths"
+      - "Review test quality and assertion completeness"
+    outputs:
+      - "Unit test suite"
+      - "Unit test results"
+      - "Code coverage report"
+    tools:
+      - "GoogleTest framework"
+      - "Code coverage tool"
+      - "Mock generation tool"
+    quality_gates:
+      - "All unit tests pass"
+      - "Code coverage above 80%"
+      - "All error paths tested"
+
+  - name: "Hardware Integration Testing"
+    description: "Test the driver on actual hardware to verify real-world operation"
+    inputs:
+      - "Driver code passing unit tests"
+      - "Target hardware with component connected"
+      - "Logic analyzer and oscilloscope"
+    steps:
+      - "Flash driver test application to target hardware"
+      - "Verify initialization sequence on logic analyzer"
+      - "Test basic read and write operations"
+      - "Verify timing meets component datasheet requirements"
+      - "Test maximum throughput and measure actual performance"
+      - "Test interrupt latency and response time"
+      - "Verify DMA transfers with data integrity checks"
+      - "Test error recovery by simulating fault conditions"
+      - "Test power mode transitions with current measurement"
+      - "Execute stress test over extended duration"
+    outputs:
+      - "Hardware integration test results"
+      - "Timing measurements from logic analyzer"
+      - "Performance characterization data"
+    tools:
+      - "JTAG debug probe"
+      - "Logic analyzer"
+      - "Oscilloscope"
+      - "Current probe"
+    quality_gates:
+      - "All timing requirements met on hardware"
+      - "Performance meets or exceeds specification"
+      - "No data corruption during stress testing"
+
+  - name: "Documentation and Release"
+    description: "Complete driver documentation and release for integration"
+    inputs:
+      - "Validated driver code"
+      - "All test results"
+      - "API specification"
+    steps:
+      - "Generate API documentation from source code comments"
+      - "Write driver integration guide with code examples"
+      - "Document configuration options and their effects"
+      - "Document known limitations and workarounds"
+      - "Write troubleshooting guide for common issues"
+      - "Create driver release package with source and tests"
+      - "Update BSP driver catalog with new driver entry"
+      - "Tag release version in version control"
+      - "Notify dependent teams of driver availability"
+    outputs:
+      - "Driver documentation package"
+      - "Tagged driver release"
+      - "Updated BSP catalog"
+    tools:
+      - "Documentation generator"
+      - "Version control system"
+      - "Release management tool"
+    quality_gates:
+      - "Documentation reviewed and approved"
+      - "All tests included in release package"
+      - "Release notes list all known limitations"

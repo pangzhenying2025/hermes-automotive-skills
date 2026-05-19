@@ -1,0 +1,155 @@
+name: planning-verification
+version: 1.0.0
+description: "Verification workflow for ADAS path planning and decision-making algorithms ensuring safe and comfortable trajectories"
+trigger: "When planning algorithms are modified, new driving scenarios are identified, or before feature release"
+domain: "ADAS"
+safety_level: "ASIL-D"
+
+prerequisites:
+  - "Planning algorithm implementation complete and code reviewed"
+  - "Perception interface contract defined and mocked"
+  - "Vehicle dynamics model validated and available"
+  - "Scenario database populated with relevant test cases"
+  - "Safety envelope constraints formally specified"
+
+phases:
+  - name: "Requirements Analysis"
+    description: "Review and formalize planning requirements including safety constraints and comfort criteria"
+    inputs:
+      - "Functional requirements specification"
+      - "Safety requirements from hazard analysis"
+      - "Comfort and performance targets"
+    steps:
+      - "Review planning functional requirements for completeness"
+      - "Formalize safety envelope constraints as mathematical inequalities"
+      - "Define comfort metrics including lateral acceleration and jerk limits"
+      - "Identify all operational design domain boundaries"
+      - "Map requirements to verifiable test conditions"
+      - "Review interaction requirements with other ADAS functions"
+      - "Document assumptions about perception input quality"
+      - "Create requirements traceability matrix"
+    outputs:
+      - "Formalized safety constraints"
+      - "Comfort and performance metric definitions"
+      - "Requirements traceability matrix"
+    tools:
+      - "Requirements management tool"
+      - "Formal specification language editor"
+    quality_gates:
+      - "All safety requirements have formal mathematical expression"
+      - "100% requirements coverage in traceability matrix"
+      - "Requirements review approved by safety team"
+
+  - name: "Unit and Module Verification"
+    description: "Verify individual planning components through unit testing and formal analysis"
+    inputs:
+      - "Planning algorithm source code"
+      - "Component interface specifications"
+      - "Formalized safety constraints"
+    steps:
+      - "Execute unit tests for trajectory generation module"
+      - "Execute unit tests for cost function evaluation"
+      - "Execute unit tests for collision checking module"
+      - "Verify boundary conditions for path optimization solver"
+      - "Test trajectory feasibility checker against vehicle dynamics limits"
+      - "Verify decision state machine transitions for all valid inputs"
+      - "Run static analysis for undefined behavior and memory safety"
+      - "Achieve minimum code coverage targets"
+      - "Review test results and address any failures"
+    outputs:
+      - "Unit test results with coverage report"
+      - "Static analysis findings report"
+      - "Module verification summary"
+    tools:
+      - "GoogleTest framework"
+      - "Code coverage tool"
+      - "Static analysis tool"
+    quality_gates:
+      - "Unit test pass rate 100%"
+      - "Code coverage above 90% for safety-critical modules"
+      - "No critical static analysis findings"
+
+  - name: "Scenario-Based Testing"
+    description: "Validate planning behavior across comprehensive driving scenario catalog"
+    inputs:
+      - "Verified planning modules"
+      - "Scenario catalog with expected behaviors"
+      - "Perception mock data per scenario"
+    steps:
+      - "Execute lane keeping scenarios on straight and curved roads"
+      - "Execute lane change scenarios including gap finding and execution"
+      - "Execute car following scenarios with varying lead vehicle behavior"
+      - "Execute intersection and junction scenarios"
+      - "Execute emergency scenarios including sudden obstacles"
+      - "Execute degraded mode scenarios with sensor failures"
+      - "Verify planned trajectories satisfy safety envelope constraints"
+      - "Measure planning computation time per scenario"
+      - "Validate smooth transitions between planning modes"
+      - "Test boundary conditions at ODD limits"
+    outputs:
+      - "Scenario test results with pass/fail per scenario"
+      - "Planning latency distribution"
+      - "Safety constraint compliance evidence"
+    tools:
+      - "Scenario simulation framework"
+      - "Trajectory analysis tool"
+      - "Safety constraint checker"
+    quality_gates:
+      - "All nominal scenarios pass within comfort bounds"
+      - "All emergency scenarios satisfy safety constraints"
+      - "Planning cycle time below 50ms at 99th percentile"
+
+  - name: "Integration Verification"
+    description: "Verify planning algorithm integrated with perception and control subsystems"
+    inputs:
+      - "Integrated software build"
+      - "Hardware-in-the-loop test bench"
+      - "Integration test scenarios"
+    steps:
+      - "Deploy integrated build to HIL test bench"
+      - "Execute perception-planning interface tests with real-time data"
+      - "Verify planning-control interface command generation"
+      - "Test failsafe transitions when perception data is delayed"
+      - "Test failsafe transitions when perception data is invalid"
+      - "Verify planning graceful degradation under computational overload"
+      - "Execute long-duration stability test over 8 hours continuous"
+      - "Monitor resource consumption trends during extended operation"
+    outputs:
+      - "Integration test results"
+      - "Interface timing verification report"
+      - "Long-duration stability report"
+    tools:
+      - "HIL test bench"
+      - "Real-time monitoring tool"
+      - "Interface timing analyzer"
+    quality_gates:
+      - "All interface timing requirements met"
+      - "No unhandled exceptions during 8-hour stability test"
+      - "Resource consumption stable with no degradation trends"
+
+  - name: "Formal Verification and Sign-off"
+    description: "Apply formal methods where applicable and obtain verification sign-off"
+    inputs:
+      - "All verification results from previous phases"
+      - "Safety case framework"
+      - "Formal verification tool configuration"
+    steps:
+      - "Apply formal verification to safety envelope constraint checker"
+      - "Verify absence of deadlocks in decision state machine"
+      - "Review all verification evidence for completeness"
+      - "Update safety case with verification results"
+      - "Present verification summary to technical review board"
+      - "Document residual risks and mitigation strategies"
+      - "Obtain verification sign-off from functional safety manager"
+    outputs:
+      - "Formal verification results"
+      - "Complete verification report"
+      - "Signed verification statement"
+    tools:
+      - "Model checker"
+      - "Safety case editor"
+      - "Document management system"
+    quality_gates:
+      - "Formal verification proofs completed for critical properties"
+      - "All verification activities traceable to requirements"
+      - "Functional safety manager sign-off obtained"

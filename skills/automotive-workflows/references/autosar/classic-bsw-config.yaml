@@ -1,0 +1,161 @@
+name: classic-bsw-config
+version: 1.0.0
+description: "AUTOSAR Classic Platform Basic Software configuration workflow for ECU development"
+trigger: "When configuring a new ECU, adding software components, or updating BSW module parameters"
+domain: "AUTOSAR"
+standard: "AUTOSAR Classic Platform R22-11"
+
+prerequisites:
+  - "AUTOSAR authoring tool licensed and configured"
+  - "ECU hardware specification and pin mapping available"
+  - "Communication matrix (DBC/ARXML) from system design"
+  - "BSW module descriptions from vendor stack"
+  - "System extract from vehicle-level AUTOSAR model"
+
+phases:
+  - name: "System Extract Import"
+    description: "Import the system-level design extract and establish the ECU configuration baseline"
+    inputs:
+      - "System description ARXML from system architect"
+      - "ECU hardware description with pin assignments"
+      - "Communication cluster definitions"
+    steps:
+      - "Import system extract ARXML into authoring tool project"
+      - "Verify all referenced SWC types are available in workspace"
+      - "Import ECU hardware description with microcontroller abstraction"
+      - "Map physical channels to hardware pin assignments"
+      - "Verify CAN, LIN, and Ethernet cluster configurations match system design"
+      - "Resolve any import warnings or conflicts"
+      - "Establish configuration baseline in version control"
+      - "Document any deviations from system extract"
+    outputs:
+      - "ECU configuration project with imported system extract"
+      - "Import validation report"
+      - "Baseline configuration in version control"
+    tools:
+      - "AUTOSAR authoring tool"
+      - "ARXML validator"
+      - "Version control system"
+    quality_gates:
+      - "Zero import errors on system extract"
+      - "All SWC ports connected per system design"
+      - "Hardware description matches ECU specification"
+
+  - name: "Communication Stack Configuration"
+    description: "Configure the communication BSW modules including CAN, LIN, Ethernet and related services"
+    inputs:
+      - "Communication matrix with signal definitions"
+      - "Timing requirements for message scheduling"
+      - "Network management requirements"
+    steps:
+      - "Configure COM module with signal groups and transfer properties"
+      - "Configure PDU Router for message routing between interfaces"
+      - "Set up CAN Interface with hardware object handles"
+      - "Configure CAN Transport Protocol for diagnostic messages"
+      - "Set up CAN State Manager for bus-off recovery"
+      - "Configure Network Management for sleep and wake behavior"
+      - "Set up communication timeouts and deadline monitoring"
+      - "Configure XCP for calibration and measurement access"
+      - "Validate signal packing against DBC definitions"
+      - "Configure gateway routing tables if applicable"
+    outputs:
+      - "Configured communication stack ARXML"
+      - "Signal routing verification report"
+      - "Network timing analysis results"
+    tools:
+      - "AUTOSAR authoring tool communication module"
+      - "Signal packing validator"
+      - "Bus timing analyzer"
+    quality_gates:
+      - "All signals mapped correctly to PDUs"
+      - "Bus load below 70% under worst case"
+      - "All timeout values within specification"
+
+  - name: "OS and Memory Configuration"
+    description: "Configure the AUTOSAR OS, memory stack, and runtime environment"
+    inputs:
+      - "Task scheduling requirements from SWC timing constraints"
+      - "Memory partition requirements from safety concept"
+      - "NVM data block definitions from application"
+    steps:
+      - "Define OS tasks with priorities and scheduling policy"
+      - "Configure task activation events and alarm triggers"
+      - "Set up interrupt service routines and category assignments"
+      - "Configure memory protection units for safety partitions"
+      - "Define NVM blocks with persistence and redundancy settings"
+      - "Configure Fee and Fls modules for flash abstraction"
+      - "Set up memory stack error handling and recovery"
+      - "Configure watchdog manager with supervision entities"
+      - "Define OS application boundaries for freedom from interference"
+      - "Validate stack sizes using static analysis estimates"
+    outputs:
+      - "OS configuration with task model"
+      - "Memory stack configuration"
+      - "Watchdog supervision configuration"
+    tools:
+      - "AUTOSAR OS configurator"
+      - "Stack analysis tool"
+      - "Memory layout tool"
+    quality_gates:
+      - "Schedulability analysis confirms all deadlines met"
+      - "Memory protection covers all safety-relevant partitions"
+      - "NVM wear leveling verified for expected lifecycle"
+
+  - name: "RTE and Service Configuration"
+    description: "Configure the Runtime Environment and diagnostic services"
+    inputs:
+      - "SWC port interface definitions"
+      - "Diagnostic service requirements from ODX"
+      - "DEM event definitions from failure analysis"
+    steps:
+      - "Generate RTE configuration from SWC-to-ECU mapping"
+      - "Configure data element routing through RTE"
+      - "Set up mode management and mode switch handling"
+      - "Configure DCM module with diagnostic service table"
+      - "Define DEM events with debouncing and enable conditions"
+      - "Configure DTC-to-event mapping with status bit handling"
+      - "Set up FIM function inhibition conditions"
+      - "Configure BswM module for mode arbitration rules"
+      - "Validate inter-runnable variable consistency"
+    outputs:
+      - "RTE generation configuration"
+      - "Diagnostic stack configuration"
+      - "Mode management configuration"
+    tools:
+      - "RTE generator"
+      - "Diagnostic configurator"
+      - "Mode management editor"
+    quality_gates:
+      - "All SWC ports connected through RTE"
+      - "Diagnostic services match ODX specification"
+      - "DEM events cover all identified failure modes"
+
+  - name: "Generation and Integration"
+    description: "Generate BSW code, integrate with application, and validate the complete configuration"
+    inputs:
+      - "All BSW module configurations"
+      - "Application SWC source code"
+      - "Linker script template"
+    steps:
+      - "Run BSW code generation for all configured modules"
+      - "Resolve any generation errors or warnings"
+      - "Integrate generated code with application SWCs"
+      - "Configure linker script with memory sections"
+      - "Compile complete ECU software build"
+      - "Execute configuration consistency checks"
+      - "Run AUTOSAR compliance validator"
+      - "Execute basic software integration tests"
+      - "Verify ECU boots and reaches operational state"
+      - "Commit final configuration to version control"
+    outputs:
+      - "Generated BSW source code"
+      - "Compiled ECU binary"
+      - "Configuration validation report"
+    tools:
+      - "BSW code generator"
+      - "Cross compiler toolchain"
+      - "AUTOSAR compliance checker"
+    quality_gates:
+      - "Zero generation errors"
+      - "Build compiles without errors"
+      - "ECU boots to operational state within timing budget"

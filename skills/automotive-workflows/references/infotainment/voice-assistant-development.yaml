@@ -1,0 +1,164 @@
+name: voice-assistant-development
+version: 1.0.0
+description: "In-vehicle voice assistant development workflow for natural language interaction with vehicle systems"
+trigger: "When developing new voice capabilities, expanding language support, or integrating new vehicle functions"
+domain: "Infotainment"
+safety_level: "QM"
+
+prerequisites:
+  - "Voice assistant platform and SDK selected"
+  - "Microphone array and noise cancellation hardware"
+  - "Vehicle function APIs for voice control integration"
+  - "Speech data collection and annotation pipeline"
+  - "Cloud voice processing infrastructure"
+
+phases:
+  - name: "Intent and Domain Design"
+    description: "Design the voice interaction model including intents, entities, and dialog flows"
+    inputs:
+      - "Vehicle functions available for voice control"
+      - "User research on expected voice commands"
+      - "Competitive voice assistant analysis"
+    steps:
+      - "Define automotive domain intents: navigation, media, climate, phone"
+      - "Define entity types: addresses, contacts, radio stations, temperatures"
+      - "Design dialog flows for multi-turn conversations"
+      - "Define confirmation strategies for safety-critical commands"
+      - "Design error handling and disambiguation dialogs"
+      - "Create training utterance sets for each intent"
+      - "Define wake word options and sensitivity parameters"
+      - "Design fallback behavior for unrecognized commands"
+      - "Define offline capability for core functions"
+      - "Create voice interaction specification"
+    outputs:
+      - "Intent taxonomy with entities"
+      - "Dialog flow specifications"
+      - "Training utterance datasets"
+    tools:
+      - "Voice interaction design tool"
+      - "Dialog flow editor"
+      - "Utterance collection platform"
+    quality_gates:
+      - "Minimum 100 training utterances per intent"
+      - "All vehicle functions mapped to voice intents"
+      - "Safety-critical commands require confirmation"
+
+  - name: "Speech Processing Pipeline"
+    description: "Configure and optimize the speech processing pipeline for in-vehicle use"
+    inputs:
+      - "Microphone array hardware specifications"
+      - "Vehicle noise characteristics"
+      - "Speech processing SDK"
+    steps:
+      - "Configure microphone array beamforming for driver position"
+      - "Implement acoustic echo cancellation for speaker interference"
+      - "Configure noise suppression for road and wind noise"
+      - "Optimize voice activity detection for in-vehicle environment"
+      - "Configure automatic speech recognition model"
+      - "Implement on-device speech recognition for offline mode"
+      - "Configure cloud speech recognition for complex queries"
+      - "Implement hybrid on-device plus cloud processing strategy"
+      - "Optimize speech recognition latency"
+      - "Test recognition accuracy in various noise conditions"
+    outputs:
+      - "Configured speech processing pipeline"
+      - "Recognition accuracy measurements"
+      - "Latency measurements"
+    tools:
+      - "Audio processing toolkit"
+      - "ASR evaluation tool"
+      - "Noise simulation system"
+    quality_gates:
+      - "Word error rate below 8% at 70 dB highway noise"
+      - "End-to-end latency below 1.5 seconds for cloud processing"
+      - "Offline recognition functional for core commands"
+
+  - name: "Natural Language Understanding"
+    description: "Train and validate the NLU models for automotive intent classification"
+    inputs:
+      - "Training utterance datasets"
+      - "Intent and entity definitions"
+      - "NLU framework and training infrastructure"
+    steps:
+      - "Train intent classification model on automotive utterances"
+      - "Train entity extraction models for automotive entities"
+      - "Implement context management for multi-turn dialogs"
+      - "Train disambiguation models for ambiguous commands"
+      - "Implement slot filling for incomplete commands"
+      - "Validate NLU accuracy on held-out test set"
+      - "Test with accent and dialect variations"
+      - "Implement language switching for multi-language markets"
+      - "Test edge cases: partial commands, corrections, interruptions"
+      - "Optimize NLU model for on-device inference speed"
+    outputs:
+      - "Trained NLU models"
+      - "NLU accuracy metrics"
+      - "Multi-language support verification"
+    tools:
+      - "NLU training platform"
+      - "Evaluation metrics tool"
+      - "Accent variation test corpus"
+    quality_gates:
+      - "Intent classification accuracy above 95%"
+      - "Entity extraction F1 score above 90%"
+      - "All target languages functional"
+
+  - name: "Vehicle Integration and Response"
+    description: "Integrate voice commands with vehicle functions and design response generation"
+    inputs:
+      - "Validated NLU models"
+      - "Vehicle function APIs"
+      - "Text-to-speech engine"
+    steps:
+      - "Implement command execution for navigation functions"
+      - "Implement command execution for media control"
+      - "Implement command execution for climate control"
+      - "Implement command execution for phone and messaging"
+      - "Implement command execution for vehicle settings"
+      - "Configure text-to-speech voice and personality"
+      - "Design response templates for each command outcome"
+      - "Implement visual feedback on display for voice interactions"
+      - "Implement multi-modal responses: audio plus visual"
+      - "Test complete voice command chains end-to-end"
+    outputs:
+      - "Integrated voice control functions"
+      - "TTS configuration"
+      - "End-to-end test results"
+    tools:
+      - "Vehicle API integration framework"
+      - "TTS engine configurator"
+      - "Integration test suite"
+    quality_gates:
+      - "All vehicle functions controllable via voice"
+      - "Command execution within 2 seconds of recognition"
+      - "Response clarity and naturalness acceptable"
+
+  - name: "User Testing and Release"
+    description: "Validate voice assistant with real users and release for production"
+    inputs:
+      - "Integrated voice assistant on vehicle"
+      - "User test participants"
+      - "Production release criteria"
+    steps:
+      - "Conduct user acceptance testing with 20 participants"
+      - "Measure task success rate for voice-only interactions"
+      - "Collect user satisfaction ratings"
+      - "Identify common failure points and misrecognitions"
+      - "Iterate on NLU training based on user test findings"
+      - "Execute voice assistant in driving simulator for safety"
+      - "Verify voice interaction does not increase driver distraction"
+      - "Test privacy controls: mute, delete history, consent"
+      - "Validate cloud data handling per privacy regulations"
+      - "Release voice assistant for production"
+    outputs:
+      - "User test results"
+      - "Distraction assessment"
+      - "Production release approval"
+    tools:
+      - "User testing facility"
+      - "Driving simulator"
+      - "Privacy compliance checker"
+    quality_gates:
+      - "Task success rate above 85%"
+      - "User satisfaction score above 7 out of 10"
+      - "No increase in driver distraction metrics"

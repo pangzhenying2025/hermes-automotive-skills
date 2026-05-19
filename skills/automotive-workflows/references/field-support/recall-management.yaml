@@ -1,0 +1,39 @@
+name: recall-management
+version: 1.0.0
+description: |
+  Vehicle recall management workflow from risk assessment to remedy completion.
+
+domain: field_support
+safety_standard: FMVSS_573
+estimated_duration: 3-12_months
+
+phases:
+  - phase: risk_assessment
+    name: Safety Risk Assessment and Scope Determination
+    duration: 1-2_weeks
+    outputs:
+      - risk_analysis
+      - affected_vin_list
+  - phase: remedy_development
+    name: Remedy Development and Validation
+    duration: 4-12_weeks
+    outputs:
+      - remedy_procedure
+      - parts_availability_plan
+  - phase: notification
+    name: Regulatory Notification and Customer Communication
+    duration: 2-4_weeks
+    outputs:
+      - nhtsa_573_filing (US)
+      - customer_notification_letters
+  - phase: tracking
+    name: Remedy Campaign Tracking and Completion
+    duration: 6-24_months
+    outputs:
+      - completion_rate_tracking
+      - closeout_report
+
+references:
+  - FMVSS 573 (Defect and noncompliance reporting)
+  - NHTSA Recall Management
+  - EU Regulation 2018/858 (Type-approval recalls)

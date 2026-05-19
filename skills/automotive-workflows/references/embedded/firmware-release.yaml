@@ -1,0 +1,164 @@
+name: firmware-release
+version: 1.0.0
+description: "Automotive ECU firmware release workflow from build through production deployment approval"
+trigger: "When firmware reaches release candidate status, for production release, or emergency hotfix deployment"
+domain: "Embedded"
+safety_level: "ASIL-B"
+
+prerequisites:
+  - "All feature development complete and merged"
+  - "CI/CD pipeline passing all automated checks"
+  - "Release testing resources allocated"
+  - "Release approval checklist available"
+  - "Code signing infrastructure operational"
+
+phases:
+  - name: "Release Candidate Build"
+    description: "Create the official release candidate build with full traceability"
+    inputs:
+      - "Source code at release commit"
+      - "Build configuration for target platform"
+      - "Version numbering per release policy"
+    steps:
+      - "Freeze source code with release tag in version control"
+      - "Verify no uncommitted changes in build environment"
+      - "Execute clean build from tagged source"
+      - "Record exact compiler version, flags, and toolchain"
+      - "Generate binary with embedded version information"
+      - "Calculate SHA-256 hash of release binary"
+      - "Run MISRA-C compliance check on final source"
+      - "Generate bill of materials for all third-party components"
+      - "Create software configuration index document"
+      - "Archive build artifacts with full provenance chain"
+    outputs:
+      - "Release candidate binary"
+      - "Build provenance record"
+      - "Software configuration index"
+      - "MISRA-C compliance report"
+    tools:
+      - "Build automation system"
+      - "Version control system"
+      - "MISRA-C checker"
+    quality_gates:
+      - "Build is reproducible from tagged source"
+      - "Binary hash matches across repeated builds"
+      - "No new MISRA-C critical violations"
+
+  - name: "Release Testing"
+    description: "Execute the complete release test campaign on the release candidate"
+    inputs:
+      - "Release candidate binary"
+      - "Release test specification"
+      - "Test bench and vehicle resources"
+    steps:
+      - "Flash release candidate to test ECU"
+      - "Execute complete regression test suite"
+      - "Execute all safety-related test cases"
+      - "Execute communication conformance tests"
+      - "Execute diagnostic protocol compliance tests"
+      - "Execute environmental stress tests: temperature cycling"
+      - "Execute power supply variation tests"
+      - "Execute long-duration stability test minimum 168 hours"
+      - "Execute EMC pre-compliance tests if hardware changes"
+      - "Compare test results against release entry criteria"
+    outputs:
+      - "Release test results report"
+      - "Defect list with severity classification"
+      - "Test coverage analysis"
+    tools:
+      - "Test automation framework"
+      - "HIL test bench"
+      - "Environmental test chamber"
+    quality_gates:
+      - "All regression tests pass"
+      - "All safety tests pass"
+      - "No blocking defects remaining"
+
+  - name: "Safety and Quality Review"
+    description: "Conduct formal safety and quality review of the release candidate"
+    inputs:
+      - "All test results"
+      - "Defect tracking records"
+      - "Safety work products"
+    steps:
+      - "Review all test results against acceptance criteria"
+      - "Verify all safety requirements tested and passing"
+      - "Review open defect list and risk assessment per defect"
+      - "Verify all safety work products are current"
+      - "Review traceability from requirements to tests to results"
+      - "Conduct formal safety review meeting"
+      - "Review compliance with applicable standards"
+      - "Document any waivers or deviations with justification"
+      - "Obtain safety assessor recommendation"
+      - "Record review decision and any conditions"
+    outputs:
+      - "Safety review minutes and decision"
+      - "Quality review checklist completed"
+      - "Waiver records if any"
+    tools:
+      - "Review management system"
+      - "Traceability tool"
+      - "Document management system"
+    quality_gates:
+      - "Safety review passed with no open actions"
+      - "All waivers documented and approved"
+      - "Traceability complete and verified"
+
+  - name: "Production Signing and Approval"
+    description: "Sign the release binary and obtain formal production release approval"
+    inputs:
+      - "Reviewed and approved release candidate"
+      - "Code signing credentials"
+      - "Release approval authority"
+    steps:
+      - "Sign release binary with production code signing key"
+      - "Verify signature on reference target hardware"
+      - "Create release package with binary and metadata"
+      - "Generate release notes with changes, fixes, and known issues"
+      - "Present release summary to release authority"
+      - "Obtain formal release approval signature"
+      - "Assign production release version number"
+      - "Register release in configuration management database"
+      - "Distribute release package to manufacturing"
+      - "Notify all stakeholders of production release"
+    outputs:
+      - "Signed production release binary"
+      - "Release notes"
+      - "Production release approval record"
+    tools:
+      - "Code signing system"
+      - "Configuration management database"
+      - "Release distribution system"
+    quality_gates:
+      - "Signature verified on target hardware"
+      - "Release approval obtained from authorized signatory"
+      - "Release registered in configuration management"
+
+  - name: "Post-Release Monitoring"
+    description: "Monitor the released firmware in production and early field deployment"
+    inputs:
+      - "Production release in manufacturing and field"
+      - "Quality monitoring criteria"
+      - "Field feedback channels"
+    steps:
+      - "Monitor manufacturing flash programming success rates"
+      - "Track end-of-line test pass rates with new firmware"
+      - "Monitor early field deployment for diagnostic fault rates"
+      - "Compare field fault rates against previous release baseline"
+      - "Investigate any field issues reported against new release"
+      - "Monitor customer complaint channels for firmware-related issues"
+      - "Generate weekly quality monitoring report for first 90 days"
+      - "Escalate any safety-relevant field issues immediately"
+      - "Compile post-release quality summary at 90 days"
+    outputs:
+      - "Post-release quality monitoring reports"
+      - "Field issue investigation records"
+      - "90-day quality summary"
+    tools:
+      - "Quality monitoring dashboard"
+      - "Field issue tracking system"
+      - "Diagnostic data analytics platform"
+    quality_gates:
+      - "Manufacturing flash success rate above 99.9%"
+      - "No increase in field fault rates versus baseline"
+      - "No safety-relevant field issues"
